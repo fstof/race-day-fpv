@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'firebase', 'ngRoute', 'ui.bootstrap'])
+//angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'firebase', 'ngRoute', 'ui.bootstrap'])
+angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebase', 'ngRoute', 'ui.bootstrap'])
 	.config(function ($routeProvider) {
 		$routeProvider
 			.when('/home', {

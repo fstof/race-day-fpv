@@ -6,6 +6,15 @@
 </div>
 
 <div class="container">
-	Hello main
-	<button class="btn btn-primary">asdf<i class="glyphicon glyphicon-apple"></i></button>
+	<input type="text" ng-model="ctrl.text">
+	<a class="btn btn-lg btn-success" ng-click="ctrl.pushData()">Push data</a>
+	<a class="btn btn-lg btn-success" ng-click="ctrl.loadEvents()">Events</a>
+	<a class="btn btn-lg btn-success" ng-click="ctrl.loadUsers()">Users</a>
+	<a class="btn btn-lg btn-success" ng-show="!ctrl.user.id" ng-click="ctrl.auth()">login</a>
+	<a class="btn btn-lg btn-success" ng-show="ctrl.user.id" ng-click="ctrl.deAuth()">logout</a>
+
+	<hr>
+
+	<pre>{{ctrl.data | json}}</pre>
+
 </div>

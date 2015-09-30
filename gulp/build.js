@@ -7,15 +7,9 @@ var $ = require('gulp-load-plugins')({
 });
 
 gulp.task('styles', function () {
-	return gulp.src('app/styles/main.scss')
-		.pipe($.plumber())
-		.pipe($.sass({
-			errLogToConsole: false,
-			onError: function (err) {
-				return $.notify().write(err);
-			}
-		}))
-		.pipe($.autoprefixer('last 1 version'))
+	return gulp.src('app/styles/main.less')
+		.pipe($.less())
+		.pipe($.replace('../fonts', '../bower_components/bootstrap/fonts'))
 		.pipe(gulp.dest('.tmp/styles'))
 		.pipe($.size());
 });
@@ -27,32 +21,18 @@ gulp.task('scripts', function () {
 		.pipe($.size());
 });
 
-gulp.task('partials', function () {
-	return gulp.src('app/partials/**/*.html')
-		.pipe($.minifyHtml({
-			empty: true,
-			spare: true,
-			quotes: true
-		}))
-		.pipe($.ngHtml2js({
-			moduleName: 'race',
-			prefix: 'partials/'
-		}))
-		.pipe(gulp.dest('.tmp/partials'))
-		.pipe($.size());
-});
 
-gulp.task('html', ['styles', 'scripts', 'partials'], function () {
+gulp.task('html', ['styles', 'scripts'], function () {
 	var jsFilter = $.filter('**/*.js');
 	var cssFilter = $.filter('**/*.css');
 
-	return gulp.src('app/*.html')
-		.pipe($.inject(gulp.src('.tmp/partials/**/*.js'), {
-			read: false,
-			starttag: '<!-- inject:partials -->',
-			addRootSlash: false,
-			addPrefix: '../'
-		}))
+	return gulp.src(['app/**/*.html'])
+		//.pipe($.inject(gulp.src('.tmp/partials/**/*.js'), {
+		//	read: false,
+		//	starttag: '<!-- inject:partials -->',
+		//	addRootSlash: false,
+		//	addPrefix: '../'
+		//}))
 		.pipe($.useref.assets())
 		.pipe($.rev())
 		.pipe(jsFilter)
@@ -60,7 +40,7 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
 		.pipe($.uglify({preserveComments: $.uglifySaveLicense}))
 		.pipe(jsFilter.restore())
 		.pipe(cssFilter)
-		.pipe($.replace('bower_components/bootstrap-sass-official/assets/fonts/bootstrap', 'fonts'))
+		.pipe($.replace('bower_components/bootstrap/fonts', 'fonts'))
 		.pipe($.csso())
 		.pipe(cssFilter.restore())
 		.pipe($.useref.restore())
@@ -93,4 +73,4 @@ gulp.task('clean', function () {
 	return gulp.src(['.tmp', 'dist'], {read: false}).pipe($.rimraf());
 });
 
-gulp.task('build', ['html', 'partials', 'images', 'fonts']);
+gulp.task('build', ['html', 'images', 'fonts']);
