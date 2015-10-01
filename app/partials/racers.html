@@ -1,22 +1,31 @@
 <div class="jumbotron text-center">
 	<h1>Racers</h1>
+
 	<p class="lead">
 		Who is who?
 	</p>
 </div>
 
 <div class="container">
-	the racers
-	<div class="panel panel-default">
+
+	<div class="panel panel-default" ng-repeat="user in ctrl.users">
 		<div class="panel-heading">
-			<h4>Bootstrap Examples</h4>
+			<div class="row">
+				<div class="col-lg-6">
+					<h4>{{user.name}}</h4>
+				</div>
+				<div class="col-lg-6">
+					<img class="pull-right" style="width: 50px; height: 50px;" ng-src="{{user.profileImageURL}}">
+				</div>
+			</div>
+
 		</div>
 		<div class="panel-body">
-			<div class="list-group">
-				<a href="http://bootply.com/tagged/modal" class="list-group-item">Modal / Dialog</a>
-				<a href="http://bootply.com/tagged/datetime" class="list-group-item">Datetime Examples</a>
-				<a href="http://bootply.com/tagged/datatable" class="list-group-item">Data Grids</a>
-			</div>
+			<ul class="list-group">
+				<li class="list-group-item">Email: {{user.email}}</li>
+				<li class="list-group-item">Email: {{user.email}}</li>
+			</ul>
 		</div>
 	</div>
+
 </div>

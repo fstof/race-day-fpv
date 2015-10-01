@@ -8,36 +8,48 @@ var $ = require('gulp-load-plugins')({
 
 gulp.task('styles', function () {
 	return gulp.src('app/styles/main.scss')
+		//.pipe($.plumber())
 		.pipe($.sass())
-		.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
+		//.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
 		.pipe(gulp.dest('.tmp/styles'))
 		.pipe($.size());
 });
 
 gulp.task('scripts', function () {
 	return gulp.src('app/scripts/**/*.js')
+		.pipe($.ngAnnotate({
+			remove: true,
+			add: true,
+			single_quotes: true
+		}))
 		.pipe($.jshint())
 		.pipe($.jshint.reporter('jshint-stylish'))
+		.pipe(gulp.dest('app/scripts'))
 		.pipe($.size());
 });
 
 
 gulp.task('html', ['styles', 'scripts'], function () {
-	var jsFilter = $.filter('**/*.js');
-	var cssFilter = $.filter('**/*.css');
+	var jsFilter = $.filter(['**/*.js'], {restore: true});
+	var cssFilter = $.filter(['**/*.css'], {restore: true});
+	var assets = $.useref.assets();
 
 	return gulp.src(['app/**/*.html'])
-		.pipe($.useref.assets())
+		.pipe(assets)
 		.pipe($.rev())
 		.pipe(jsFilter)
-		.pipe($.ngAnnotate())
+		.pipe($.ngAnnotate({
+			remove: true,
+			add: true,
+			single_quotes: true
+		}))
 		.pipe($.uglify({preserveComments: $.uglifySaveLicense}))
-		.pipe(jsFilter.restore())
+		.pipe(jsFilter.restore)
 		.pipe(cssFilter)
 		.pipe($.replace('bower_components/bootstrap-sass/assets/fonts/bootstrap', 'fonts'))
 		.pipe($.csso())
-		.pipe(cssFilter.restore())
-		.pipe($.useref.restore())
+		.pipe(cssFilter.restore)
+		.pipe(assets.restore())
 		.pipe($.useref())
 		.pipe($.revReplace())
 		.pipe(gulp.dest('dist'))

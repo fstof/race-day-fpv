@@ -51,15 +51,10 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-cog"></i></a>
-						<ul class="dropdown-menu">
-							<li><a href="#">My Account</a></li>
-							<li><a href="#">Log In</a></li>
-							<li><a href="#">Log Out</a></li>
-						</ul>
-					</li>
-				</ul>
+                    <li><a href="" ng-show="ctrl.FPVSession.user != null"><img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.user.profileImageURL}}"></a></li>
+                    <li><a href="" ng-show="ctrl.FPVSession.user == null" ng-click="ctrl.auth()">Log In</a></li>
+                    <li><a href="" ng-show="ctrl.FPVSession.user != null" ng-click="ctrl.deAuth()">Log Out</a></li>
+                </ul>
 			</div><!-- /.navbar-collapse -->
 		</nav>
 
@@ -101,7 +96,10 @@
     <!-- build:js({app,.tmp}) scripts/main.js -->
     <script src="scripts/race-day-fpv.js"></script>
     <script src="scripts/index-ctrl.js"></script>
-    <script src="scripts/main/main-ctrl.js"></script>
+    <script src="scripts/model/session-model.js"></script>
+    <script src="scripts/controller/home-ctrl.js"></script>
+    <script src="scripts/controller/events-ctrl.js"></script>
+    <script src="scripts/controller/racers-ctrl.js"></script>
     <!-- endbuild -->
 
   </body>
