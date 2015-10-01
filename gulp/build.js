@@ -7,9 +7,9 @@ var $ = require('gulp-load-plugins')({
 });
 
 gulp.task('styles', function () {
-	return gulp.src('app/styles/main.less')
-		.pipe($.less())
-		.pipe($.replace('../fonts', '../bower_components/bootstrap/fonts'))
+	return gulp.src('app/styles/main.scss')
+		.pipe($.sass())
+		.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
 		.pipe(gulp.dest('.tmp/styles'))
 		.pipe($.size());
 });
@@ -27,12 +27,6 @@ gulp.task('html', ['styles', 'scripts'], function () {
 	var cssFilter = $.filter('**/*.css');
 
 	return gulp.src(['app/**/*.html'])
-		//.pipe($.inject(gulp.src('.tmp/partials/**/*.js'), {
-		//	read: false,
-		//	starttag: '<!-- inject:partials -->',
-		//	addRootSlash: false,
-		//	addPrefix: '../'
-		//}))
 		.pipe($.useref.assets())
 		.pipe($.rev())
 		.pipe(jsFilter)
@@ -40,7 +34,7 @@ gulp.task('html', ['styles', 'scripts'], function () {
 		.pipe($.uglify({preserveComments: $.uglifySaveLicense}))
 		.pipe(jsFilter.restore())
 		.pipe(cssFilter)
-		.pipe($.replace('bower_components/bootstrap/fonts', 'fonts'))
+		.pipe($.replace('bower_components/bootstrap-sass/assets/fonts/bootstrap', 'fonts'))
 		.pipe($.csso())
 		.pipe(cssFilter.restore())
 		.pipe($.useref.restore())
@@ -62,7 +56,7 @@ gulp.task('images', function () {
 });
 
 gulp.task('fonts', function () {
-	return gulp.src($.mainBowerFiles())
+	return gulp.src('app/bower_components/**/*')
 		.pipe($.filter('**/*.{eot,svg,ttf,woff}'))
 		.pipe($.flatten())
 		.pipe(gulp.dest('dist/fonts'))
