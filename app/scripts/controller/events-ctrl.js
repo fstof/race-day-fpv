@@ -3,25 +3,35 @@
 angular.module('race-day-fpv')
 	.controller('EventsCtrl', EventsCtrl);
 
-function EventsCtrl($firebaseArray, $firebaseObject) {
-	// now we can use $firebase to synchronize data between clients and the server!
-	var ref = new Firebase('https://race-day-fpv.firebaseio.com');
+function EventsCtrl(FIREBASE_REF, $timeout, $firebaseArray, $firebaseObject) {
+	var ref = FIREBASE_REF;
 	var self = this;
 
-	self.events = {};
+	self.events = [];
 	_init();
 
 	function _init() {
-		var listRef = ref.child('events');
-		self.events = $firebaseArray(listRef);
-		self.events.forEach(function (elem) {
-			elem.organiser = _getUser(elem.organiser);
-		})
+		var eventsRef = ref.child('events');
+		self.events = $firebaseArray(eventsRef);
+		/////
+		//eventsRef.on('child_added', function (childSnapshot) {
+		//	console.log(childSnapshot.key());
+		//	$timeout(function () {
+		//		var val = childSnapshot.val();
+		//		self.events.push(val);
+		//	});
+		//});
+		/////
 	}
 
-	function _getUser(uid) {
-		var userRef = ref.child('users/' + uid);
-		return $firebaseObject(userRef);
+	self.toggle = function (event) {
+		if (event.show) {
+			event.show = false;
+		} else {
+			var userRef = ref.child('users/' + event.organiserId);
+			event.organiser = $firebaseObject(userRef);
+			event.show = true;
+		}
 	}
 }
-EventsCtrl.$inject = ['$firebaseArray', '$firebaseObject'];
+EventsCtrl.$inject = ['FIREBASE_REF', '$timeout', '$firebaseArray', '$firebaseObject'];

@@ -1,31 +1,34 @@
-<div class="jumbotron text-center">
-	<h1>Events</h1>
-
-	<p class="lead">
-		Where to meet up
-	</p>
+<div class="page-header text-center">
+	<h1>Events <small>Where to meet up</small></h1>
 </div>
 
+<div class="container-fluid">
 
-<div class="container">
+	<div class="row">
 
-	<div class="panel panel-default" ng-repeat="event in ctrl.events">
-		<div class="panel-heading">
-			<div class="row">
-				<div class="col-lg-6">
-					<h4>{{event.name}}</h4>
+		<div class="col-sm-6 col-md-4" ng-repeat="event in ctrl.events">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-lg-12">
+							<h4>{{event.name}}<button class="btn btn-default pull-right" ng-click="ctrl.toggle(event)">Details</button></h4>
+							<span ng-hide="event.show">Date: {{event.date}}</span>
+						</div>
+					</div>
+
+				</div>
+				<div class="panel-body" ng-show="event.show">
+					<ul class="list-group">
+						<li class="list-group-item">Date: {{event.date}}</li>
+						<li class="list-group-item">Venue: {{event.venue}}</li>
+						<li class="list-group-item">Organiser: {{event.organiser.name}}</li>
+						<li class="list-group-item">Notes: {{event.notes}}</li>
+					</ul>
+					<span><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>
 				</div>
 			</div>
+		</div>
 
-		</div>
-		<div class="panel-body">
-			<ul class="list-group">
-				<li class="list-group-item">Date: {{event.date}}</li>
-				<li class="list-group-item">Venue: {{event.venue}}</li>
-				<li class="list-group-item">Organiser: {{event.organiser}}</li>
-				<li class="list-group-item">Notes: {{event.notes}}</li>
-			</ul>
-		</div>
 	</div>
 
 </div>

@@ -3,9 +3,8 @@
 angular.module('race-day-fpv')
 	.controller('HomeCtrl', HomeCtrl);
 
-function HomeCtrl($firebaseObject, $firebaseArray, $firebaseAuth) {
-	// now we can use $firebase to synchronize data between clients and the server!
-	var ref = new Firebase('https://race-day-fpv.firebaseio.com');
+function HomeCtrl(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseArray, $firebaseAuth) {
+	var ref = FIREBASE_REF;
 	var self = this;
 
 	self.pushData = function () {
@@ -14,7 +13,8 @@ function HomeCtrl($firebaseObject, $firebaseArray, $firebaseAuth) {
 		var newPostKey = newDataRef.key();
 
 		var newData = {
-			name: self.text
+			name: self.text,
+			organiserId: FPVSession.user.$id
 		};
 
 		newDataRef.update(newData, function (error) {
@@ -24,4 +24,4 @@ function HomeCtrl($firebaseObject, $firebaseArray, $firebaseAuth) {
 		});
 	};
 }
-HomeCtrl.$inject = ['$firebaseObject', '$firebaseArray', '$firebaseAuth'];
+HomeCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', '$firebaseArray', '$firebaseAuth'];

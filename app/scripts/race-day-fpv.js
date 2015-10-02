@@ -19,8 +19,14 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebas
 				controller: 'RacersCtrl',
 				controllerAs: 'ctrl'
 			})
+			.when('/event/:eventId', {
+				templateUrl: 'partials/events.html',
+				controller: 'EventsCtrl',
+				controllerAs: 'ctrl'
+			})
 			.otherwise({
 				redirectTo: '/home'
 			});
 	}])
+	.constant('FIREBASE_REF', new Firebase('https://race-day-fpv.firebaseio.com'));
 ;

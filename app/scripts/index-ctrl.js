@@ -3,8 +3,8 @@
 angular.module('race-day-fpv')
 	.controller('IndexCtrl', IndexCtrl);
 
-function IndexCtrl(FPVSession, $firebaseObject, $firebaseArray, $firebaseAuth) {
-	var ref = new Firebase('https://race-day-fpv.firebaseio.com');
+function IndexCtrl(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseArray, $firebaseAuth) {
+	var ref = FIREBASE_REF;
 	var self = this;
 	self.active = 'home';
 	self.navCollapsed = true;
@@ -64,4 +64,4 @@ function IndexCtrl(FPVSession, $firebaseObject, $firebaseArray, $firebaseAuth) {
 		});
 	}
 }
-IndexCtrl.$inject = ['FPVSession', '$firebaseObject', '$firebaseArray', '$firebaseAuth'];
+IndexCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', '$firebaseArray', '$firebaseAuth'];
