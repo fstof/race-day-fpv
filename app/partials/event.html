@@ -1,0 +1,55 @@
+<div class="jumbotron">
+	<h1>Event<small>{{ctrl.event.name}}</small></h1>
+	<div class="btn-group">
+	<button class="btn btn-primary" ng-class="{active: false}">Join Event</button>
+	<button class="btn btn-primary" ng-class="{active: true}">Not Going</button>
+		</div>
+	<div ng-hide="ctrl.me.checkedIn">
+		<p>You are not yet checked in.</p>
+		<button class="btn btn-primary" ng-click="ctrl.checkIn()">Check In</button>
+	</div>
+	<div ng-show="ctrl.me.checkedIn">
+		<p>You are checked in, welcome, and good luck!</p>
+		<button class="btn btn-primary" ng-click="ctrl.checkOut()">Chicken Out</button>
+	</div>
+	<div ng-show="ctrl.event.date >= today">
+		<p>Check-ins are not yet open.</p>
+	</div>
+
+	<div>
+		<p>Your video frequency (for now) is {{ctrl.me.frequency}}</p>
+	</div>
+</div>
+
+<div class="container-fluid">
+
+	<div>
+		<h1>Attending Racers</h1>
+	</div>
+	<div class="row">
+
+		<div class="col-sm-6 col-md-4" ng-repeat="racer in ctrl.racers">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-lg-12">
+							<h4 class="pull-left">{{racer.name}}</h4>
+							<img class="pull-right" style="width: 50px; height: 50px;" ng-src="{{user.profileImageURL}}">
+						</div>
+					</div>
+				</div>
+				<div class="panel-body" ng-show="event.show">
+					<ul class="list-group">
+						<li class="list-group-item">Date: {{event.date}}</li>
+						<li class="list-group-item">Venue: {{event.venue}}</li>
+						<li class="list-group-item">Organiser: {{event.organiser.name}}</li>
+						<li class="list-group-item">Notes: {{event.notes}}</li>
+					</ul>
+					<span><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>

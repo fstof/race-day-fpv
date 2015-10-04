@@ -20,8 +20,8 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebas
 				controllerAs: 'ctrl'
 			})
 			.when('/event/:eventId', {
-				templateUrl: 'partials/events.html',
-				controller: 'EventsCtrl',
+				templateUrl: 'partials/event.html',
+				controller: 'EventCtrl',
 				controllerAs: 'ctrl'
 			})
 			.otherwise({
