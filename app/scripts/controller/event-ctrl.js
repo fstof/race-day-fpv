@@ -3,60 +3,85 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventsCtrl);
 
-function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $timeout, $firebaseArray, $firebaseObject) {
+function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseArray, $firebaseObject) {
 	var ref = FIREBASE_REF;
 	var self = this;
 
 	var eventId = $routeParams.eventId;
 
-	var eventRef = null;
-	var racersRef = null;
-	var meRef = null;
+	var _eventRef = null;
+	var _racersRef = null;
+	var _meRef = null;
 
-	self.event = {};
-	self.racers = [];
-	self.me = {};
-	self.mePath = null;
+	self.event = null;
+	self.racers = null;
+	self.me = null;
 	_init();
 
 	function _init() {
-		eventRef = ref.child('events/' + eventId);
-		eventRef.on('value', function (snap) {
-			$timeout(function () {
-				self.event = snap.val();
+		self.today = $filter('date')(new Date(), 'yyyy-MM-dd');
 
-				racersRef = ref.child('events/' + eventId + '/pilots');
+		_eventRef = ref.child('events/' + eventId);
+		self.event = $firebaseObject(_eventRef);
+		self.event.$loaded().then(function () {
+			console.log("event loaded");
+			_racersRef = ref.child('events/' + eventId + '/pilots');
 
-				racersRef.on('child_added', function (child) {
-					$timeout(function () {
-						var userRef = ref.child('users/' + child.key());
-						var racer = $firebaseObject(userRef);
-						self.racers.push(racer);
-						if (FPVSession.user.$id === child.key()) {
-							meRef = racersRef.child(child.key());
-							self.me = $firebaseObject(meRef);
-							self.mePath = meRef.toString();
-							console.log(self.mePath);
-							var mr = ref.child(self.mePath);
-							console.log(mr);
-						}
-					});
+			self.racers = $firebaseObject(_racersRef);
+			self.racers.$loaded().then(function () {
+				// To iterate the key/value pairs of the object, use angular.forEach()
+				angular.forEach(self.racers, function (value, key) {
+					console.log(key, value);
+					if (FPVSession.user.$id === key) {
+						_meRef = _racersRef.child(key);
+						self.me = $firebaseObject(_meRef);
+						self.me.$loaded().then(function () {
+						});
+					}
 				});
 			});
+
+			//racersRef.on('child_added', function (child) {
+			////$timeout(function () {
+			//var userRef = ref.child('users/' + child.key());
+			//var racer = $firebaseObject(userRef);
+			//self.racers.push(racer);
+			//if (FPVSession.user.$id === child.key()) {
+			//meRef = racersRef.child(child.key());
+			//self.me = $firebaseObject(meRef);
+			//console.log('Child Me load time: ' + (new Date().getTime() - start));
+			//}
+			//console.log('Child load time: ' + (new Date().getTime() - start));
+			////});
+			//});
 		});
-		/////
 	}
 
+	self.going = function () {
+		_meRef = _racersRef.child(FPVSession.user.$id);
+		_meRef.set({
+			checkedIn: false
+		});
+		self.me = $firebaseObject(_meRef);
+		self.me.$loaded().then(function () {
+		});
+	};
+
+	self.notGoing = function () {
+		self.me.$remove().then(function (ref) {
+			self.me = null;
+		})
+
+	};
+
 	self.checkIn = function () {
-		meRef.update(
-			{'checkedIn': true}
-		);
+		self.me.checkedIn = true;
+		self.me.$save();
 	};
 
 	self.checkOut = function () {
-		meRef.update(
-			{'checkedIn': false}
-		);
+		self.me.checkedIn = false;
+		self.me.$save();
 	};
 }
-EventsCtrl.$inject = ['FIREBASE_REF', 'FPVSession', '$routeParams', '$timeout', '$firebaseArray', '$firebaseObject'];
+EventsCtrl.$inject = ['FIREBASE_REF', 'FPVSession', '$routeParams', '$filter', '$firebaseArray', '$firebaseObject'];
