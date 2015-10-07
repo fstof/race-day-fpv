@@ -1,0 +1,49 @@
+<div class="page-header text-center">
+	<h1>New Event</h1>
+</div>
+
+<div class="container-fluid">
+<form>
+	<div class="row">
+
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-lg-12">
+							<h4>Name: <input type="text" class="form-control" ng-model="ctrl.event.name">
+								<!--<button class="btn btn-default pull-right" ng-click="ctrl.toggle(event)">Details</button>-->
+							</h4>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item">
+							<i class="fa fa-calendar" tooltip="Date"></i>:
+							<!--<input type="text" class="form-control" ng-model="ctrl.event.date">-->
+
+							<span class="input-group">
+								<input type="text" class="form-control" datepicker-popup ng-model="ctrl.event.date" is-open="ctrl.status.opened" close-text="Close" />
+								  <span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="ctrl.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+								  </span>
+							</span>
+
+
+						</li>
+						<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Venue"></i>: <input type="text" class="form-control" ng-model="ctrl.event.venue"></li>
+						<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: <input type="text" class="form-control" ng-model="ctrl.event.notes"></li>
+					</ul>
+					<span class="pull-right">
+						<a class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</a>
+						<a class="btn btn-primary" ng-click="ctrl.save()">Save</a>
+					</span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</form>
+
+</div>

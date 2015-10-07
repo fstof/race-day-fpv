@@ -13,15 +13,7 @@ function EventsCtrl(FIREBASE_REF, $timeout, $firebaseArray, $firebaseObject) {
 	function _init() {
 		var eventsRef = ref.child('events');
 		self.events = $firebaseArray(eventsRef);
-		/////
-		//eventsRef.on('child_added', function (childSnapshot) {
-		//	console.log(childSnapshot.key());
-		//	$timeout(function () {
-		//		var val = childSnapshot.val();
-		//		self.events.push(val);
-		//	});
-		//});
-		/////
+
 	}
 
 	self.toggle = function (event) {
@@ -32,6 +24,10 @@ function EventsCtrl(FIREBASE_REF, $timeout, $firebaseArray, $firebaseObject) {
 			event.organiser = $firebaseObject(userRef);
 			event.show = true;
 		}
-	}
+	};
+
+	self.delete = function (event) {
+		$firebaseObject(ref.child('events/' + event.$id)).$remove();
+	};
 }
 EventsCtrl.$inject = ['FIREBASE_REF', '$timeout', '$firebaseArray', '$firebaseObject'];

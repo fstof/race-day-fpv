@@ -49,11 +49,14 @@
 						<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.user.profileImageURL}}">
 					</a>
 				</li>
-				<li>
-					<a href="" ng-show="ctrl.FPVSession.user == null" ng-click="ctrl.auth()">Log In</a>
+				<li ng-show="ctrl.FPVSession.user == null">
+					<a href="" ng-click="ctrl.login('google')"><i style="font-size: 1.5em" class="fa fa-google-plus-square"></i> Google Sign-In</a>
+				</li>
+				<li ng-show="ctrl.FPVSession.user == null">
+					<a href="" ng-click="ctrl.login('facebook')"><i style="font-size: 1.5em" class="fa fa-facebook-official"></i> Facebook Sign-In</a>
 				</li>
 				<li>
-					<a href="" ng-show="ctrl.FPVSession.user != null" ng-click="ctrl.deAuth()"><i class="glyphicon glyphiconlogout-cog"></i>Log Out</a>
+					<a href="" ng-show="ctrl.FPVSession.user != null" ng-click="ctrl.logout()">Log Out</a>
 				</li>
 			</ul>
 		</div>
@@ -105,10 +108,11 @@
 <!-- build:js({app,.tmp}) scripts/main.js -->
 <script src="scripts/race-day-fpv.js"></script>
 <script src="scripts/index-ctrl.js"></script>
-<script src="scripts/model/session-model.js"></script>
-<script src="scripts/service/racer-service.js"></script>
+<script src="scripts/service/session-service.js"></script>
+<script src="scripts/service/auth-service.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
 <script src="scripts/controller/events-ctrl.js"></script>
+<script src="scripts/controller/event-add-ctrl.js"></script>
 <script src="scripts/controller/event-ctrl.js"></script>
 <script src="scripts/controller/racers-ctrl.js"></script>
 <!-- endbuild -->

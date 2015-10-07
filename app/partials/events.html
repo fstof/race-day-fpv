@@ -5,26 +5,34 @@
 <div class="container-fluid">
 
 	<div class="row">
+		<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+			<a class="btn btn-primary" ng-href="#/events/add"><i class="fa fa-plus"></i> New Event</a>
+		</div>
+	</div>
+	<br>
+
+	<div class="row">
 
 		<div class="col-sm-6 col-md-4" ng-repeat="event in ctrl.events">
 			<div class="panel panel-default">
-				<div class="panel-heading">
+				<div class="panel-heading hand" ng-click="ctrl.toggle(event)">
 					<div class="row">
 						<div class="col-lg-12">
-							<h4>{{event.name}}<button class="btn btn-default pull-right" ng-click="ctrl.toggle(event)">Details</button></h4>
-							<span ng-hide="event.show">Date: {{event.date}}</span>
+							<h4>{{event.name}}...</h4>
+							<span ng-hide="event.show"><i class="fa fa-calendar"></i>: {{event.date}}</span>
 						</div>
 					</div>
 
 				</div>
 				<div class="panel-body" ng-show="event.show">
 					<ul class="list-group">
-						<li class="list-group-item">Date: {{event.date}}</li>
-						<li class="list-group-item">Venue: {{event.venue}}</li>
-						<li class="list-group-item">Organiser: {{event.organiser.name}}</li>
-						<li class="list-group-item">Notes: {{event.notes}}</li>
+						<li class="list-group-item"><i class="fa fa-calendar" tooltip="Date"></i>: {{event.date}}</li>
+						<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Venue"></i>: {{event.venue}}</li>
+						<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{event.organiser.name}}</li>
+						<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{event.notes}}</li>
 					</ul>
-					<span><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>
+					<span  class="pull-left"><a class="btn btn-danger" ng-click="ctrl.delete(event)"><i class="fa fa-trash"></i></a></span>
+					<span  class="pull-right"><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>
 				</div>
 			</div>
 		</div>

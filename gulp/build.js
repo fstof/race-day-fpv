@@ -10,7 +10,8 @@ gulp.task('styles', function () {
 	return gulp.src('app/styles/main.scss')
 		//.pipe($.plumber())
 		.pipe($.sass())
-		//.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
+		.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
+		.pipe($.replace('../fonts', '../bower_components/components-font-awesome/fonts'))
 		.pipe(gulp.dest('.tmp/styles'))
 		.pipe($.size());
 });
@@ -36,22 +37,19 @@ gulp.task('html', ['styles', 'scripts'], function () {
 
 	return gulp.src(['app/**/*.html'])
 		.pipe(assets)
-		.pipe($.rev())
+		//.pipe($.rev())
 		.pipe(jsFilter)
-		.pipe($.ngAnnotate({
-			remove: true,
-			add: true,
-			single_quotes: true
-		}))
-		.pipe($.uglify({preserveComments: $.uglifySaveLicense}))
+		//.pipe($.uglify({preserveComments: $.uglifySaveLicense}))
+		.pipe($.uglify())
 		.pipe(jsFilter.restore)
 		.pipe(cssFilter)
 		.pipe($.replace('bower_components/bootstrap-sass/assets/fonts/bootstrap', 'fonts'))
+		.pipe($.replace('bower_components/components-font-awesome/fonts', 'fonts'))
 		.pipe($.csso())
 		.pipe(cssFilter.restore)
 		.pipe(assets.restore())
 		.pipe($.useref())
-		.pipe($.revReplace())
+		//.pipe($.revReplace())
 		.pipe(gulp.dest('dist'))
 		.pipe($.size());
 });
@@ -69,7 +67,7 @@ gulp.task('images', function () {
 
 gulp.task('fonts', function () {
 	return gulp.src('app/bower_components/**/*')
-		.pipe($.filter('**/*.{eot,svg,ttf,woff}'))
+		.pipe($.filter('**/*.{eot,svg,ttf,woff,woff2}'))
 		.pipe($.flatten())
 		.pipe(gulp.dest('dist/fonts'))
 		.pipe($.size());

@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('race-day-fpv')
-	.controller('EventCtrl', EventsCtrl);
+	.controller('EventCtrl', EventCtrl);
 
-function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseArray, $firebaseObject) {
+function EventCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseArray, $firebaseObject) {
 	var ref = FIREBASE_REF;
 	var self = this;
 
@@ -12,7 +12,7 @@ function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseAr
 	var _eventRef = null;
 	var _racersRef = null;
 	var _meRef = null;
-  var _userRef = FPVSession.userRef;
+	var _userRef = FPVSession.userRef;
 
 	self.event = null;
 	self.racers = null;
@@ -25,15 +25,14 @@ function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseAr
 		_eventRef = ref.child('events/' + eventId);
 		self.event = $firebaseObject(_eventRef);
 		self.event.$loaded().then(function () {
-			console.log("event loaded");
+			console.log('event loaded');
 			_racersRef = ref.child('events/' + eventId + '/pilots');
 
 			self.racers = $firebaseObject(_racersRef);
 			self.racers.$loaded().then(function () {
 				// To iterate the key/value pairs of the object, use angular.forEach()
 				angular.forEach(self.racers, function (value, key) {
-					console.log(key, value);
-					if (FPVSession.user.$id === key) {
+					if (FPVSession.user !== null && FPVSession.user.$id === key) {
 						_meRef = _racersRef.child(key);
 						self.me = $firebaseObject(_meRef);
 						self.me.$loaded().then(function () {
@@ -66,14 +65,14 @@ function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseAr
 		self.me = $firebaseObject(_meRef);
 		self.me.$loaded().then(function () {
 		});
-    _userRef.child('events/' + self.event.$id).set(true);
+		_userRef.child('events/' + self.event.$id).set(true);
 	};
 
 	self.notGoing = function () {
-		self.me.$remove().then(function (ref) {
+		self.me.$remove().then(function () {
 			self.me = null;
 		});
-    $firebaseObject(_userRef.child('events/' + self.event.$id)).$remove();
+		$firebaseObject(_userRef.child('events/' + self.event.$id)).$remove();
 	};
 
 	self.checkIn = function () {
@@ -86,4 +85,4 @@ function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseAr
 		self.me.$save();
 	};
 }
-EventsCtrl.$inject = ['FIREBASE_REF', 'FPVSession', '$routeParams', '$filter', '$firebaseArray', '$firebaseObject'];
+EventCtrl.$inject = ['FIREBASE_REF', 'FPVSession', '$routeParams', '$filter', '$firebaseArray', '$firebaseObject'];

@@ -14,14 +14,19 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebas
 				controller: 'EventsCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/racers', {
-				templateUrl: 'partials/racers.html',
-				controller: 'RacersCtrl',
-				controllerAs: 'ctrl'
-			})
 			.when('/event/:eventId', {
 				templateUrl: 'partials/event.html',
 				controller: 'EventCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/events/add', {
+				templateUrl: 'partials/event-add.html',
+				controller: 'EventAddCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/racers', {
+				templateUrl: 'partials/racers.html',
+				controller: 'RacersCtrl',
 				controllerAs: 'ctrl'
 			})
 			.otherwise({
@@ -29,4 +34,4 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebas
 			});
 	}])
 	.constant('FIREBASE_REF', new Firebase('https://race-day-fpv.firebaseio.com'));
-;
+

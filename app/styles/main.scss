@@ -1,6 +1,8 @@
-$icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
-
+//$icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 @import '../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+
+//$icon-font-path: "../bower_components/components-font-awesome/fonts/";
+@import '../bower_components/components-font-awesome/scss/font-awesome.scss';
 
 .browsehappy {
   margin: 0.2em 0;
@@ -13,7 +15,7 @@ $icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
   height: 200px;
 
   img.pull-right {
-    width: 50px;
+	width: 50px;
   }
 }
 
