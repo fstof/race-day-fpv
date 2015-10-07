@@ -1,0 +1,9 @@
+{
+  "firebase": "race-day-fpv",
+  "public": "dist",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

@@ -3,24 +3,31 @@
 angular.module('race-day-fpv')
 	.controller('HomeCtrl', HomeCtrl);
 
-function HomeCtrl(FPVSession, FIREBASE_REF) {
+function HomeCtrl(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseArray) {
 	var ref = FIREBASE_REF;
 	var self = this;
 
-	self.pushData = function () {
-		var listRef = ref.child('events');
-		var newDataRef = listRef.push();
+	self.events = [];
+	_init();
 
-		var newData = {
-			name: self.text,
-			organiserId: FPVSession.user.$id
-		};
+	function _init() {
+		if (FPVSession.user != null) {
+			var eventsRef = ref.child('users/' + FPVSession.user.$id + '/events');
+			self.events = $firebaseArray(eventsRef);
+			self.events.$loaded().then(function (elem) {
+				console.log(elem);
+			});
+		}
+	}
 
-		newDataRef.update(newData, function (error) {
-			if (error) {
-				console.log('Error updating data:', error);
-			}
-		});
+	self.toggle = function (event) {
+		if (event.show) {
+			event.show = false;
+		} else {
+			var userRef = ref.child('users/' + event.organiserId);
+			event.organiser = $firebaseObject(userRef);
+			event.show = true;
+		}
 	};
 }
-HomeCtrl.$inject = ['FPVSession', 'FIREBASE_REF'];
+HomeCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', '$firebaseArray'];

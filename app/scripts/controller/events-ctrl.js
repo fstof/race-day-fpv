@@ -13,7 +13,6 @@ function EventsCtrl(FIREBASE_REF, $timeout, $firebaseArray, $firebaseObject) {
 	function _init() {
 		var eventsRef = ref.child('events');
 		self.events = $firebaseArray(eventsRef);
-
 	}
 
 	self.toggle = function (event) {
