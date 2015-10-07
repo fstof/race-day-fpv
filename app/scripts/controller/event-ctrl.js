@@ -12,6 +12,7 @@ function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseAr
 	var _eventRef = null;
 	var _racersRef = null;
 	var _meRef = null;
+  var _userRef = FPVSession.userRef;
 
 	self.event = null;
 	self.racers = null;
@@ -65,13 +66,14 @@ function EventsCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseAr
 		self.me = $firebaseObject(_meRef);
 		self.me.$loaded().then(function () {
 		});
+    _userRef.child('events/' + self.event.$id).set(true);
 	};
 
 	self.notGoing = function () {
 		self.me.$remove().then(function (ref) {
 			self.me = null;
-		})
-
+		});
+    $firebaseObject(_userRef.child('events/' + self.event.$id)).$remove();
 	};
 
 	self.checkIn = function () {

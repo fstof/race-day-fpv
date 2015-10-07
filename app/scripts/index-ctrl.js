@@ -9,11 +9,13 @@ function IndexCtrl(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseArray, $f
 	self.active = 'home';
 	self.navCollapsed = true;
 	self.FPVSession = FPVSession;
+  var _userRef = null;
 
 	ref.onAuth(authDataCallback);
 
 	self.deAuth = function () {
 		ref.unauth();
+    _userRef = null;
 	};
 
 	self.auth = function () {
@@ -23,8 +25,8 @@ function IndexCtrl(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseArray, $f
 			scope: 'email'
 		}).then(function (authData) {
 			console.log('Logged in as:', authData.uid);
-			var userRef = ref.child('users/' + authData.uid);
-			userRef.once('value', function (snap) {
+      _userRef = _getUserRef(authData.uid);
+      _userRef.once('value', function (snap) {
 				if (snap.val() === null) {
 					console.log('New user... gonna add it');
 					persistNewUser(authData);
@@ -43,25 +45,35 @@ function IndexCtrl(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseArray, $f
 		if (authData) {
 			if (FPVSession.user === null) {
 				console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
-				var userRef = ref.child('users/' + authData.uid);
-				FPVSession.user = $firebaseObject(userRef);
+        _userRef = _getUserRef(authData.uid);
+				FPVSession.user = $firebaseObject(_userRef);
 			} else {
 				console.log('all good');
 			}
+      FPVSession.userRef = _getUserRef(authData.uid);
 		} else {
 			console.log('User is logged out');
 			FPVSession.user = null;
+      FPVSession.userRef = null;
+      _userRef = null;
 		}
 		console.log('bob' + FPVSession.user);
 	}
 
 	function persistNewUser(authData) {
-		var userRef = ref.child('users/' + authData.uid);
-		userRef.set({
+    _userRef = _getUserRef(authData.uid);
+    _userRef.set({
 			name: authData.google.displayName,
 			profileImageURL: authData.google.profileImageURL,
 			email: authData.google.email
 		});
 	}
+
+  function _getUserRef(uid) {
+    if (_userRef == null) {
+      _userRef = ref.child('users/' + uid);
+    }
+    return _userRef;
+  }
 }
 IndexCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', '$firebaseArray', '$firebaseAuth'];
