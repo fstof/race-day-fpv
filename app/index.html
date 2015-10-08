@@ -55,8 +55,8 @@
 				<li ng-show="ctrl.FPVSession.user == null">
 					<a href="" ng-click="ctrl.login('facebook')"><i style="font-size: 1.5em" class="fa fa-facebook-official"></i> Facebook Sign-In</a>
 				</li>
-				<li>
-					<a href="" ng-show="ctrl.FPVSession.user != null" ng-click="ctrl.logout()">Log Out</a>
+				<li ng-show="ctrl.FPVSession.user != null">
+					<a href="" ng-click="ctrl.logout()"><i class="fa fa-sign-out" tooltip="Log Out"></i></a>
 				</li>
 			</ul>
 		</div>
@@ -112,6 +112,7 @@
 <script src="scripts/service/event-service.js"></script>
 <script src="scripts/service/session-service.js"></script>
 <script src="scripts/service/auth-service.js"></script>
+<script src="scripts/directive/event-card.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
 <script src="scripts/controller/events-ctrl.js"></script>
 <script src="scripts/controller/event-add-ctrl.js"></script>
