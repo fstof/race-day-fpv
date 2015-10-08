@@ -18,7 +18,7 @@ function HomeCtrl(FPVSession, FIREBASE_REF, EventService, $firebaseObject) {
 				EventService.getEvent(child.key())
 					.then(function (result) {
 						if (result.data === null) {
-							$firebaseObject(myEventsRef.child(event.$id)).$remove();
+							$firebaseObject(myEventsRef.child(child.key())).$remove();
 						} else {
 							self.events[child.key()] = result.data;
 							self.events[child.key()].$id = child.key();
