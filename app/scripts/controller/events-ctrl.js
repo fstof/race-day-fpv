@@ -3,9 +3,11 @@
 angular.module('race-day-fpv')
 	.controller('EventsCtrl', EventsCtrl);
 
-function EventsCtrl(FIREBASE_REF, $timeout, $firebaseArray, $firebaseObject) {
+function EventsCtrl(FPVSession, FIREBASE_REF, $firebaseArray, $firebaseObject) {
 	var ref = FIREBASE_REF;
 	var self = this;
+	self.signedIn = FPVSession.user !== null;
+	self.uid = FPVSession.user ? FPVSession.user.$id : null;
 
 	self.events = [];
 	_init();
@@ -29,4 +31,4 @@ function EventsCtrl(FIREBASE_REF, $timeout, $firebaseArray, $firebaseObject) {
 		$firebaseObject(ref.child('events/' + event.$id)).$remove();
 	};
 }
-EventsCtrl.$inject = ['FIREBASE_REF', '$timeout', '$firebaseArray', '$firebaseObject'];
+EventsCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseArray', '$firebaseObject'];

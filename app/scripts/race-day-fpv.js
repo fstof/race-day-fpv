@@ -33,5 +33,6 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebas
 				redirectTo: '/home'
 			});
 	}])
-	.constant('FIREBASE_REF', new Firebase('https://race-day-fpv.firebaseio.com'));
+	.constant('FIREBASE_REF', new Firebase('https://race-day-fpv.firebaseio.com'))
+	.constant('FIREBASE_URL', 'https://race-day-fpv.firebaseio.com');
 

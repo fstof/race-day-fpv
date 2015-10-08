@@ -11,7 +11,7 @@
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-lg-12">
-							<h4>Name: <input type="text" class="form-control" ng-model="ctrl.event.name">
+							<h4><label>Name:</label> <input type="text" class="form-control" ng-model="ctrl.event.name">
 								<!--<button class="btn btn-default pull-right" ng-click="ctrl.toggle(event)">Details</button>-->
 							</h4>
 						</div>
@@ -26,7 +26,7 @@
 							<span class="input-group">
 								<input type="text" class="form-control" datepicker-popup ng-model="ctrl.event.date" is-open="ctrl.status.opened" close-text="Close" />
 								  <span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="ctrl.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+									<button type="button" class="btn btn-default" ng-click="ctrl.openCalendar()"><i class="glyphicon glyphicon-calendar"></i></button>
 								  </span>
 							</span>
 

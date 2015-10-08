@@ -24,7 +24,7 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 	function authGoogle() {
 		var auth = $firebaseAuth(ref);
 		auth.$authWithOAuthPopup('google', {
-			remember: 'sessionOnly',
+			remember: 'default',
 			scope: 'email'
 		}).then(function (authData) {
 			console.log('Logged in as:', authData.uid);
@@ -47,7 +47,7 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 	function authFacebook() {
 		var auth = $firebaseAuth(ref);
 		auth.$authWithOAuthPopup('facebook', {
-			remember: 'sessionOnly',
+			remember: 'default',
 			scope: 'email'
 		}).then(function (authData) {
 			console.log('Logged in as:', authData.uid);

@@ -12,7 +12,7 @@
 				<div class="panel-heading hand" ng-click="ctrl.toggle(event)">
 					<div class="row">
 						<div class="col-lg-12">
-							<h4>{{event.$id}}...</h4>
+							<h4>{{event.name}}...</h4>
 							<span ng-hide="event.show"><i class="fa fa-calendar"></i>: {{event.date}}</span>
 						</div>
 					</div>
@@ -25,8 +25,8 @@
 						<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{event.organiser.name}}</li>
 						<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{event.notes}}</li>
 					</ul>
-					<span  class="pull-left"><a class="btn btn-danger" ng-click="ctrl.delete(event)"><i class="fa fa-trash"></i></a></span>
-					<span  class="pull-right"><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>
+					<span  class="pull-left" ng-if="ctrl.signedIn && event.organiser.$id == ctrl.uid"><a class="btn btn-danger" ng-click="ctrl.delete(event)"><i class="fa fa-trash"></i></a></span>
+					<span  class="pull-right"><a class="btn btn-primary" ng-href="#/event/{{event.id}}">More</a></span>
 				</div>
 			</div>
 		</div>

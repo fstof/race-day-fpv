@@ -3,14 +3,14 @@
 angular.module('race-day-fpv')
 	.controller('EventAddCtrl', EventAddCtrl);
 
-function EventAddCtrl(FPVSession, FIREBASE_REF, $location, $timeout, $firebaseArray, $firebaseObject) {
+function EventAddCtrl(FPVSession, FIREBASE_REF, $location) {
 	var ref = FIREBASE_REF;
 	var self = this;
 	self.status = {
 		opened: false
 	};
 
-	self.open = function($event) {
+	self.openCalendar = function () {
 		self.status.opened = true;
 	};
 
@@ -32,6 +32,6 @@ function EventAddCtrl(FPVSession, FIREBASE_REF, $location, $timeout, $firebaseAr
 
 	self.cancel = function () {
 		$location.path('/events');
-	}
+	};
 }
-EventAddCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$location', '$timeout', '$firebaseArray', '$firebaseObject'];
+EventAddCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$location'];

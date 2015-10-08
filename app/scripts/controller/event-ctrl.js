@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventCtrl);
 
-function EventCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseArray, $firebaseObject) {
+function EventCtrl(FIREBASE_REF, FPVSession, UserService, $routeParams, $filter, $firebaseObject) {
 	var ref = FIREBASE_REF;
 	var self = this;
 
@@ -28,32 +28,41 @@ function EventCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseArr
 			console.log('event loaded');
 			_racersRef = ref.child('events/' + eventId + '/pilots');
 
-			self.racers = $firebaseObject(_racersRef);
-			self.racers.$loaded().then(function () {
-				// To iterate the key/value pairs of the object, use angular.forEach()
-				angular.forEach(self.racers, function (value, key) {
-					if (FPVSession.user !== null && FPVSession.user.$id === key) {
-						_meRef = _racersRef.child(key);
-						self.me = $firebaseObject(_meRef);
-						self.me.$loaded().then(function () {
-						});
-					}
-				});
-			});
-
-			//racersRef.on('child_added', function (child) {
-			////$timeout(function () {
-			//var userRef = ref.child('users/' + child.key());
-			//var racer = $firebaseObject(userRef);
-			//self.racers.push(racer);
-			//if (FPVSession.user.$id === child.key()) {
-			//meRef = racersRef.child(child.key());
-			//self.me = $firebaseObject(meRef);
-			//console.log('Child Me load time: ' + (new Date().getTime() - start));
-			//}
-			//console.log('Child load time: ' + (new Date().getTime() - start));
-			////});
+			//self.racers = $firebaseObject(_racersRef);
+			//self.racers.$loaded().then(function () {
+			//	// To iterate the key/value pairs of the object, use angular.forEach()
+			//	angular.forEach(self.racers, function (value, key) {
+			//		if (FPVSession.user !== null && FPVSession.user.$id === key) {
+			//			_meRef = _racersRef.child(key);
+			//			self.me = $firebaseObject(_meRef);
+			//			self.me.$loaded().then(function () {
+			//			});
+			//		}
+			//		UserService.getUser(key)
+			//			.then(function (result) {
+			//				console.log(result.data);
+			//				value.name = result.data.name;
+			//				value.profileImageURL = result.data.profileImageURL;
+			//			});
+			//	});
 			//});
+
+			self.racers = {};
+			_racersRef.on('child_removed', function (child) {
+				delete self.racers[child.key()];
+			});
+			_racersRef.on('child_added', function (child) {
+				self.racers[child.key()] = child;
+				if (FPVSession.user !== null && FPVSession.user.$id === child.key()) {
+					_meRef = _racersRef.child(child.key());
+					self.me = $firebaseObject(_meRef);
+				}
+				UserService.getUser(child.key())
+					.then(function (result) {
+						child.name = result.data.name;
+						child.profileImageURL = result.data.profileImageURL;
+					});
+			});
 		});
 	}
 
@@ -85,4 +94,4 @@ function EventCtrl(FIREBASE_REF, FPVSession, $routeParams, $filter, $firebaseArr
 		self.me.$save();
 	};
 }
-EventCtrl.$inject = ['FIREBASE_REF', 'FPVSession', '$routeParams', '$filter', '$firebaseArray', '$firebaseObject'];
+EventCtrl.$inject = ['FIREBASE_REF', 'FPVSession', 'UserService', '$routeParams', '$filter', '$firebaseObject'];
