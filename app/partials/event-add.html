@@ -20,15 +20,14 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item">
-							<i class="fa fa-calendar" tooltip="Date"></i>:
-							<!--<input type="text" class="form-control" ng-model="ctrl.event.date">-->
+							<i class="fa fa-calendar" tooltip="Date"></i>: {{ctrl.event.date | date:'yyyy-MM-dd hh:mm'}}
 
 							<span class="input-group">
-								<input type="text" class="form-control" datepicker-popup ng-model="ctrl.event.date" is-open="ctrl.status.opened" close-text="Close" />
-								  <span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="ctrl.openCalendar()"><i class="glyphicon glyphicon-calendar"></i></button>
-								  </span>
+								<input type="text" class="form-control" datepicker-popup ng-click="ctrl.openCalendar()" ng-model="ctrl.event.date" is-open="ctrl.status.opened" close-text="Close" />
+								<span class="input-group-addon" ng-click="ctrl.openCalendar()"><i class="fa fa-calendar"></i></span>
 							</span>
+
+							<timepicker ng-model="ctrl.event.date" hour-step="1" minute-step="5" show-meridian="false"></timepicker>
 
 
 						</li>
