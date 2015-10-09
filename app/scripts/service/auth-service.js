@@ -78,6 +78,7 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 				console.log('all good');
 			}
 			FPVSession.userRef = _getUserRef(authData.uid);
+			FPVSession.authData = authData;
 		} else {
 			console.log('User is logged out');
 			FPVSession.user = null;

@@ -3,8 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventAddCtrl', EventAddCtrl);
 
-function EventAddCtrl(FPVSession, FIREBASE_REF, $location) {
-	var ref = FIREBASE_REF;
+function EventAddCtrl(FPVSession, EventService, ngToast, $location, $route) {
 	var self = this;
 	self.status = {
 		opened: false
@@ -19,19 +18,20 @@ function EventAddCtrl(FPVSession, FIREBASE_REF, $location) {
 	};
 
 	self.save = function () {
-		var listRef = ref.child('events');
-		var newDataRef = listRef.push();
-
-		newDataRef.update(self.event, function (error) {
-			if (error) {
-				console.log('Error updating data:', error);
-			}
-			$location.path('/events');
-		});
+		EventService.create(self.event)
+			.then(function () {
+				ngToast.success('Event added');
+				$location.path('/events');
+				$route.reload();
+			})
+			.catch(function () {
+				ngToast.danger('ERROR');
+			});
 	};
 
 	self.cancel = function () {
 		$location.path('/events');
+		$route.reload();
 	};
 }
-EventAddCtrl.$inject = ['FPVSession', 'FIREBASE_REF', '$location'];
+EventAddCtrl.$inject = ['FPVSession', 'EventService', 'ngToast', '$location', '$route'];

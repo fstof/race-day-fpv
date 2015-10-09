@@ -17,8 +17,7 @@ function eventCard() {
 	};
 }
 
-function EventCardCtrl(FIREBASE_REF, FPVSession, $firebaseObject) {
-	var _ref = FIREBASE_REF;
+function EventCardCtrl(FPVSession, EventService, UserService, ngToast, $route) {
 	var self = this;
 	self.signedIn = FPVSession.user !== null;
 	self.uid = FPVSession.user ? FPVSession.user.$id : null;
@@ -27,16 +26,24 @@ function EventCardCtrl(FIREBASE_REF, FPVSession, $firebaseObject) {
 		if (event.show) {
 			event.show = false;
 		} else {
-			var userRef = _ref.child('users/' + event.organiserId);
-			event.organiser = $firebaseObject(userRef);
+			if (!event.organiser) {
+				UserService.get(event.organiserId)
+					.then(function (result) {
+						event.organiser = result.data;
+					});
+			}
 			event.show = true;
 		}
 	};
 	self.delete = function (event) {
-		$firebaseObject(_ref.child('events/' + event.$id)).$remove();
+		EventService.delete(event.$id)
+			.finally(function () {
+				ngToast.success('Event deleted');
+				$route.reload();
+			});
 	};
 }
-EventCardCtrl.$inject = ['FIREBASE_REF', 'FPVSession', '$firebaseObject'];
+EventCardCtrl.$inject = ['FPVSession', 'EventService', 'UserService', 'ngToast', '$route'];
 
 function TemplateCache($templateCache) {
 	$templateCache.put('event-card.html',
@@ -56,7 +63,7 @@ function TemplateCache($templateCache) {
 		'<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{event.organiser.name}}</li>' +
 		'<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{event.notes}}</li>' +
 		'</ul>' +
-		'<span class="pull-left" ng-if="ctrl.signedIn && event.organiser.$id == ctrl.uid"><a class="btn btn-danger" ng-click="ctrl.delete(event)"><i class="fa fa-trash"></i></a></span>' +
+		'<span class="pull-left" ng-if="ctrl.signedIn && event.organiserId == ctrl.uid"><a class="btn btn-danger" ng-click="ctrl.delete(event)"><i class="fa fa-trash"></i></a></span>' +
 		'<span class="pull-right"><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>' +
 		'</div>' +
 		'</div>');

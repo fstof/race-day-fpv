@@ -11,8 +11,15 @@
 	<link rel="stylesheet" href="styles/main.css">
 	<!-- endbuild -->
 
+	<!-- build:css({.tmp,app}) styles/vendor.css -->
+	<!-- bower:css -->
+	<link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="bower_components/ngToast/dist/ngToast.css" />
+	<!-- endbower -->
+	<!-- endbuild -->
 </head>
 <body ng-controller="IndexCtrl as ctrl">
+<toast></toast>
 
 <div class="container">
 
@@ -102,6 +109,8 @@
 <script src="bower_components/firebase/firebase.js"></script>
 <script src="bower_components/angularfire/dist/angularfire.js"></script>
 <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/ngToast/dist/ngToast.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -112,6 +121,8 @@
 <script src="scripts/service/event-service.js"></script>
 <script src="scripts/service/session-service.js"></script>
 <script src="scripts/service/auth-service.js"></script>
+<!--<script src="scripts/service/event.js"></script>-->
+<!--<script src="scripts/service/user.js"></script>-->
 <script src="scripts/directive/event-card.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
 <script src="scripts/controller/events-ctrl.js"></script>

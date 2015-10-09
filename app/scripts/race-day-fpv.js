@@ -1,7 +1,7 @@
 'use strict';
 
 //angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'firebase', 'ngRoute', 'ui.bootstrap'])
-angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebase', 'ngRoute', 'ui.bootstrap'])
+angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap'])
 	.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
 			.when('/home', {
@@ -33,6 +33,13 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'firebas
 				redirectTo: '/home'
 			});
 	}])
+
+	.config(['ngToastProvider', function (ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'bottom',
+			horizontalPosition: 'left'
+		});
+	}])
+
 	.constant('FIREBASE_REF', new Firebase('https://race-day-fpv.firebaseio.com'))
 	.constant('FIREBASE_URL', 'https://race-day-fpv.firebaseio.com');
-

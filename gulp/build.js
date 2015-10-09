@@ -10,8 +10,8 @@ gulp.task('styles', function () {
 	return gulp.src('app/styles/main.scss')
 		//.pipe($.plumber())
 		.pipe($.sass())
-		.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
-		.pipe($.replace('../fonts', '../bower_components/components-font-awesome/fonts'))
+		//.pipe($.replace('../fonts/bootstrap', '../bower_components/bootstrap-sass/assets/fonts/bootstrap'))
+		//.pipe($.replace('../fonts', '../bower_components/components-font-awesome/fonts'))
 		.pipe(gulp.dest('.tmp/styles'))
 		.pipe($.size());
 });
