@@ -3,16 +3,14 @@
 angular.module('race-day-fpv')
 	.controller('RacersCtrl', RacersCtrl);
 
-function RacersCtrl(FIREBASE_REF, $firebaseArray) {
-	var ref = FIREBASE_REF;
+function RacersCtrl(User) {
 	var self = this;
 
 	self.users = {};
 	_init();
 
 	function _init() {
-		var listRef = ref.child('users');
-		self.users = $firebaseArray(listRef);
+		self.users = User.all;
 	}
 }
-RacersCtrl.$inject = ['FIREBASE_REF', '$firebaseArray'];
+RacersCtrl.$inject = ['User'];

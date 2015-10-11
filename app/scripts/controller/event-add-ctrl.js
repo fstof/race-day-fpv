@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventAddCtrl', EventAddCtrl);
 
-function EventAddCtrl(FPVSession, EventService, ngToast, $location, $route) {
+function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 	var self = this;
 	self.status = {
 		opened: false
@@ -18,7 +18,7 @@ function EventAddCtrl(FPVSession, EventService, ngToast, $location, $route) {
 	};
 
 	self.save = function () {
-		EventService.create(self.event)
+		Event.create(self.event)
 			.then(function () {
 				ngToast.success('Event added');
 				$location.path('/events');
@@ -34,4 +34,4 @@ function EventAddCtrl(FPVSession, EventService, ngToast, $location, $route) {
 		$route.reload();
 	};
 }
-EventAddCtrl.$inject = ['FPVSession', 'EventService', 'ngToast', '$location', '$route'];
+EventAddCtrl.$inject = ['FPVSession', 'Event', 'ngToast', '$location', '$route'];

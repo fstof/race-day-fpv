@@ -19,13 +19,16 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 			return events.$remove(event);
 		},
 		getRacers: function (eventId) {
-			return $firebaseArray(ref.child('events').child(eventId).child('racers'));
+			return $firebaseArray(ref.child('events').child(eventId).child('pilots'));
 		},
-		addRacer: function (eventId, racerId, racer) {
-			return $firebaseObject(ref.child('events').child(eventId).child('racers').child(racerId)).$add(racer);
+		getRacer: function (eventId, racerId) {
+			return $firebaseObject(ref.child('events').child(eventId).child('pilots').child(racerId));
+		},
+		addRacer: function (eventId, racerId, racer, callback) {
+			return ref.child('events').child(eventId).child('pilots').child(racerId).set(racer, callback);
 		},
 		removeRacer: function (eventId, racerId) {
-			return $firebaseArray(ref.child('events').child(eventId).child('racers')).$remove(racerId);
+			return $firebaseObject(ref.child('events').child(eventId).child('pilots').child(racerId)).$remove();
 		}
 	};
 }

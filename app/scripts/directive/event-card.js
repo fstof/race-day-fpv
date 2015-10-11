@@ -17,7 +17,7 @@ function eventCard() {
 	};
 }
 
-function EventCardCtrl(FPVSession, EventService, UserService, ngToast, $route) {
+function EventCardCtrl(FPVSession, Event, User, ngToast, $route) {
 	var self = this;
 	self.signedIn = FPVSession.user !== null;
 	self.uid = FPVSession.user ? FPVSession.user.$id : null;
@@ -27,23 +27,20 @@ function EventCardCtrl(FPVSession, EventService, UserService, ngToast, $route) {
 			event.show = false;
 		} else {
 			if (!event.organiser) {
-				UserService.get(event.organiserId)
-					.then(function (result) {
-						event.organiser = result.data;
-					});
+				event.organiser = User.get(event.organiserId);
 			}
 			event.show = true;
 		}
 	};
 	self.delete = function (event) {
-		EventService.delete(event.$id)
-			.finally(function () {
+		Event.delete(event)
+			.then(function () {
 				ngToast.success('Event deleted');
 				$route.reload();
 			});
 	};
 }
-EventCardCtrl.$inject = ['FPVSession', 'EventService', 'UserService', 'ngToast', '$route'];
+EventCardCtrl.$inject = ['FPVSession', 'Event', 'User', 'ngToast', '$route'];
 
 function TemplateCache($templateCache) {
 	$templateCache.put('event-card.html',

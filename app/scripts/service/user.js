@@ -21,11 +21,11 @@ function User(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 		getEvents: function (userId) {
 			return $firebaseArray(ref.child('users').child(userId).child('events'));
 		},
-		addEvent: function (userId, eventId) {
-			return $firebaseObject(ref.child('users').child(userId).child('events').child(eventId)).$add(true);
+		addEvent: function (userId, eventId, callback) {
+			return ref.child('users').child(userId).child('events').child(eventId).set(true, callback);
 		},
 		removeEvent: function (userId, eventId) {
-			return $firebaseArray(ref.child('users').child(userId).child('events')).$remove(eventId);
+			return $firebaseObject(ref.child('users').child(userId).child('events').child(eventId)).$remove();
 		}
 	};
 }
