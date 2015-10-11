@@ -13,15 +13,5 @@ function EventsCtrl(FPVSession, Event) {
 	function _init() {
 		self.events = Event.all;
 	}
-
-	//function _init() {
-	//	EventService.all()
-	//		.then(function (result) {
-	//			self.events = result.data;
-	//			angular.forEach(self.events, function (value, key) {
-	//				value.$id = key;
-	//			});
-	//		});
-	//}
 }
 EventsCtrl.$inject = ['FPVSession', 'Event'];

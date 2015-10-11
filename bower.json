@@ -14,7 +14,6 @@
     "components-font-awesome": "~4.4.0",
     "firebase": "~2.3.1",
     "angular-resource": "~1.4.7",
-    "ngToast": "ngtoast#~1.5.6",
-    "firebase-util": "~0.2.5"
+    "ngToast": "ngtoast#~1.5.6"
   }
 }

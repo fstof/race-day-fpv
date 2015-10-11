@@ -18,15 +18,15 @@ function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 	};
 
 	self.save = function () {
-		Event.create(self.event)
-			.then(function () {
+		Event.create(self.event, function (err) {
+			if (err) {
+				ngToast.danger('ERROR');
+			} else {
 				ngToast.success('Event added');
 				$location.path('/events');
 				$route.reload();
-			})
-			.catch(function () {
-				ngToast.danger('ERROR');
-			});
+			}
+		});
 	};
 
 	self.cancel = function () {

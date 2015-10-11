@@ -24,8 +24,8 @@ function User(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 		addEvent: function (userId, eventId, callback) {
 			return ref.child('users').child(userId).child('events').child(eventId).set(true, callback);
 		},
-		removeEvent: function (userId, eventId) {
-			return $firebaseObject(ref.child('users').child(userId).child('events').child(eventId)).$remove();
+		removeEvent: function (userId, eventId, callback) {
+			return ref.child('users').child(userId).child('events').child(eventId).set(null, callback);
 		}
 	};
 }

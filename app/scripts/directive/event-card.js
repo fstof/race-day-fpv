@@ -33,11 +33,14 @@ function EventCardCtrl(FPVSession, Event, User, ngToast, $route) {
 		}
 	};
 	self.delete = function (event) {
-		Event.delete(event)
-			.then(function () {
+		Event.delete(event.$id, function (err) {
+			if (err) {
+				ngToast.danger('Could not delete');
+			} else {
 				ngToast.success('Event deleted');
 				$route.reload();
-			});
+			}
+		});
 	};
 }
 EventCardCtrl.$inject = ['FPVSession', 'Event', 'User', 'ngToast', '$route'];
