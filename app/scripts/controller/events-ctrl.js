@@ -6,7 +6,7 @@ angular.module('race-day-fpv')
 function EventsCtrl(FPVSession, EventService) {
 	var self = this;
 	self.signedIn = FPVSession.user !== null;
-	self.events = [];
+	self.events = null;
 
 	_init();
 
@@ -14,8 +14,8 @@ function EventsCtrl(FPVSession, EventService) {
 		EventService.all()
 			.then(function (result) {
 				self.events = result.data;
-				angular.forEach(self.events, function (value, key) {
-					value.$id = key;
+				angular.forEach(self.events, function (val, key) {
+					val.$id = key;
 				});
 			});
 	}

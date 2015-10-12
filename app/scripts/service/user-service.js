@@ -19,10 +19,10 @@ function UserService(FPVSession, FIREBASE_URL, $http) {
 				params: {}
 			});
 		},
-		create: function (user) {
+		create: function (userId, user) {
 			return $http({
-				method: 'post',
-				url: FIREBASE_URL + '/users.json',
+				method: 'patch',
+				url: FIREBASE_URL + '/users/' + userId + '.json',
 				params: {auth: FPVSession.authData.token},
 				data: user
 			});

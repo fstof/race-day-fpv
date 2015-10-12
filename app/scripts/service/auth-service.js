@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.factory('Auth', Auth);
 
-function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) {
+function Auth(FPVSession, FIREBASE_REF, $firebaseObject, UserService, $firebaseAuth, $route, ngToast) {
 	var ref = FIREBASE_REF;
 	var _userRef = null;
 
@@ -88,12 +88,16 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 	}
 
 	function _persistNewUser(authData, detail) {
-		_userRef = _getUserRef(authData.uid);
-		_userRef.set({
+		var newUser = {
 			name: detail.displayName,
 			profileImageURL: detail.profileImageURL,
 			email: detail.email
-		});
+		};
+		UserService.create(authData.uid, newUser)
+			.then(function (result) {
+				ngToast.success('New user added')
+			})
+
 	}
 
 	function _getUserRef(uid) {
@@ -103,4 +107,4 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 		return _userRef;
 	}
 }
-Auth.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', '$firebaseAuth', '$route'];
+Auth.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', 'UserService', '$firebaseAuth', '$route', 'ngToast'];

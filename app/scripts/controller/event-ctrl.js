@@ -3,13 +3,9 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventCtrl);
 
-function EventCtrl(FIREBASE_REF, FPVSession, EventService, UserService, ngToast, $routeParams, $filter) {
-	var _ref = FIREBASE_REF;
+function EventCtrl(FPVSession, EventService, UserService, ngToast, $routeParams, $filter) {
 	var self = this;
-
 	var eventId = $routeParams.eventId;
-
-	var _racersRef = null;
 
 	self.event = null;
 	self.racers = null;
@@ -22,30 +18,24 @@ function EventCtrl(FIREBASE_REF, FPVSession, EventService, UserService, ngToast,
 		EventService.get(eventId)
 			.then(function (result) {
 				self.event = result.data;
-				console.log('event loaded');
-				_racersRef = _ref.child('events/' + eventId + '/pilots');
+				_loadRacers(eventId);
+			});
+	}
 
-				self.racers = {};
-				_racersRef.on('child_removed', function (child) {
-					delete self.racers[child.key()];
-				});
-				_racersRef.on('child_added', function (child) {
-					self.racers[child.key()] = child.val();
-					if (FPVSession.user !== null && FPVSession.user.$id === child.key()) {
-						self.me = child.val();
-					}
-					UserService.get(child.key())
+	function _loadRacers(eventId) {
+		EventService.getRacers(eventId)
+			.then(function (result) {
+				console.log(result);
+				self.racers = result.data;
+				angular.forEach(self.racers, function (val, key) {
+					UserService.get(key)
 						.then(function (result) {
-							if (result.data !== null) {
-								self.racers[child.key()].name = result.data.name;
-								self.racers[child.key()].profileImageURL = result.data.profileImageURL;
-							} else {
-								EventService.removeRacer(eventId, child.key())
-									.then(function () {
-										ngToast.warning('Some user is gone');
-									});
+							self.racers[key].profileImageURL = result.data.profileImageURL;
+							self.racers[key].name = result.data.name;
+							if (FPVSession.user !== null && FPVSession.user.$id === key) {
+								self.me = self.racers[key];
 							}
-						});
+						})
 				});
 			});
 	}
@@ -58,6 +48,7 @@ function EventCtrl(FIREBASE_REF, FPVSession, EventService, UserService, ngToast,
 				.then(function () {
 					ngToast.success('Great, see you there');
 					self.me = obj;
+					_loadRacers(eventId);
 				});
 		}
 	};
@@ -68,25 +59,26 @@ function EventCtrl(FIREBASE_REF, FPVSession, EventService, UserService, ngToast,
 			UserService.removeEvent(FPVSession.user.$id, eventId)
 				.then(function () {
 					ngToast.success('Sad to see you go');
+					delete self.racers[FPVSession.user.$id];
 					self.me = null;
 				});
 		}
 	};
 
 	self.checkIn = function () {
-		self.me.checkedIn = true;
-		EventService.addRacer(eventId, FPVSession.user.$id, self.me)
+		EventService.addRacer(eventId, FPVSession.user.$id, {checkedIn: true})
 			.then(function () {
 				ngToast.success('Welcome');
+				self.me.checkedIn = true;
 			});
 	};
 
 	self.checkOut = function () {
-		self.me.checkedIn = false;
-		EventService.addRacer(eventId, FPVSession.user.$id, self.me)
+		EventService.addRacer(eventId, FPVSession.user.$id, {checkedIn: false})
 			.then(function () {
 				ngToast.success('Bye');
+				self.me.checkedIn = false;
 			});
 	};
 }
-EventCtrl.$inject = ['FIREBASE_REF', 'FPVSession', 'EventService', 'UserService', 'ngToast', '$routeParams', '$filter'];
+EventCtrl.$inject = ['FPVSession', 'EventService', 'UserService', 'ngToast', '$routeParams', '$filter'];

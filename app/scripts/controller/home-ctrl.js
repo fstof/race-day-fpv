@@ -3,8 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('HomeCtrl', HomeCtrl);
 
-function HomeCtrl(FPVSession, FIREBASE_REF, EventService, $firebaseObject) {
-	var _ref = FIREBASE_REF;
+function HomeCtrl(FPVSession, UserService, EventService) {
 	var self = this;
 
 	self.events = {};
@@ -12,20 +11,22 @@ function HomeCtrl(FPVSession, FIREBASE_REF, EventService, $firebaseObject) {
 
 	function _init() {
 		if (FPVSession.user !== null) {
-			var myEventsRef = _ref.child('users/' + FPVSession.user.$id + '/events');
-
-			myEventsRef.on('child_added', function (child) {
-				EventService.get(child.key())
-					.then(function (result) {
-						if (result.data === null) {
-							$firebaseObject(myEventsRef.child(child.key())).$remove();
-						} else {
-							self.events[child.key()] = result.data;
-							self.events[child.key()].$id = child.key();
-						}
-					});
-			});
+			_loadMyEvents();
 		}
 	}
+
+	function _loadMyEvents() {
+		UserService.getEvents(FPVSession.user.$id)
+			.then(function (result) {
+				self.events = result.data;
+				angular.forEach(self.events, function (val, key) {
+					EventService.get(key)
+						.then(function (result) {
+							self.events[key] = result.data;
+							self.events[key].$id = key;
+						})
+				});
+			});
+	}
 }
-HomeCtrl.$inject = ['FPVSession', 'FIREBASE_REF', 'EventService', '$firebaseObject'];
+HomeCtrl.$inject = ['FPVSession', 'UserService', 'EventService'];
