@@ -29,6 +29,11 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast
 				controller: 'RacersCtrl',
 				controllerAs: 'ctrl'
 			})
+			.when('/manage', {
+				templateUrl: 'partials/manage/index.html',
+				controller: 'ManageCtrl',
+				controllerAs: 'ctrl'
+			})
 			.otherwise({
 				redirectTo: '/home'
 			});

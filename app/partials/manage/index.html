@@ -1,0 +1,36 @@
+<div class="page-header text-center">
+	<h1>Manage
+		<small>Some setting</small>
+	</h1>
+</div>
+
+<div class="container-fluid">
+
+	<accordion>
+
+		<accordion-group heading="Video Frequencies">
+			5.8 GHz
+		</accordion-group>
+
+		<accordion-group heading="Groups">
+
+			<div class="row">
+				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+					<a class="btn btn-primary" ng-click="ctrl.addGroup()"><i class="fa fa-plus"></i> New Group</a>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-6 col-md-4">
+					<div class="input-group" ng-repeat="group in ctrl.groups track by $index">
+						<input type="text" class=" form-control" ng-model="group.name" ng-change="ctrl.update(group)" ng-model-options="{debounce: { 'default': 1000, 'blur': 0 }}">
+						<div class="input-group-addon" ng-click="ctrl.deleteGroup(group)"><i class="fa fa-times-circle text-danger"></i></div>
+					</div>
+				</div>
+			</div>
+
+		</accordion-group>
+
+	</accordion>
+
+</div>

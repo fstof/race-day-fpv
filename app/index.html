@@ -51,6 +51,9 @@
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
+				<li ng-show="ctrl.FPVSession.user != null && ctrl.FPVSession.user.manager">
+					<a ng-href="#/manage" ><i style="font-size: 1.5em" class="fa fa-wrench"></i></a>
+				</li>
 				<li>
 					<a href="" ng-show="ctrl.FPVSession.user != null">
 						<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.user.profileImageURL}}">
@@ -117,18 +120,20 @@
 <!-- build:js({app,.tmp}) scripts/main.js -->
 <script src="scripts/race-day-fpv.js"></script>
 <script src="scripts/index-ctrl.js"></script>
-<script src="scripts/service/user-service.js"></script>
-<script src="scripts/service/event-service.js"></script>
+<!--<script src="scripts/service/user-service.js"></script>-->
+<!--<script src="scripts/service/event-service.js"></script>-->
 <script src="scripts/service/session-service.js"></script>
 <script src="scripts/service/auth-service.js"></script>
 <script src="scripts/service/event.js"></script>
 <script src="scripts/service/user.js"></script>
+<script src="scripts/service/raceGroup.js"></script>
 <script src="scripts/directive/event-card.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
 <script src="scripts/controller/events-ctrl.js"></script>
 <script src="scripts/controller/event-add-ctrl.js"></script>
 <script src="scripts/controller/event-ctrl.js"></script>
 <script src="scripts/controller/racers-ctrl.js"></script>
+<script src="scripts/controller/manage/manage-ctrl.js"></script>
 <!-- endbuild -->
 
 </body>
