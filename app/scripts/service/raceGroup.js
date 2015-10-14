@@ -6,7 +6,7 @@ angular.module('race-day-fpv')
 function RaceGroup(FIREBASE_REF, $firebaseArray) {
 	var ref = FIREBASE_REF;
 
-	var raceGroups = $firebaseArray(ref.child('raceGroups').orderByChild('name'));
+	//var raceGroups = $firebaseArray(ref.child('raceGroups').orderByChild('name'));
 
 	return {
 		//all: raceGroups,
