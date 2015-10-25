@@ -1,6 +1,6 @@
 <div class="jumbotron">
 	<div class="container-fluid">
-		<h3>{{ctrl.event.name}}</h3>
+		<h3>{{ctrl.event.name}} <small>{{ctrl.event.date | date}}</small></h3>
 		<div>
 			<label class="">Are you going</label>
 			<div class="btn-group">
@@ -8,18 +8,18 @@
 				<button class="btn btn-primary" ng-class="{active: ctrl.me == null}" ng-click="ctrl.notGoing()">No</button>
 			</div>
 		</div>
-		<div ng-show="ctrl.me != null && ctrl.event.date == ctrl.today && !ctrl.me.checkedIn">
+		<div ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today && !ctrl.me.checkedIn">
 			<label class="">You are not yet checked in.</label>
 			<button class="btn btn-primary" ng-click="ctrl.checkIn()">Check In</button>
 		</div>
-		<div ng-show="ctrl.me != null && ctrl.event.date == ctrl.today && ctrl.me.checkedIn">
+		<div ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn">
 			<label class="">You are checked in, welcome, and good luck!</label>
 			<button class="btn btn-primary" ng-click="ctrl.checkOut()">Chicken Out</button>
 		</div>
-		<div ng-show="ctrl.event.date > ctrl.today">
+		<div ng-show="ctrl.eventDate > ctrl.today">
 			<p>Check-ins are not yet open.</p>
 		</div>
-		<div ng-show="ctrl.event.date < ctrl.today">
+		<div ng-show="ctrl.eventDate < ctrl.today">
 			<p>This event is closed.</p>
 		</div>
 	</div>

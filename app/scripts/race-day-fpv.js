@@ -1,6 +1,5 @@
 'use strict';
 
-//angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'firebase', 'ngRoute', 'ui.bootstrap'])
 angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap'])
 	.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
@@ -9,18 +8,28 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast
 				controller: 'HomeCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/events', {
-				templateUrl: 'partials/events.html',
-				controller: 'EventsCtrl',
+			.when('/events/upcoming', {
+				templateUrl: 'partials/events/events.html',
+				controller: 'EventsUpcomingCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/event/:eventId', {
+			.when('/events/past', {
+				templateUrl: 'partials/events/events.html',
+				controller: 'EventsPastCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/events/me', {
+				templateUrl: 'partials/events/me.html',
+				controller: 'MeCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/events/:eventId', {
 				templateUrl: 'partials/event.html',
 				controller: 'EventCtrl',
 				controllerAs: 'ctrl'
 			})
 			.when('/events/add', {
-				templateUrl: 'partials/event-add.html',
+				templateUrl: 'partials/events/event-add.html',
 				controller: 'EventAddCtrl',
 				controllerAs: 'ctrl'
 			})

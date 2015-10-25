@@ -9,6 +9,8 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 
 	return {
 		all: events,
+		allUpcomming: $firebaseArray(ref.child('events').orderByChild('date').startAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
+		allPast: $firebaseArray(ref.child('events').orderByChild('date').endAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
 		get: function (id) {
 			return $firebaseObject(ref.child('events').child(id));
 		},

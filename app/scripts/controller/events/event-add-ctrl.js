@@ -18,6 +18,7 @@ function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 	};
 
 	self.save = function () {
+		self.event.date = self.event.date.getTime();
 		Event.create(self.event, function (err) {
 			if (err) {
 				ngToast.danger('ERROR');

@@ -15,10 +15,15 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 	_init();
 
 	function _init() {
-		self.today = $filter('date')(new Date(), 'yyyy-MM-dd');
-
 		self.event = Event.get(eventId);
 		self.racers = Event.getRacers(eventId);
+
+		self.event.$watch(function () {
+			self.eventDate = $filter('date')(new Date(self.event.date), 'yyyy-MM-dd');
+		});
+
+		self.today = $filter('date')(new Date(), 'yyyy-MM-dd');
+		self.tomorrow = $filter('date')(new Date(), 'yyyy-MM-dd');
 
 		self.racers.$watch(function (event) {
 
