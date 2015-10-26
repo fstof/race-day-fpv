@@ -18,21 +18,21 @@
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">
-						<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Name"></i>: <input type="text" class="form-control" placeholder="Name" ng-model="ctrl.event.name"></li>
+						<li class="list-group-item"><i class="fa fa-map-pin" uib-tooltip="Name"></i>: <input type="text" class="form-control" placeholder="Name" ng-model="ctrl.event.name"></li>
 						<li class="list-group-item">
-							<i class="fa fa-calendar" tooltip="Date"></i>: {{ctrl.event.date | date:'yyyy-MM-dd hh:mm'}}
+							<i class="fa fa-calendar" uib-tooltip="Date"></i>: {{ctrl.event.date | date:'yyyy-MM-dd hh:mm'}}
 
 							<span class="input-group">
-								<input type="text" class="form-control" placeholder="Date" datepicker-popup ng-click="ctrl.openCalendar()" ng-model="ctrl.event.date" is-open="ctrl.calanderOpen" close-text="Close" />
+								<input type="text" class="form-control" placeholder="Date" uib-datepicker-popup ng-click="ctrl.openCalendar()" ng-model="ctrl.event.date" is-open="ctrl.calanderOpen" close-text="Close" />
 								<span class="input-group-addon" ng-click="ctrl.openCalendar()"><i class="fa fa-calendar"></i></span>
 							</span>
 
-							<i class="fa fa-clock-o"></i><timepicker ng-model="ctrl.event.date" hour-step="1" minute-step="5" show-meridian="false"></timepicker>
+							<i class="fa fa-clock-o"></i><uib-timepicker ng-model="ctrl.event.date" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
 
 
 						</li>
-						<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Venue"></i>: <input type="text" class="form-control" placeholder="Venue" ng-model="ctrl.event.venue"></li>
-						<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: <textarea class="form-control" placeholder="Notes" rows="3" ng-model="ctrl.event.notes"></textarea></li>
+						<li class="list-group-item"><i class="fa fa-map-pin" uib-tooltip="Venue"></i>: <input type="text" class="form-control" placeholder="Venue" ng-model="ctrl.event.venue"></li>
+						<li class="list-group-item"><i class="fa fa-sticky-note" uib-tooltip="Notes"></i>: <textarea class="form-control" placeholder="Notes" rows="3" ng-model="ctrl.event.notes"></textarea></li>
 					</ul>
 					<span class="pull-right">
 						<a class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</a>
