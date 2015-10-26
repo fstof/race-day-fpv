@@ -5,12 +5,11 @@ angular.module('race-day-fpv')
 
 function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 	var self = this;
-	self.status = {
-		opened: false
-	};
+	self.heading = 'New Event';
+	self.calanderOpen = false;
 
 	self.openCalendar = function () {
-		self.status.opened = true;
+		self.calanderOpen = true;
 	};
 
 	self.event = {
@@ -21,9 +20,9 @@ function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 		self.event.date = self.event.date.getTime();
 		Event.create(self.event, function (err) {
 			if (err) {
-				ngToast.danger('ERROR');
+				ngToast.danger('Error');
 			} else {
-				ngToast.success('Event added');
+				ngToast.success('Saved');
 				$location.path('/events');
 				$route.reload();
 			}

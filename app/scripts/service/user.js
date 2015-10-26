@@ -10,7 +10,7 @@ function User(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 	return {
 		all: users,
 		get: function (userId) {
-			return $firebaseObject(ref.child('users').child(userId));
+			return ref.child('users').child(userId);
 		},
 		create: function (user) {
 			return users.$add(user);

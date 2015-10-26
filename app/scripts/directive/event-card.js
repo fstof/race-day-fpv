@@ -27,7 +27,10 @@ function EventCardCtrl(FPVSession, Event, User, ngToast, $route) {
 			event.show = false;
 		} else {
 			if (!event.organiser) {
-				event.organiser = User.get(event.organiserId);
+				var org = User.get(event.organiserId);
+				org.once('value', function (snap) {
+					event.organiser = snap.val();
+				})
 			}
 			event.show = true;
 		}

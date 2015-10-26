@@ -23,12 +23,14 @@ function MeCtrl(FPVSession, User, Event, ngToast) {
 
 				if (change.event === 'child_added' || change.event === 'child_changed') {
 					Event.get(change.key)
-						.$loaded(function (event) {
-							if (event.name) {
-								self.myEvents[event.$id] = event;
+						.on('value', function (snap) {
+							var val = snap.val();
+							val.$id = change.key;
+							if (val.name) {
+								self.myEvents[change.key] = val;
 								self.eventCount++;
 							} else { // orphan event now deleting
-								User.removeEvent(FPVSession.user.$id, event.$id)
+								User.removeEvent(FPVSession.user.$id, change.key)
 									.then(function () {
 										ngToast.success('Removed an orphaned event');
 									});

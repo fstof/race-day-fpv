@@ -1,26 +1,41 @@
 <div class="jumbotron">
 	<div class="container-fluid">
 		<h3>{{ctrl.event.name}} <small>{{ctrl.event.date | date}}</small></h3>
-		<div>
-			<label class="">Are you going</label>
-			<div class="btn-group">
-				<button class="btn btn-primary" ng-class="{active: ctrl.me != null}" ng-click="ctrl.going()">Yes</button>
-				<button class="btn btn-primary" ng-class="{active: ctrl.me == null}" ng-click="ctrl.notGoing()">No</button>
+		<div class="row">
+			<label class="col-md-4">Are you going</label>
+			<div class="col-md-6">
+				<div class="btn-group">
+					<button class="btn btn-primary" ng-class="{active: ctrl.me != null}" ng-click="ctrl.going()">Yes</button>
+					<button class="btn btn-primary" ng-class="{active: ctrl.me == null}" ng-click="ctrl.notGoing()">No</button>
+				</div>
 			</div>
 		</div>
-		<div ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today && !ctrl.me.checkedIn">
-			<label class="">You are not yet checked in.</label>
-			<button class="btn btn-primary" ng-click="ctrl.checkIn()">Check In</button>
+		<div class="row" ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today && !ctrl.me.checkedIn">
+			<label class="col-md-4">You are not yet checked in.</label>
+			<div class="col-md-6">
+				<button class="btn btn-primary" ng-click="ctrl.checkIn()">Check In</button>
+			</div>
 		</div>
-		<div ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn">
-			<label class="">You are checked in, welcome, and good luck!</label>
-			<button class="btn btn-primary" ng-click="ctrl.checkOut()">Chicken Out</button>
+		<div class="row" ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn">
+			<label class="col-md-4">You are checked in, welcome, and good luck!</label>
+			<div class="col-md-6">
+				<button class="btn btn-primary" ng-click="ctrl.checkOut()">Chicken Out</button>
+			</div>
 		</div>
-		<div ng-show="ctrl.eventDate > ctrl.today">
-			<p>Check-ins are not yet open.</p>
+		<div class="row" ng-show="ctrl.eventDate > ctrl.today">
+			<div class="col-md-6">
+				<p>Check-ins are not yet open.</p>
+			</div>
 		</div>
-		<div ng-show="ctrl.eventDate < ctrl.today">
-			<p>This event is closed.</p>
+		<div class="row" ng-show="ctrl.eventDate < ctrl.today">
+			<div class="col-md-6">
+				<p>This event is closed.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<a ng-href="#/events/edit/{{ctrl.event.$id}}" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
+			</div>
 		</div>
 	</div>
 </div>
@@ -40,15 +55,6 @@
 							<img class="pull-right" style="width: 50px; height: 50px;" ng-src="{{racer.profileImageURL}}">
 						</div>
 					</div>
-				</div>
-				<div class="panel-body" ng-show="event.show">
-					<ul class="list-group">
-						<li class="list-group-item">Date: {{event.date}}</li>
-						<li class="list-group-item">Venue: {{event.venue}}</li>
-						<li class="list-group-item">Organiser: {{event.organiser.name}}</li>
-						<li class="list-group-item">Notes: {{event.notes}}</li>
-					</ul>
-					<span><a class="btn btn-primary" ng-href="#/event/{{event.$id}}">More</a></span>
 				</div>
 			</div>
 		</div>

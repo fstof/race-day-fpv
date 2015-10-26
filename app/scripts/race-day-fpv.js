@@ -33,6 +33,11 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast
 				controller: 'EventAddCtrl',
 				controllerAs: 'ctrl'
 			})
+			.when('/events/edit/:eventId', {
+				templateUrl: 'partials/events/event-add.html',
+				controller: 'EventEditCtrl',
+				controllerAs: 'ctrl'
+			})
 			.when('/racers', {
 				templateUrl: 'partials/racers.html',
 				controller: 'RacersCtrl',

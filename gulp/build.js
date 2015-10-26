@@ -18,14 +18,14 @@ gulp.task('styles', function () {
 
 gulp.task('scripts', function () {
 	return gulp.src('app/scripts/**/*.js')
-		.pipe($.ngAnnotate({
-			remove: true,
-			add: true,
-			single_quotes: true
-		}))
+		//.pipe($.ngAnnotate({
+		//	remove: true,
+		//	add: true,
+		//	single_quotes: true
+		//}))
 		.pipe($.jshint())
 		.pipe($.jshint.reporter('jshint-stylish'))
-		.pipe(gulp.dest('app/scripts'))
+		//.pipe(gulp.dest('app/scripts'))
 		.pipe($.size());
 });
 

@@ -15,15 +15,17 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 	_init();
 
 	function _init() {
-		self.event = Event.get(eventId);
+		var ev = Event.get(eventId);
 		self.racers = Event.getRacers(eventId);
 
-		self.event.$watch(function () {
+		ev.on('value', function (snap) {
+			self.event = snap.val();
+			self.event.$id = eventId;
 			self.eventDate = $filter('date')(new Date(self.event.date), 'yyyy-MM-dd');
 		});
 
+
 		self.today = $filter('date')(new Date(), 'yyyy-MM-dd');
-		self.tomorrow = $filter('date')(new Date(), 'yyyy-MM-dd');
 
 		self.racers.$watch(function (event) {
 
@@ -33,10 +35,11 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 				if (FPVSession.user !== null && FPVSession.user.$id === event.key) {
 					self.me = Event.getRacer(eventId, event.key);
 				}
-				User.get(event.key)
-					.$loaded(function (loadedUser) {
-						self.evRacers[event.key].name = loadedUser.name;
-						self.evRacers[event.key].profileImageURL = loadedUser.profileImageURL;
+				var us = User.get(event.key);
+					us.once('value', function (snap) {
+						var user = snap.val();
+						self.evRacers[event.key].name = user.name;
+						self.evRacers[event.key].profileImageURL = user.profileImageURL;
 					});
 			} else if (event.event === 'child_removed') {
 				delete self.evRacers[event.key];
@@ -50,9 +53,9 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 			User.addEvent(FPVSession.user.$id, eventId);
 			Event.addRacer(eventId, FPVSession.user.$id, obj, function (err) {
 				if (err) {
-					ngToast.danger('Error saving');
+					ngToast.danger('Error');
 				} else {
-					ngToast.success('Great, see you there');
+					ngToast.success('See you there');
 				}
 			});
 		}
@@ -63,9 +66,9 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 			User.removeEvent(FPVSession.user.$id, eventId);
 			Event.removeRacer(eventId, FPVSession.user.$id, function (err) {
 				if (err) {
-					ngToast.danger('Error saving');
+					ngToast.danger('Error');
 				} else {
-					ngToast.success('Sad to see you go');
+					ngToast.success('Too bad');
 					self.me = null;
 				}
 			});

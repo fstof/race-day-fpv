@@ -12,10 +12,13 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 		allUpcomming: $firebaseArray(ref.child('events').orderByChild('date').startAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
 		allPast: $firebaseArray(ref.child('events').orderByChild('date').endAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
 		get: function (id) {
-			return $firebaseObject(ref.child('events').child(id));
+			return ref.child('events').child(id);
 		},
 		create: function (event, callback) {
 			return ref.child('events').push(event, callback);
+		},
+		update: function (eventId, event, callback) {
+			return ref.child('events/' + eventId).update(event, callback);
 		},
 		delete: function (eventId, callback) {
 			return ref.child('events/' + eventId).set(null, callback);

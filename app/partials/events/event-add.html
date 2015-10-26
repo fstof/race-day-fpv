@@ -1,5 +1,5 @@
 <div class="page-header text-center">
-	<h1>New Event</h1>
+	<h1>{{ctrl.heading}}</h1>
 </div>
 
 <div class="container-fluid">
@@ -23,7 +23,7 @@
 							<i class="fa fa-calendar" tooltip="Date"></i>: {{ctrl.event.date | date:'yyyy-MM-dd hh:mm'}}
 
 							<span class="input-group">
-								<input type="text" class="form-control" placeholder="Date" datepicker-popup ng-click="ctrl.openCalendar()" ng-model="ctrl.event.date" is-open="ctrl.status.opened" close-text="Close" />
+								<input type="text" class="form-control" placeholder="Date" datepicker-popup ng-click="ctrl.openCalendar()" ng-model="ctrl.event.date" is-open="ctrl.calanderOpen" close-text="Close" />
 								<span class="input-group-addon" ng-click="ctrl.openCalendar()"><i class="fa fa-calendar"></i></span>
 							</span>
 
