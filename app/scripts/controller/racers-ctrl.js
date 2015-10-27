@@ -3,14 +3,14 @@
 angular.module('race-day-fpv')
 	.controller('RacersCtrl', RacersCtrl);
 
-function RacersCtrl(User) {
+function RacersCtrl(Pilot) {
 	var self = this;
 
-	self.users = {};
+	self.pilots = {};
 	_init();
 
 	function _init() {
-		self.users = User.all;
+		self.pilots = Pilot.all;
 	}
 }
-RacersCtrl.$inject = ['User'];
+RacersCtrl.$inject = ['Pilot'];

@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventCtrl);
 
-function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
+function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $timeout) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
@@ -35,11 +35,11 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 				if (FPVSession.user !== null && FPVSession.user.$id === event.key) {
 					self.me = Event.getRacer(eventId, event.key);
 				}
-				var us = User.get(event.key);
+				var us = Pilot.get(event.key);
 					us.once('value', function (snap) {
 						var user = snap.val();
 						self.evRacers[event.key].name = user.name;
-						self.evRacers[event.key].profileImageURL = user.profileImageURL;
+						self.evRacers[event.key].avatar = user.avatar;
 					});
 			} else if (event.event === 'child_removed') {
 				delete self.evRacers[event.key];
@@ -50,7 +50,7 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 	self.going = function () {
 		if (self.me === null) {
 			var obj = {checkedIn: false};
-			User.addEvent(FPVSession.user.$id, eventId);
+			Pilot.addEvent(FPVSession.user.$id, eventId);
 			Event.addRacer(eventId, FPVSession.user.$id, obj, function (err) {
 				if (err) {
 					ngToast.danger('Error');
@@ -63,13 +63,48 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 
 	self.notGoing = function () {
 		if (self.me !== null) {
-			User.removeEvent(FPVSession.user.$id, eventId);
+			Pilot.removeEvent(FPVSession.user.$id, eventId);
 			Event.removeRacer(eventId, FPVSession.user.$id, function (err) {
 				if (err) {
 					ngToast.danger('Error');
 				} else {
 					ngToast.success('Too bad');
 					self.me = null;
+				}
+			});
+		}
+	};
+
+	self.goingToggle = function (event) {
+		if (self.me !== null) {
+			Pilot.removeEvent(FPVSession.user.$id, event.$id, function (err) {
+				if (!err) {
+					Event.removeRacer(event.$id, FPVSession.user.$id, function (err) {
+						$timeout(function () {
+							if (err) {
+								ngToast.danger('Error');
+							} else {
+								ngToast.success('Too bad');
+								self.me = null;
+							}
+						});
+					});
+				}
+			});
+
+		} else {
+			var obj = {checkedIn: false};
+			Pilot.addEvent(FPVSession.user.$id, event.$id, function (err) {
+				if (!err) {
+					Event.addRacer(event.$id, FPVSession.user.$id, obj, function (err) {
+						$timeout(function () {
+							if (err) {
+								ngToast.danger('Error');
+							} else {
+								ngToast.success('See you there');
+							}
+						});
+					});
 				}
 			});
 		}
@@ -91,4 +126,4 @@ function EventCtrl(FPVSession, User, Event, ngToast, $routeParams, $filter) {
 			});
 	};
 }
-EventCtrl.$inject = ['FPVSession', 'User', 'Event', 'ngToast', '$routeParams', '$filter'];
+EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'ngToast', '$routeParams', '$filter', '$timeout'];

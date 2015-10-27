@@ -3,9 +3,10 @@
 angular.module('race-day-fpv')
 	.factory('Auth', Auth);
 
-function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) {
+function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth, $route, $location) {
 	var ref = FIREBASE_REF;
 	var _userRef = null;
+	var _pilotRef = null;
 
 	return {
 		authGoogle: authGoogle,
@@ -18,6 +19,7 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 	function deAuth() {
 		ref.unauth();
 		_userRef = null;
+		$location.path('/home');
 		$route.reload();
 	}
 
@@ -36,6 +38,7 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 				} else {
 					console.log('existing user... go forth in peace');
 				}
+				$location.path('/events/me');
 				$route.reload();
 			});
 
@@ -59,6 +62,7 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 				} else {
 					console.log('existing user... go forth in peace');
 				}
+				$location.path('/events/me');
 				$route.reload();
 			});
 
@@ -73,7 +77,9 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 			if (FPVSession.user === null) {
 				console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
 				_userRef = _getUserRef(authData.uid);
+				_pilotRef = _getPilotRef(authData.uid);
 				FPVSession.user = $firebaseObject(_userRef);
+				FPVSession.pilot = $firebaseObject(_pilotRef);
 			} else {
 				console.log('all good');
 			}
@@ -91,8 +97,22 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 		_userRef = _getUserRef(authData.uid);
 		_userRef.set({
 			name: detail.displayName,
-			profileImageURL: detail.profileImageURL,
 			email: detail.email
+		}, function (err) {
+			if (err) {
+				ngToast.warning('Error: ' + err);
+			}
+		});
+		_pilotRef = _getPilotRef(authData.uid);
+		_pilotRef.set({
+			name: detail.displayName,
+			avatar: detail.profileImageURL,
+			alias: faker.fake('{{commerce.productAdjective}}{{commerce.productMaterial}}{{commerce.product}}'),
+			tagline: faker.company.catchPhrase()
+		}, function (err) {
+			if (err) {
+				ngToast.warning('Error: ' + err);
+			}
 		});
 	}
 
@@ -102,5 +122,12 @@ function Auth(FPVSession, FIREBASE_REF, $firebaseObject, $firebaseAuth, $route) 
 		}
 		return _userRef;
 	}
+
+	function _getPilotRef(uid) {
+		if (_pilotRef === null) {
+			_pilotRef = ref.child('pilots/' + uid);
+		}
+		return _pilotRef;
+	}
 }
-Auth.$inject = ['FPVSession', 'FIREBASE_REF', '$firebaseObject', '$firebaseAuth', '$route'];
+Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'ngToast', '$firebaseObject', '$firebaseAuth', '$route', '$location'];

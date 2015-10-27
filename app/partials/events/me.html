@@ -8,7 +8,7 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-6 col-md-4" ng-repeat="event in ctrl.myEvents">
-			<event-card event="event" ></event-card>
+			<event-card event-id="event.$id" ></event-card>
 		</div>
 	</div>
 	<div ng-show="ctrl.eventCount == 0">

@@ -10,70 +10,89 @@ function eventCard() {
 		controllerAs: 'ctrl',
 		restrict: 'EA',
 		scope: {
-			event: '='
+			eventId: '='
 		},
 		replace: true,
 		templateUrl: 'event-card.html'
 	};
 }
 
-function EventCardCtrl(FPVSession, Event, User, ngToast, $route, $scope) {
+function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeout) {
 	var self = this;
-	self.signedIn = FPVSession.user !== null;
 	self.uid = FPVSession.user ? FPVSession.user.$id : null;
+	self.eventId = $scope.eventId;
+	self.signedIn = self.uid !== null;
+	self.myEvent = false;
 	self.going = false;
-	if ($scope.event.pilots) {
-		self.going = $scope.event.pilots[self.uid] != null;
+	self.event = null;
+
+	_init();
+
+	function _init() {
+		var eventRef = Event.get(self.eventId);
+		eventRef.on('value', function (snap) {
+			var val = snap.val();
+			val.$id = snap.key();
+			self.event = val;
+			if (self.event.pilots) {
+				self.going = self.event.pilots[self.uid] != null;
+			} else {
+				self.going = false;
+			}
+		});
 	}
 
-	self.goingToggle = function (event) {
+	self.goingToggle = function () {
 		if (self.going) {
-			User.removeEvent(FPVSession.user.$id, event.$id);
-			Event.removeRacer(event.$id, FPVSession.user.$id, function (err) {
-				if (err) {
-					ngToast.danger('Error');
-				} else {
-					ngToast.success('Too bad');
-					//delete $scope.event.pilots[self.uid];
-				}
-				if ($scope.event.pilots) {
-					self.going = $scope.event.pilots[self.uid] != null;
-				} else {
-					self.going = false;
+
+			Pilot.removeEvent(FPVSession.user.$id, self.event.$id, function (err) {
+				if (!err) {
+					Event.removeRacer(self.event.$id, FPVSession.user.$id, function (err) {
+						$timeout(function () {
+							if (err) {
+								ngToast.danger('Error');
+							} else {
+								ngToast.success('Too bad');
+							}
+						});
+					});
 				}
 			});
+
 		} else {
+
 			var obj = {checkedIn: false};
-			User.addEvent(FPVSession.user.$id, event.$id);
-			Event.addRacer(event.$id, FPVSession.user.$id, obj, function (err) {
-				if (err) {
-					ngToast.danger('Error');
-				} else {
-					ngToast.success('See you there');
-					//$scope.event.pilots[self.uid] = obj;
-				}
-				if ($scope.event.pilots) {
-					self.going = $scope.event.pilots[self.uid] != null;
+			Pilot.addEvent(FPVSession.user.$id, self.event.$id, function (err) {
+				if (!err) {
+					Event.addRacer(self.event.$id, FPVSession.user.$id, obj, function (err) {
+						$timeout(function () {
+							if (err) {
+								ngToast.danger('Error');
+							} else {
+								ngToast.success('See you there');
+							}
+						});
+					});
 				}
 			});
 		}
 	};
 
-	self.toggle = function (event) {
-		if (event.show) {
-			event.show = false;
+	self.viewToggle = function () {
+		if (self.event.show) {
+			self.event.show = false;
 		} else {
-			if (!event.organiser) {
-				var org = User.get(event.organiserId);
+			if (!self.event.organiser) {
+				var org = Pilot.get(self.event.organiserId);
 				org.once('value', function (snap) {
-					event.organiser = snap.val();
+					self.event.organiser = snap.val().name;
 				})
 			}
-			event.show = true;
+			self.event.show = true;
 		}
 	};
-	self.delete = function (event) {
-		Event.delete(event.$id, function (err) {
+	self.delete = function () {
+		Event.delete(self.event.$id, function (err) {
 			if (err) {
 				ngToast.danger('Could not delete');
 			} else {
@@ -83,7 +102,7 @@ function EventCardCtrl(FPVSession, Event, User, ngToast, $route, $scope) {
 		});
 	};
 }
-EventCardCtrl.$inject = ['FPVSession', 'Event', 'User', 'ngToast', '$route', '$scope'];
+EventCardCtrl.$inject = ['FPVSession', 'Event', 'Pilot', 'ngToast', '$route', '$scope', '$timeout'];
 
 function TemplateCache($templateCache) {
 	$templateCache.put('event-card.html',
@@ -91,10 +110,10 @@ function TemplateCache($templateCache) {
 		'	<div class="panel-heading ">' +
 		'		<div class="row">' +
 		'			<div class="col-lg-12">' +
-		'				<h4 class="pull-left hand" ng-click="ctrl.toggle(event)">{{event.name}}</h4>' +
+		'				<h4 class="pull-left hand" ng-click="ctrl.viewToggle()">{{ctrl.event.name}}</h4>' +
 		'				<div class="pull-right">' +
-		'					<button type="button" class="btn btn-primary" ng-click="ctrl.goingToggle(event)">' +
-		'						<i class="fa fa-check-square" ng-show="ctrl.going"></i>' +
+		'					<button type="button" class="btn btn-primary" ng-click="ctrl.goingToggle()">' +
+		'						<i class="fa fa-check-square-o" ng-show="ctrl.going"></i>' +
 		'						<i class="fa fa-square" ng-hide="ctrl.going"></i>' +
 		'					</button>' +
 		'				</div>' +
@@ -102,19 +121,20 @@ function TemplateCache($templateCache) {
 		'		</div>' +
 		'		<div class="row">' +
 		'			<div class="col-lg-12">' +
-		'				<span class="clearfix" ng-hide="event.show"><i class="fa fa-calendar"></i>: {{event.date | date:\'yyyy-MM-dd hh:mm\'}}</span>' +
+		'				<span class="clearfix" ng-hide="ctrl.event.show"><i class="fa fa-calendar"></i>: {{ctrl.event.date | date:\'yyyy-MM-dd hh:mm\'}}</span>' +
 		'			</div>' +
 		'		</div>' +
 		'	</div>' +
-		'	<div class="panel-body" ng-show="event.show">' +
+		'	<div class="panel-body" ng-show="ctrl.event.show">' +
 		'		<ul class="list-group">' +
-		'			<li class="list-group-item"><i class="fa fa-calendar" tooltip="Date"></i>: {{event.date | date:\'yyyy-MM-dd hh:mm\'}}</li>' +
-		'			<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Venue"></i>: {{event.venue}}</li>' +
-		'			<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{event.organiser.name}}</li>' +
-		'			<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{event.notes}}</li>' +
+		'			<li class="list-group-item"><i class="fa fa-calendar" tooltip="Date"></i>: {{ctrl.event.date | date:\'yyyy-MM-dd hh:mm\'}}</li>' +
+		'			<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Venue"></i>: {{ctrl.event.venue}}</li>' +
+		'			<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{ctrl.event.organiser}}</li>' +
+		'			<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{ctrl.event.notes}}</li>' +
 		'		</ul>' +
-		'		<span class="pull-left" ng-if="ctrl.signedIn && event.organiserId == ctrl.uid"><a class="btn btn-danger" ng-click="ctrl.delete(event)"><i class="fa fa-trash"></i></a></span>' +
-		'		<span class="pull-right"><a class="btn btn-primary" ng-href="#/events/{{event.$id}}">More</a></span>' +
+		'		<span class="" ng-if="ctrl.signedIn && ctrl.event.organiserId == ctrl.uid"><a class="btn btn-warning" ng-href="#/events/edit/{{ctrl.event.$id}}"><i class="fa fa-edit"></i></a></span>' +
+		'		<span class="" ng-if="ctrl.signedIn && ctrl.event.organiserId == ctrl.uid"><a class="btn btn-danger" ng-click="ctrl.delete()"><i class="fa fa-trash"></i></a></span>' +
+		'		<span class="pull-right"><a class="btn btn-primary" ng-href="#/events/{{ctrl.event.$id}}">More</a></span>' +
 		'	</div>' +
 		'</div>');
 }
