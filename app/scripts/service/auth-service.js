@@ -19,7 +19,9 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 	function deAuth() {
 		ref.unauth();
 		_userRef = null;
-		$location.path('/home');
+		FPVSession.user = null;
+		FPVSession.pilot = null;
+		//$location.path('/home');
 		$route.reload();
 	}
 
@@ -62,7 +64,7 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 				} else {
 					console.log('existing user... go forth in peace');
 				}
-				$location.path('/events/me');
+				//$location.path('/events/me');
 				$route.reload();
 			});
 

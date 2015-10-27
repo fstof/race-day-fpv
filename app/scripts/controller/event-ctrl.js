@@ -33,7 +33,11 @@ function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $ti
 				self.evRacers[event.key] = self.racers.$getRecord(event.key);
 
 				if (FPVSession.user !== null && FPVSession.user.$id === event.key) {
-					self.me = Event.getRacer(eventId, event.key);
+					var ra = Event.getRacer(eventId, event.key);
+					ra.on('value', function (snap) {
+						self.me = snap.val();
+						self.me.$id = snap.key();
+					});
 				}
 				var us = Pilot.get(event.key);
 					us.once('value', function (snap) {

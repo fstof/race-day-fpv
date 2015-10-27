@@ -15,7 +15,7 @@ function MeCtrl(FPVSession, Pilot, Event, ngToast) {
 
 	function _init() {
 		if (FPVSession.user !== null) {
-			var events = Pilot.getEvents2(FPVSession.user.$id);
+			var events = Pilot.getEvents(FPVSession.user.$id);
 
 			events.on('child_added', function (snap) {
 				var key = snap.key();

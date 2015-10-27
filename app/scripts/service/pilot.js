@@ -19,9 +19,6 @@ function Pilot(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 			return pilots.$remove(user);
 		},
 		getEvents: function (userId) {
-			return $firebaseArray(ref.child('pilots').child(userId).child('events'));
-		},
-		getEvents2: function (userId) {
 			return ref.child('pilots').child(userId).child('events');
 		},
 		addEvent: function (userId, eventId, callback) {

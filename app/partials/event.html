@@ -1,7 +1,7 @@
 <div class="jumbotron">
 	<div class="container-fluid">
 		<h3>{{ctrl.event.name}} <small>{{ctrl.event.date | date}}</small></h3>
-		<div class="row">
+		<div class="row" logged-in>
 			<label class="col-md-4">Are you going</label>
 			<div class="col-md-6">
 				<div class="btn-group">
@@ -34,7 +34,7 @@
 				<p>This event is closed.</p>
 			</div>
 		</div>
-		<div class="row">
+		<div my-item="ctrl.event.organiserId" class="row">
 			<div class="col-md-6">
 				<a ng-href="#/events/edit/{{ctrl.event.$id}}" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
 			</div>

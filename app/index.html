@@ -30,13 +30,13 @@
 	<div id="topbar" class="hidden-xs">
 		<div class="container">
 			<ul class="pull-right list-inline">
-				<li ng-show="ctrl.FPVSession.user == null">
+				<li logged-in="false">
 					<a href ng-click="ctrl.login('google')"><i class="fa fa-google-plus-square"></i> Google Sign-In</a>
 				</li>
-				<li ng-show="ctrl.FPVSession.user == null">
+				<li logged-in="false">
 					<a href ng-click="ctrl.login('facebook')"><i class="fa fa-facebook-official"></i> Facebook Sign-In</a>
 				</li>
-				<li ng-show="ctrl.FPVSession.user != null">
+				<li logged-in>
 					<a href ng-click="ctrl.logout()"><i class="fa fa-sign-out"></i> Sign Out</a>
 				</li>
 			</ul>
@@ -60,8 +60,8 @@
 
 				<div class="hidden-xs">
 					<ul class="nav navbar-nav pull-right">
-						<li ng-show="ctrl.FPVSession.user != null">
-							<a ng-href="#/events/me">
+						<li logged-in>
+							<a ng-href="#/events/me" >
 								<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.pilot.avatar}}">
 								<span>Me</span>
 							</a>
@@ -72,7 +72,7 @@
 							<ul class="dropdown-menu">
 								<li><a ng-href="#/events/upcoming"><span>Upcoming Events</span></a></li>
 								<li><a ng-href="#/events/past"><span>Past Events</span></a></li>
-								<li ng-show="ctrl.FPVSession.user != null"><a ng-href="#/events/add"><i class="fa fa-plus"></i> New Event</a></li>
+								<li logged-in><a ng-href="#/events/add"><i class="fa fa-plus"></i> New Event</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
@@ -88,7 +88,7 @@
 
 				<div class="visible-xs">
 					<ul class="nav navbar-nav text-center">
-						<li ng-show="ctrl.FPVSession.user != null">
+						<li logged-in>
 							<a ng-href="#/events/me" data-toggle="collapse" data-target=".navbar-collapse">
 								<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.pilot.avatar}}">
 								<span>Me</span>
@@ -99,7 +99,7 @@
 							<ul class="dropdown-menu text-center">
 								<li><a ng-href="#/events/upcoming" data-toggle="collapse" data-target=".navbar-collapse"><span>Upcoming Events</span></a></li>
 								<li><a ng-href="#/events/past" data-toggle="collapse" data-target=".navbar-collapse"><span>Past Events</span></a></li>
-								<li ng-show="ctrl.FPVSession.user != null"><a ng-href="#/events/add" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-plus"></i> New Event</a></li>
+								<li logged-in><a ng-href="#/events/add" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-plus"></i> New Event</a></li>
 							</ul>
 						</li>
 						<li class="dropdown"><a href class="dropdown-toggle" data-toggle="dropdown">Pilots <b class="fa fa-caret-down"></b></a>
@@ -109,13 +109,13 @@
 								<li><a ng-href="#/racers" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
 							</ul>
 						</li>
-						<li ng-show="ctrl.FPVSession.user == null">
+						<li logged-in="false">
 							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.login('google')"><i class="fa fa-google-plus-square"></i> Google Sign-In</a>
 						</li>
-						<li ng-show="ctrl.FPVSession.user == null">
+						<li logged-in="false">
 							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.login('facebook')"><i class="fa fa-facebook-official"></i> Facebook Sign-In</a>
 						</li>
-						<li ng-show="ctrl.FPVSession.user != null">
+						<li logged-in>
 							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.logout()"><i class="fa fa-sign-out"></i> Sign Out</a>
 						</li>
 					</ul>
@@ -172,8 +172,8 @@
 <script src="bower_components/ngToast/dist/ngToast.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
+<script src="http://marak.com/faker.js/js/faker.min.js"></script>
 
-<script src="http://marak.com/faker.js/js/faker.js"></script>
 
 <!-- build:js({app,.tmp}) scripts/main.js -->
 <script src="scripts/race-day-fpv.js"></script>
@@ -188,6 +188,8 @@
 <script src="scripts/service/raceGroup.js"></script>
 <script src="scripts/service/frequency.js"></script>
 <script src="scripts/directive/event-card.js"></script>
+<script src="scripts/directive/logged-in.js"></script>
+<script src="scripts/directive/my-item.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
 <script src="scripts/controller/events/me-ctrl.js"></script>
 <script src="scripts/controller/events/events-upcoming-ctrl.js"></script>

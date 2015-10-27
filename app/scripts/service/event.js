@@ -27,7 +27,7 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 			return $firebaseArray(ref.child('events').child(eventId).child('pilots'));
 		},
 		getRacer: function (eventId, racerId) {
-			return $firebaseObject(ref.child('events').child(eventId).child('pilots').child(racerId));
+			return ref.child('events').child(eventId).child('pilots').child(racerId);
 		},
 		addRacer: function (eventId, racerId, racer, callback) {
 			return ref.child('events').child(eventId).child('pilots').child(racerId).set(racer, callback);
