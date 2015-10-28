@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('FrequenciesCtrl', FrequenciesCtrl);
 
-function FrequenciesCtrl(FPVSession, Frequency, ngToast) {
+function FrequenciesCtrl(FPVSession, Frequency, ngToast, $scope) {
 	var self = this;
 	self.signedIn = FPVSession.user !== null;
 	self.frequencies = {};
@@ -18,6 +18,9 @@ function FrequenciesCtrl(FPVSession, Frequency, ngToast) {
 		});
 		allFreq.on('child_removed', function (snap) {
 			delete self.frequencies[snap.key()];
+		});
+		$scope.$on('$destroy', function() {
+			allFreq.off();
 		});
 	}
 
@@ -55,4 +58,4 @@ function FrequenciesCtrl(FPVSession, Frequency, ngToast) {
 		});
 	};
 }
-FrequenciesCtrl.$inject = ['FPVSession', 'Frequency', 'ngToast'];
+FrequenciesCtrl.$inject = ['FPVSession', 'Frequency', 'ngToast', '$scope'];

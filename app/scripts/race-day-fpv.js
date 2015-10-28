@@ -19,28 +19,28 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast
 				controllerAs: 'ctrl'
 			})
 			.when('/events/me', {
-				templateUrl: 'partials/events/me.html',
+				templateUrl: 'partials/me.html',
 				controller: 'MeCtrl',
 				controllerAs: 'ctrl'
 			})
 			.when('/events/add', {
-				templateUrl: 'partials/events/event-add.html',
+				templateUrl: 'partials/events/event-edit.html',
 				controller: 'EventAddCtrl',
 				controllerAs: 'ctrl'
 			})
 			.when('/events/:eventId', {
-				templateUrl: 'partials/event.html',
+				templateUrl: 'partials/events/event.html',
 				controller: 'EventCtrl',
 				controllerAs: 'ctrl'
 			})
 			.when('/events/edit/:eventId', {
-				templateUrl: 'partials/events/event-add.html',
+				templateUrl: 'partials/events/event-edit.html',
 				controller: 'EventEditCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/racers', {
-				templateUrl: 'partials/racers.html',
-				controller: 'RacersCtrl',
+			.when('/pilots', {
+				templateUrl: 'partials/pilots/pilots.html',
+				controller: 'PilotsCtrl',
 				controllerAs: 'ctrl'
 			})
 			.when('/manage', {

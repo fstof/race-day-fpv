@@ -10,9 +10,12 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 	return {
 		all: events,
 		allUpcomming: $firebaseArray(ref.child('events').orderByChild('date').startAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
-		allPast: $firebaseArray(ref.child('events').orderByChild('date').endAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
+		allPast: $firebaseArray(ref.child('events').orderByChild('date').endAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1).getTime())),
 		get: function (id) {
 			return ref.child('events').child(id);
+		},
+		getName: function (id) {
+			return ref.child('events').child(id).child('name');
 		},
 		create: function (event, callback) {
 			return ref.child('events').push(event, callback);
@@ -31,6 +34,9 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 		},
 		addRacer: function (eventId, racerId, racer, callback) {
 			return ref.child('events').child(eventId).child('pilots').child(racerId).set(racer, callback);
+		},
+		updateRacer: function (eventId, racerId, racer, callback) {
+			return ref.child('events').child(eventId).child('pilots').child(racerId).update(racer, callback);
 		},
 		removeRacer: function (eventId, racerId, callback) {
 			return ref.child('events').child(eventId).child('pilots').child(racerId).set(null, callback);

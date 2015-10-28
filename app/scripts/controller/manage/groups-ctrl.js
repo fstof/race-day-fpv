@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('GroupsCtrl', GroupsCtrl);
 
-function GroupsCtrl(FPVSession, RaceGroup, ngToast) {
+function GroupsCtrl(FPVSession, RaceGroup, ngToast, $scope) {
 	var self = this;
 	self.signedIn = FPVSession.user !== null;
 	self.groups = {};
@@ -19,6 +19,9 @@ function GroupsCtrl(FPVSession, RaceGroup, ngToast) {
 		});
 		allGrp.on('child_removed', function (snap) {
 			delete self.groups[snap.key()];
+		});
+		$scope.$on('$destroy', function() {
+			allGrp.off();
 		});
 	}
 
@@ -53,4 +56,4 @@ function GroupsCtrl(FPVSession, RaceGroup, ngToast) {
 		});
 	};
 }
-GroupsCtrl.$inject = ['FPVSession', 'RaceGroup', 'ngToast'];
+GroupsCtrl.$inject = ['FPVSession', 'RaceGroup', 'ngToast', '$scope'];

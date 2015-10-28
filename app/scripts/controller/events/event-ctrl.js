@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventCtrl);
 
-function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $timeout) {
+function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $timeout, $scope) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
@@ -23,7 +23,9 @@ function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $ti
 			self.event.$id = eventId;
 			self.eventDate = $filter('date')(new Date(self.event.date), 'yyyy-MM-dd');
 		});
-
+		$scope.$on('$destroy', function () {
+			ev.off();
+		});
 
 		self.today = $filter('date')(new Date(), 'yyyy-MM-dd');
 
@@ -38,46 +40,21 @@ function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $ti
 						self.me = snap.val();
 						self.me.$id = snap.key();
 					});
+					$scope.$on('$destroy', function () {
+						ra.off();
+					});
 				}
 				var us = Pilot.get(event.key);
-					us.once('value', function (snap) {
-						var user = snap.val();
-						self.evRacers[event.key].name = user.name;
-						self.evRacers[event.key].avatar = user.avatar;
-					});
+				us.once('value', function (snap) {
+					var user = snap.val();
+					self.evRacers[event.key].name = user.name;
+					self.evRacers[event.key].avatar = user.avatar;
+				});
 			} else if (event.event === 'child_removed') {
 				delete self.evRacers[event.key];
 			}
 		});
 	}
-
-	self.going = function () {
-		if (self.me === null) {
-			var obj = {checkedIn: false};
-			Pilot.addEvent(FPVSession.user.$id, eventId);
-			Event.addRacer(eventId, FPVSession.user.$id, obj, function (err) {
-				if (err) {
-					ngToast.danger('Error');
-				} else {
-					ngToast.success('See you there');
-				}
-			});
-		}
-	};
-
-	self.notGoing = function () {
-		if (self.me !== null) {
-			Pilot.removeEvent(FPVSession.user.$id, eventId);
-			Event.removeRacer(eventId, FPVSession.user.$id, function (err) {
-				if (err) {
-					ngToast.danger('Error');
-				} else {
-					ngToast.success('Too bad');
-					self.me = null;
-				}
-			});
-		}
-	};
 
 	self.goingToggle = function (event) {
 		if (self.me !== null) {
@@ -114,20 +91,31 @@ function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $ti
 		}
 	};
 
-	self.checkIn = function () {
-		self.me.checkedIn = true;
-		self.me.$save()
-			.then(function () {
-				ngToast.success('Welcome');
+	self.checkInToggle = function () {
+		if (self.me.checkedIn) {
+			Event.updateRacer(self.event.$id, self.me.$id, {checkedIn: false}, function (err) {
+				$timeout(function () {
+					if (err) {
+						ngToast.warning('Error');
+					} else {
+						ngToast.success('Bye');
+						self.me.checkedIn = false;
+					}
+				});
 			});
+		} else {
+			Event.updateRacer(self.event.$id, self.me.$id, {checkedIn: true}, function (err) {
+				$timeout(function () {
+					if (err) {
+						ngToast.warning('Error');
+					} else {
+						ngToast.success('Welcome');
+						self.me.checkedIn = true;
+					}
+				});
+			});
+		}
 	};
 
-	self.checkOut = function () {
-		self.me.checkedIn = false;
-		self.me.$save()
-			.then(function () {
-				ngToast.success('Bye');
-			});
-	};
 }
-EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'ngToast', '$routeParams', '$filter', '$timeout'];
+EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'ngToast', '$routeParams', '$filter', '$timeout', '$scope'];

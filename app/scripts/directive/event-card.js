@@ -32,6 +32,9 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 		var eventRef = Event.get(self.eventId);
 		eventRef.on('value', function (snap) {
 			var val = snap.val();
+			if (val === null) {
+				val = {};
+			}
 			val.$id = snap.key();
 			self.event = val;
 			if (self.event.pilots) {
@@ -39,6 +42,9 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 			} else {
 				self.going = false;
 			}
+		});
+		$scope.$on('$destroy', function() {
+			eventRef.off();
 		});
 	}
 
@@ -97,7 +103,7 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 				ngToast.danger('Could not delete');
 			} else {
 				ngToast.success('Event deleted');
-				$route.reload();
+				Pilot.removeEvent(FPVSession.user.$id, self.event.$id);
 			}
 		});
 	};
@@ -112,7 +118,7 @@ function TemplateCache($templateCache) {
 		'			<div class="col-lg-12">' +
 		'				<h4 class="pull-left hand" ng-click="ctrl.viewToggle()">{{ctrl.event.name}}</h4>' +
 		'				<div class="pull-right">' +
-		'					<button type="button" class="btn btn-primary" ng-click="ctrl.goingToggle()">' +
+		'					<button type="button" class="btn btn-primary" logged-in ng-click="ctrl.goingToggle()">' +
 		'						<i class="fa fa-check-square-o" ng-show="ctrl.going"></i>' +
 		'						<i class="fa fa-square" ng-hide="ctrl.going"></i>' +
 		'					</button>' +
@@ -128,7 +134,7 @@ function TemplateCache($templateCache) {
 		'	<div class="panel-body" ng-show="ctrl.event.show">' +
 		'		<ul class="list-group">' +
 		'			<li class="list-group-item"><i class="fa fa-calendar" tooltip="Date"></i>: {{ctrl.event.date | date:\'yyyy-MM-dd hh:mm\'}}</li>' +
-		'			<li class="list-group-item"><i class="fa fa-map-pin" tooltip="Venue"></i>: {{ctrl.event.venue}}</li>' +
+		'			<li class="list-group-item"><i class="fa fa-home" tooltip="Venue"></i>: {{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></li>' +
 		'			<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{ctrl.event.organiser}}</li>' +
 		'			<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{ctrl.event.notes}}</li>' +
 		'		</ul>' +

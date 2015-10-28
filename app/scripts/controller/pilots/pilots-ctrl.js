@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('race-day-fpv')
-	.controller('RacersCtrl', RacersCtrl);
+	.controller('PilotsCtrl', PilotsCtrl);
 
-function RacersCtrl(Pilot) {
+function PilotsCtrl(Pilot) {
 	var self = this;
 
 	self.pilots = {};
@@ -13,4 +13,4 @@ function RacersCtrl(Pilot) {
 		self.pilots = Pilot.all;
 	}
 }
-RacersCtrl.$inject = ['Pilot'];
+PilotsCtrl.$inject = ['Pilot'];
