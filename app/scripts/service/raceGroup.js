@@ -3,13 +3,10 @@
 angular.module('race-day-fpv')
 	.factory('RaceGroup', RaceGroup);
 
-function RaceGroup(FIREBASE_REF, $firebaseArray) {
+function RaceGroup(FIREBASE_REF) {
 	var ref = FIREBASE_REF;
 
-	//var raceGroups = $firebaseArray(ref.child('raceGroups').orderByChild('name'));
-
 	return {
-		//all: raceGroups,
 		all: function () {
 			return ref.child('raceGroups').orderByChild('name');
 		},
@@ -28,4 +25,4 @@ function RaceGroup(FIREBASE_REF, $firebaseArray) {
 	};
 }
 
-RaceGroup.$inject = ['FIREBASE_REF', '$firebaseArray'];
+RaceGroup.$inject = ['FIREBASE_REF'];

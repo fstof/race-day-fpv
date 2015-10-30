@@ -15,6 +15,9 @@ function Pilot(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 		create: function (user) {
 			return pilots.$add(user);
 		},
+		update: function (userId, pilot, callback) {
+			return ref.child('pilots/' + userId).update(pilot, callback);
+		},
 		delete: function (user) {
 			return pilots.$remove(user);
 		},

@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('MeCtrl', MeCtrl);
 
-function MeCtrl(FPVSession, Pilot, Event, ngToast, $scope) {
+function MeCtrl(FPVSession, Pilot, Event, ngToast, $location, $scope) {
 	var self = this;
 
 	self.eventCount = 0;
@@ -34,6 +34,8 @@ function MeCtrl(FPVSession, Pilot, Event, ngToast, $scope) {
 			$scope.$on('$destroy', function() {
 				events.off();
 			});
+		} else {
+			$location.path('/');
 		}
 	}
 
@@ -45,9 +47,9 @@ function MeCtrl(FPVSession, Pilot, Event, ngToast, $scope) {
 					if (!err) {
 						ngToast.warning('Removed Orphan event');
 					}
-				})
+				});
 			}
 		});
 	}
 }
-MeCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'ngToast', '$scope', '$timeout'];
+MeCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'ngToast', '$location', '$scope'];

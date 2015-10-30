@@ -29,7 +29,7 @@ function EventEditCtrl(FPVSession, Event, ngToast, $routeParams, $location, $rou
 
 	self.save = function () {
 		self.event.date = self.event.date.getTime ? self.event.date.getTime() : self.event.date;
-		delete self.event['pilots'];
+		delete self.event.pilots;
 		Event.update(eventId, self.event, function (err) {
 			if (err) {
 				ngToast.danger('Error');

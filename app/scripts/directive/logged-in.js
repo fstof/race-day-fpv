@@ -7,7 +7,7 @@ function loggedIn(FPVSession) {
 	return {
 		restrict: 'A',
 		link: function ($scope, element, attributes) {
-			var loggedIn = attributes.loggedIn === "" || attributes.loggedIn === "true";
+			var loggedIn = attributes.loggedIn === '' || attributes.loggedIn === 'true';
 			$scope.session = FPVSession;
 
 			if (loggedIn) {

@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.factory('Auth', Auth);
 
-function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth, $route, $location) {
+function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth, $route) {
 	var ref = FIREBASE_REF;
 	var _userRef = null;
 	var _pilotRef = null;
@@ -40,7 +40,6 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 				} else {
 					console.log('existing user... go forth in peace');
 				}
-				$location.path('/events/me');
 				$route.reload();
 			});
 
@@ -64,7 +63,6 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 				} else {
 					console.log('existing user... go forth in peace');
 				}
-				//$location.path('/events/me');
 				$route.reload();
 			});
 
@@ -132,4 +130,4 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 		return _pilotRef;
 	}
 }
-Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'ngToast', '$firebaseObject', '$firebaseAuth', '$route', '$location'];
+Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'ngToast', '$firebaseObject', '$firebaseAuth', '$route'];

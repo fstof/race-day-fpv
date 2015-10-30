@@ -4,6 +4,14 @@
 			{{ctrl.event.name}} <small>{{ctrl.event.date | date}}</small>
 		</h3>
 
+		<p>{{ctrl.event.date | date: "yyyy-MM-dd hh:mm"}}</p>
+
+		<p ng-show="ctrl.eventDate > ctrl.today">Check-ins are not yet open.</p>
+
+		<p ng-show="ctrl.eventDate < ctrl.today">This event is closed.</p>
+
+		<p>{{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></p>
+
 		<p>
 			<button type="button" class="btn btn-primary" logged-in ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">
 				<i class="fa fa-check-square" ng-show="ctrl.me != null"> Going</i>
@@ -18,19 +26,13 @@
 			<a my-item="ctrl.event.organiserId" ng-href="#/events/edit/{{ctrl.event.$id}}" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
 		</p>
 
-		<p ng-show="ctrl.eventDate > ctrl.today">Check-ins are not yet open.</p>
-
-		<p ng-show="ctrl.eventDate < ctrl.today">This event is closed.</p>
-
-		<p>{{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></p>
-
 		<pre>{{ctrl.event.notes}}</pre>
 	</div>
 </div>
 
 <div class="container-fluid">
 	<div>
-		<h1>Attending Racers</h1>
+		<h1>Attending Pilots</h1>
 	</div>
 	<div class="row">
 

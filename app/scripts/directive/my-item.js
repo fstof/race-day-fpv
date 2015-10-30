@@ -12,7 +12,7 @@ function myItem(FPVSession) {
 
 			var ownerId = $scope.$eval(expression);
 
-			if (FPVSession.user == null || FPVSession.user.$id !== ownerId) {
+			if (FPVSession.user === null || FPVSession.user.$id !== ownerId) {
 				element.hide();
 			} else {
 				element.show();
@@ -23,7 +23,7 @@ function myItem(FPVSession) {
 					if (newValue === oldValue) {
 						return;
 					}
-					if (FPVSession.user == null || FPVSession.user.$id !== newValue) {
+					if (FPVSession.user === null || FPVSession.user.$id !== newValue) {
 						element.hide();
 					} else {
 						element.show();

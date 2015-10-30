@@ -22,8 +22,8 @@
 <body ng-controller="IndexCtrl as ctrl">
 <toast></toast>
 
-<div style="position: relative; height: 80px" class="hidden-xs"></div>
-<div style="position: relative; height: 60px" class="visible-xs"></div>
+<div style="position: relative; height: 90px" class="hidden-xs"></div>
+<div style="position: relative; height: 65px" class="visible-xs"></div>
 
 <div class="navbar-inverse navbar-fixed-top" role="navigation">
 
@@ -53,7 +53,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a ng-href="#/"><img class="logo " width="250px" height="53px" src="images/logo_light.png" alt="Race Day FPV"></a>
+				<a ng-href="#/me"><img class="logo " width="250px" height="53px" src="images/logo_light.png" alt="Race Day FPV"></a>
 			</div>
 
 			<div class="navbar-collapse collapse">
@@ -61,7 +61,7 @@
 				<div class="hidden-xs">
 					<ul class="nav navbar-nav pull-right">
 						<li logged-in>
-							<a ng-href="#/events/me" >
+							<a ng-href="#/me" >
 								<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.pilot.avatar}}">
 								<span>Me</span>
 							</a>
@@ -83,13 +83,16 @@
 								<li><a ng-href="#/pilots"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
 							</ul>
 						</li>
+						<li logged-in>
+							<a ng-href="#/manage" ><i class="fa fa-wrench"></i> Manage</a>
+						</li>
 					</ul>
 				</div><!-- Desktop User Buttons -->
 
 				<div class="visible-xs">
 					<ul class="nav navbar-nav text-center">
 						<li logged-in>
-							<a ng-href="#/events/me" data-toggle="collapse" data-target=".navbar-collapse">
+							<a ng-href="#/me" data-toggle="collapse" data-target=".navbar-collapse">
 								<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.pilot.avatar}}">
 								<span>Me</span>
 							</a>
@@ -108,6 +111,9 @@
 								<li><a ng-href="#/pilots" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-users"></i> Teams</span></a></li>
 								<li><a ng-href="#/pilots" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
 							</ul>
+						</li>
+						<li logged-in>
+							<a ng-href="#/manage" ><i class="fa fa-wrench"></i> Manage</a>
 						</li>
 						<li logged-in="false">
 							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.login('google')"><i class="fa fa-google-plus-square"></i> Google Sign-In</a>
@@ -171,8 +177,8 @@
 <script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/ngToast/dist/ngToast.js"></script>
 <!-- endbower -->
+<script src="scripts/vendor/faker.js"></script>
 <!-- endbuild -->
-<script src="http://marak.com/faker.js/js/faker.min.js"></script>
 
 
 <!-- build:js({app,.tmp}) scripts/main.js -->
@@ -198,6 +204,7 @@
 <script src="scripts/controller/events/event-edit-ctrl.js"></script>
 <script src="scripts/controller/events/event-ctrl.js"></script>
 <script src="scripts/controller/pilots/pilots-ctrl.js"></script>
+<script src="scripts/controller/pilots/pilot-edit-ctrl.js"></script>
 <script src="scripts/controller/manage/manage-ctrl.js"></script>
 <script src="scripts/controller/manage/groups-ctrl.js"></script>
 <script src="scripts/controller/manage/frequencies-ctrl.js"></script>

@@ -3,6 +3,16 @@
 angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap'])
 	.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
+			.when('/me', {
+				templateUrl: 'partials/me.html',
+				controller: 'MeCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/me/edit', {
+				templateUrl: 'partials/pilots/pilot-edit.html',
+				controller: 'PilotEditCtrl',
+				controllerAs: 'ctrl'
+			})
 			.when('/home', {
 				templateUrl: 'partials/home.html',
 				controller: 'HomeCtrl',
@@ -16,11 +26,6 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast
 			.when('/events/past', {
 				templateUrl: 'partials/events/events.html',
 				controller: 'EventsPastCtrl',
-				controllerAs: 'ctrl'
-			})
-			.when('/events/me', {
-				templateUrl: 'partials/me.html',
-				controller: 'MeCtrl',
 				controllerAs: 'ctrl'
 			})
 			.when('/events/add', {

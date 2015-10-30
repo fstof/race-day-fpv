@@ -17,7 +17,7 @@ function eventCard() {
 	};
 }
 
-function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeout) {
+function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeout, $location) {
 	var self = this;
 	self.uid = FPVSession.user ? FPVSession.user.$id : null;
 	self.eventId = $scope.eventId;
@@ -25,6 +25,7 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 	self.myEvent = false;
 	self.going = false;
 	self.event = null;
+	self.pilotCount = 0;
 
 	_init();
 
@@ -32,18 +33,26 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 		var eventRef = Event.get(self.eventId);
 		eventRef.on('value', function (snap) {
 			var val = snap.val();
-			if (val === null) {
-				val = {};
-			}
 			val.$id = snap.key();
 			self.event = val;
+			self.event.show = true;
+
 			if (self.event.pilots) {
-				self.going = self.event.pilots[self.uid] != null;
+				self.going = self.event.pilots[self.uid] !== null;
+				self.pilotCount = Object.keys(self.event.pilots).length;
 			} else {
 				self.going = false;
+				self.pilotCount = 0;
+			}
+
+			if (!self.event.organiser) {
+				var org = Pilot.get(self.event.organiserId);
+				org.once('value', function (snap) {
+					self.event.organiser = snap.val().name;
+				});
 			}
 		});
-		$scope.$on('$destroy', function() {
+		$scope.$on('$destroy', function () {
 			eventRef.off();
 		});
 	}
@@ -85,17 +94,12 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 	};
 
 	self.viewToggle = function () {
-		if (self.event.show) {
-			self.event.show = false;
-		} else {
-			if (!self.event.organiser) {
-				var org = Pilot.get(self.event.organiserId);
-				org.once('value', function (snap) {
-					self.event.organiser = snap.val().name;
-				})
-			}
-			self.event.show = true;
-		}
+		$location.path('/events/' + self.event.$id);
+		//if (self.event.show) {
+		//	self.event.show = false;
+		//} else {
+		//	self.event.show = true;
+		//}
 	};
 	self.delete = function () {
 		Event.delete(self.event.$id, function (err) {
@@ -108,7 +112,7 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 		});
 	};
 }
-EventCardCtrl.$inject = ['FPVSession', 'Event', 'Pilot', 'ngToast', '$route', '$scope', '$timeout'];
+EventCardCtrl.$inject = ['FPVSession', 'Event', 'Pilot', 'ngToast', '$route', '$scope', '$timeout', '$location'];
 
 function TemplateCache($templateCache) {
 	$templateCache.put('event-card.html',
@@ -116,11 +120,11 @@ function TemplateCache($templateCache) {
 		'	<div class="panel-heading ">' +
 		'		<div class="row">' +
 		'			<div class="col-lg-12">' +
-		'				<h4 class="pull-left hand" ng-click="ctrl.viewToggle()">{{ctrl.event.name}}</h4>' +
+		'				<h4 class="pull-left hand" ng-click="ctrl.viewToggle()">{{ctrl.event.name}}<br/><small>{{ctrl.pilotCount}} attending</small></h4>' +
 		'				<div class="pull-right">' +
-		'					<button type="button" class="btn btn-primary" logged-in ng-click="ctrl.goingToggle()">' +
+		'					<button type="button" class="btn btn-success" logged-in ng-click="ctrl.goingToggle()">' +
 		'						<i class="fa fa-check-square-o" ng-show="ctrl.going"></i>' +
-		'						<i class="fa fa-square" ng-hide="ctrl.going"></i>' +
+		'						<i class="fa fa-square-o" ng-hide="ctrl.going"></i>' +
 		'					</button>' +
 		'				</div>' +
 		'			</div>' +
@@ -140,7 +144,7 @@ function TemplateCache($templateCache) {
 		'		</ul>' +
 		'		<span class="" my-item="ctrl.event.organiserId"><a class="btn btn-warning" ng-href="#/events/edit/{{ctrl.event.$id}}"><i class="fa fa-edit"></i></a></span>' +
 		'		<span class="" my-item="ctrl.event.organiserId"><a class="btn btn-danger" ng-click="ctrl.delete()"><i class="fa fa-trash"></i></a></span>' +
-		'		<span class="pull-right"><a class="btn btn-primary" ng-href="#/events/{{ctrl.event.$id}}">More</a></span>' +
+		'		<span class="pull-right"><a class="" ng-href="#/events/{{ctrl.event.$id}}">More...</a></span>' +
 		'	</div>' +
 		'</div>');
 }
