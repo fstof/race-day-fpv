@@ -39,7 +39,7 @@ function FrequenciesCtrl(FPVSession, Frequency, ngToast, $timeout, $scope) {
 
 	self.addFreq = function () {
 		var obj = {
-			frequency: ''
+			frequency: 0
 		};
 		Frequency.create(obj, function (err) {
 			$timeout(function () {
