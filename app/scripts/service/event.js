@@ -3,14 +3,14 @@
 angular.module('race-day-fpv')
 	.factory('Event', Event);
 
-function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
+function Event(FIREBASE_REF, RDFDateUtil, $firebaseObject, $firebaseArray) {
 	var ref = FIREBASE_REF;
 	var events = $firebaseArray(ref.child('events').orderByChild('date'));
 
 	return {
 		all: events,
-		allUpcomming:   $firebaseArray(ref.child('events').orderByChild('date').startAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
-		allPast:        $firebaseArray(ref.child('events').orderByChild('date').endAt(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime())),
+		allUpcomming: $firebaseArray(ref.child('events').orderByChild('date').startAt(RDFDateUtil.todayDateTime())),
+		allPast: $firebaseArray(ref.child('events').orderByChild('date').endAt(RDFDateUtil.todayDateTime())),
 		get: function (id) {
 			return ref.child('events').child(id);
 		},
@@ -44,4 +44,4 @@ function Event(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 	};
 }
 
-Event.$inject = ['FIREBASE_REF', '$firebaseObject', '$firebaseArray'];
+Event.$inject = ['FIREBASE_REF', 'RDFDateUtil', '$firebaseObject', '$firebaseArray'];

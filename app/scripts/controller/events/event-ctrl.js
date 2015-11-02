@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventCtrl);
 
-function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $timeout, $scope) {
+function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams, $timeout, $scope) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
@@ -21,13 +21,13 @@ function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $ti
 		ev.on('value', function (snap) {
 			self.event = snap.val();
 			self.event.$id = eventId;
-			self.eventDate = $filter('date')(new Date(self.event.date), 'yyyy-MM-dd');
+			self.eventDate = RDFDateUtil.stringValue(new Date(self.event.date));
 		});
 		$scope.$on('$destroy', function () {
 			ev.off();
 		});
 
-		self.today = $filter('date')(new Date(), 'yyyy-MM-dd');
+		self.today = RDFDateUtil.stringValue(new Date());
 
 		self.racers.$watch(function (event) {
 
@@ -118,4 +118,4 @@ function EventCtrl(FPVSession, Pilot, Event, ngToast, $routeParams, $filter, $ti
 	};
 
 }
-EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'ngToast', '$routeParams', '$filter', '$timeout', '$scope'];
+EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$scope'];

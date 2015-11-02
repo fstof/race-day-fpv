@@ -3,8 +3,13 @@
 angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap'])
 	.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
-			.when('/me', {
-				templateUrl: 'partials/me.html',
+			.when('/me/events', {
+				templateUrl: 'partials/my-events.html',
+				controller: 'MeCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/me/frequencies', {
+				templateUrl: 'partials/my-frequencies.html',
 				controller: 'MeCtrl',
 				controllerAs: 'ctrl'
 			})
