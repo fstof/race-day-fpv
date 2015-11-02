@@ -117,5 +117,15 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams,
 		}
 	};
 
+	self.startEvent = function (event) {
+		var racerCount = 0;
+		angular.forEach(self.evRacers, function (val) {
+			if (val.checkedIn) {
+				racerCount++;
+			}
+		});
+		console.log('racerCount', racerCount);
+	};
+
 }
 EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$scope'];

@@ -12,31 +12,21 @@
 
 		<p>{{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></p>
 
-		<p>
-			<button type="button" class="btn btn-primary" logged-in ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">
-				<i class="fa fa-check-square" ng-show="ctrl.me != null"> Going</i>
-				<i class="fa fa-square" ng-hide="ctrl.me != null"> Not Going</i>
-			</button>
 
-			<button type="button" class="btn btn-primary" logged-in ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-class="{active: ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn}" ng-click="ctrl.checkInToggle(ctrl.event)">
-				<i class="fa fa-check-square" ng-show="ctrl.me.checkedIn"> Checked In</i>
-				<i class="fa fa-square" ng-hide="ctrl.me.checkedIn"> Not Checked In</i>
-			</button>
-
-			<a my-item="ctrl.event.organiserId" ng-href="#/events/edit/{{ctrl.event.$id}}" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
-
+		<div class="col-md-2">
+			<input type="text" number-spinner number="ctrl.bob">
+		</div>
+		<div class="col-md-2">
 			<button type="button" class="btn btn-success"  my-item="ctrl.event.organiserId" ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-click="ctrl.startEvent(ctrl.event)">
-				<i class="fa fa-flag-checkered"></i> Start Event <i class="fa fa-flag-checkered"></i>
+				<i class="fa fa-flag-checkered"></i> Start <i class="fa fa-flag-checkered"></i>
 			</button>
-		</p>
-
-		<pre>{{ctrl.event.notes}}</pre>
+		</div>
 	</div>
 </div>
 
 <div class="container-fluid">
 	<div>
-		<h1>Attending Pilots</h1>
+		<h1>Groups</h1>
 	</div>
 	<div class="row">
 
