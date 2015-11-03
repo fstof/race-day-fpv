@@ -40,6 +40,15 @@ function Event(FIREBASE_REF, RDFDateUtil, $firebaseObject, $firebaseArray) {
 		},
 		removeRacer: function (eventId, racerId, callback) {
 			return ref.child('events').child(eventId).child('pilots').child(racerId).set(null, callback);
+		},
+		getGroups: function (eventId) {
+			return ref.child('events').child(eventId).child('groups');
+		},
+		addGroup: function (eventId, group, callback) {
+			return ref.child('events').child(eventId).child('groups').push(group, callback);
+		},
+		deleteGroup: function (eventId, groupId, callback) {
+			return ref.child('events').child(eventId).child('groups').child(groupId).set(null, callback);
 		}
 	};
 }

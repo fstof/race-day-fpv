@@ -10,7 +10,8 @@ function numberSpinner() {
 		controllerAs: 'ctrl',
 		restrict: 'EA',
 		scope: {
-			number: '='
+			number: '=',
+			onchange: '='
 		},
 		replace: true,
 		templateUrl: 'number-spinner.html'
@@ -22,9 +23,13 @@ function NumSpinCtrl($scope) {
 
 	$scope.incrementNumber = function () {
 		$scope.number++;
+		if ($scope.onchange)
+			$scope.onchange($scope.number);
 	};
 	$scope.decrementNumber = function () {
 		$scope.number--;
+		if ($scope.onchange)
+			$scope.onchange($scope.number);
 	};
 }
 NumSpinCtrl.$inject = ['$scope'];
