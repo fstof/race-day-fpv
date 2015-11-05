@@ -38,7 +38,7 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 			self.event.show = true;
 
 			if (self.event.pilots) {
-				self.going = self.event.pilots[self.uid] !== null;
+				self.going = self.event.pilots[self.uid] != null;
 				self.pilotCount = Object.keys(self.event.pilots).length;
 			} else {
 				self.going = false;

@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.factory('Auth', Auth);
 
-function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth, $route) {
+function Auth(FPVSession, FIREBASE_REF, User, Pilot, ngToast, $firebaseObject, $firebaseAuth, $route, $timeout) {
 	var ref = FIREBASE_REF;
 	var _userRef = null;
 	var _pilotRef = null;
@@ -17,11 +17,9 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 	};
 
 	function deAuth() {
-		ref.unauth();
 		_userRef = null;
-		FPVSession.user = null;
-		FPVSession.pilot = null;
-		//$location.path('/home');
+		_pilotRef = null;
+		ref.unauth();
 		$route.reload();
 	}
 
@@ -32,7 +30,7 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 			scope: 'email'
 		}).then(function (authData) {
 			console.log('Logged in as:', authData.uid);
-			_userRef = _getUserRef(authData.uid);
+			_userRef = User.get(authData.uid);
 			_userRef.once('value', function (snap) {
 				if (snap.val() === null) {
 					console.log('New user... gonna add it');
@@ -55,7 +53,7 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 			scope: 'email'
 		}).then(function (authData) {
 			console.log('Logged in as:', authData.uid);
-			_userRef = _getUserRef(authData.uid);
+			_userRef = User.get(authData.uid);
 			_userRef.once('value', function (snap) {
 				if (snap.val() === null) {
 					console.log('New user... gonna add it');
@@ -74,60 +72,70 @@ function Auth(FPVSession, FIREBASE_REF, ngToast, $firebaseObject, $firebaseAuth,
 	// Create a callback which logs the current auth state
 	function authDataCallback(authData) {
 		if (authData) {
-			if (FPVSession.user === null) {
-				console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
-				_userRef = _getUserRef(authData.uid);
-				_pilotRef = _getPilotRef(authData.uid);
-				FPVSession.user = $firebaseObject(_userRef);
-				FPVSession.pilot = $firebaseObject(_pilotRef);
+			console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
+			if (FPVSession.user == null && FPVSession.pilot == null) {
+				console.log('Session is not initialised, now loading user');
+				_userRef = User.get(authData.uid);
+				_userRef.on('value', function (snap) {
+					if (snap.val()) {
+						FPVSession.user = snap.val();
+						FPVSession.user.$id = snap.key();
+						$timeout(function () {
+							ngToast.success('User Logged In');
+						});
+						_userRef.off();
+					}
+				});
+				_pilotRef = Pilot.get(authData.uid);
+				_pilotRef.on('value', function (snap) {
+					if (snap.val()) {
+						FPVSession.pilot = snap.val();
+						FPVSession.pilot.$id = snap.key();
+						$timeout(function () {
+							ngToast.success('Pilot Logged In');
+						});
+						_pilotRef.off();
+					}
+				});
 			} else {
-				console.log('all good');
+				console.log('Session is initialised');
 			}
-			FPVSession.userRef = _getUserRef(authData.uid);
 			FPVSession.authData = authData;
 		} else {
-			console.log('User is logged out');
+			console.log('No user logged in');
 			FPVSession.user = null;
-			FPVSession.userRef = null;
+			FPVSession.pilot = null;
 			_userRef = null;
+			_pilotRef = null;
 		}
 	}
 
 	function _persistNewUser(authData, detail) {
-		_userRef = _getUserRef(authData.uid);
-		_userRef.set({
+		var newUserObj = {
 			name: detail.displayName,
 			email: detail.email
-		}, function (err) {
-			if (err) {
-				ngToast.warning('Error: ' + err);
-			}
-		});
-		_pilotRef = _getPilotRef(authData.uid);
-		_pilotRef.set({
+		};
+		var newPilotObj = {
 			name: detail.displayName,
 			avatar: detail.profileImageURL,
 			alias: faker.fake('{{commerce.productAdjective}}{{commerce.productMaterial}}{{commerce.product}}'),
 			tagline: faker.company.catchPhrase()
-		}, function (err) {
+		};
+		User.create(authData.uid, newUserObj, function (err) {
 			if (err) {
-				ngToast.warning('Error: ' + err);
+				$timeout(function () {
+					ngToast.warning('Error: ' + err);
+				});
+			} else {
+				Pilot.create(authData.uid, newPilotObj, function (err) {
+					if (err) {
+						$timeout(function () {
+							ngToast.warning('Error: ' + err);
+						});
+					}
+				});
 			}
 		});
 	}
-
-	function _getUserRef(uid) {
-		if (_userRef === null) {
-			_userRef = ref.child('users/' + uid);
-		}
-		return _userRef;
-	}
-
-	function _getPilotRef(uid) {
-		if (_pilotRef === null) {
-			_pilotRef = ref.child('pilots/' + uid);
-		}
-		return _pilotRef;
-	}
 }
-Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'ngToast', '$firebaseObject', '$firebaseAuth', '$route'];
+Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'User', 'Pilot', 'ngToast', '$firebaseObject', '$firebaseAuth', '$route', '$timeout'];

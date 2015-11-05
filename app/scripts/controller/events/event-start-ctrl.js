@@ -48,25 +48,44 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 
 	self.removeGroup = function () {
 		Event.deleteGroup(eventId, groupIds[groupIds.length - 1], function (err) {
-			if (err) {
-				ngToast.warning('Error');
-			}
+			$timeout(function () {
+				if (err) {
+					ngToast.warning('Error');
+				} else {
+					self.shuffle();
+				}
+			});
 		});
 	};
 
 	self.addGroup = function () {
 		Event.addGroup(eventId, {name: 'Group ' + (groupIds.length + 1)}, function (err) {
-			if (err) {
-				ngToast.warning('Error');
-			}
+			$timeout(function () {
+				if (err) {
+					ngToast.warning('Error');
+				} else {
+					self.shuffle();
+				}
+			});
 		});
 	};
 
 	self.shuffle = function () {
 		var shuffeled = angular.copy(self.event.pilots);
 
-		angular.forEach(self.groups, function (val) {
-
+		var k = 0;
+		angular.forEach(shuffeled, function (val, key) {
+			console.log('pilot', val, key);
+			if (!self.event.groups[groupIds[k]]) {
+				k = 0;
+			}
+			if (!self.event.groups[groupIds[k]].racers) {
+				self.event.groups[groupIds[k]].racers = {};
+			}
+			console.log('adding pilot ' + key + ' to group ' + groupIds[k], val);
+			// todo we need to add it to the databse... not just in memory
+			self.event.groups[groupIds[k]].racers[key] = val;
+			k++;
 		});
 	};
 

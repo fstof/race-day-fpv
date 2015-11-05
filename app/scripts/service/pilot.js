@@ -12,8 +12,8 @@ function Pilot(FIREBASE_REF, $firebaseObject, $firebaseArray) {
 		get: function (userId) {
 			return ref.child('pilots').child(userId);
 		},
-		create: function (user) {
-			return pilots.$add(user);
+		create: function (userId, pilot, callback) {
+			return ref.child('pilots').child(userId).set(pilot, callback);
 		},
 		update: function (userId, pilot, callback) {
 			return ref.child('pilots/' + userId).update(pilot, callback);
