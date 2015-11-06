@@ -45,10 +45,22 @@ function Event(FIREBASE_REF, RDFDateUtil, $firebaseObject, $firebaseArray) {
 			return ref.child('events').child(eventId).child('groups');
 		},
 		addGroup: function (eventId, group, callback) {
-			return ref.child('events').child(eventId).child('groups').push(group, callback);
+			return ref.child('events').child(eventId).child('groups').child(group.name).set(group, callback);
+		},
+		updateGroup: function (eventId, groupId, group, callback) {
+			return ref.child('events').child(eventId).child('groups').child(groupId).set(group, callback);
 		},
 		deleteGroup: function (eventId, groupId, callback) {
 			return ref.child('events').child(eventId).child('groups').child(groupId).set(null, callback);
+		},
+		addGroupRacer: function (eventId, groupId, racerId, racer, callback) {
+			return ref.child('events').child(eventId).child('groups').child(groupId).child('racers').child(racerId).set(racer, callback);
+		},
+		deleteGroupRacer: function (eventId, groupId, racerId, callback) {
+			return ref.child('events').child(eventId).child('groups').child(groupId).child('racers').child(racerId).set(null, callback);
+		},
+		deleteAllGroupRacers: function (eventId, groupId, callback) {
+			return ref.child('events').child(eventId).child('groups').child(groupId).child('racers').set(null, callback);
 		}
 	};
 }

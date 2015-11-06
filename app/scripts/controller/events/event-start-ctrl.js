@@ -10,9 +10,10 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 
 	self.event = {};
 	self.groups = {};
-	var groupIds = [];
+	var pilots = {};
 
 	self.numberOfGroups = 0;
+	var numOfPilots = 0;
 	_init();
 
 	function _init() {
@@ -22,6 +23,12 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 			self.event = snap.val();
 			self.event.$id = eventId;
 			self.eventDate = RDFDateUtil.stringValue(new Date(self.event.date));
+			angular.forEach(self.event.pilots, function (val, key) {
+				Pilot.get(key).once('value', function (snap) {
+					pilots[snap.key()] = snap.val();
+					numOfPilots = Object.keys(pilots).length;
+				});
+			})
 		});
 		$scope.$on('$destroy', function () {
 			ev.off();
@@ -32,13 +39,11 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 			var key = snap.key();
 			var val = snap.val();
 			self.groups[key] = val;
-			groupIds.push(key);
 			self.numberOfGroups++;
 		});
 		grps.on('child_removed', function (snap) {
 			var key = snap.key();
 			delete self.groups[key];
-			groupIds.splice(groupIds.indexOf(key), 1);
 			self.numberOfGroups--;
 		});
 		$scope.$on('$destroy', function () {
@@ -47,10 +52,10 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	}
 
 	self.removeGroup = function () {
-		Event.deleteGroup(eventId, groupIds[groupIds.length - 1], function (err) {
+		Event.deleteGroup(eventId, 'Group ' + self.numberOfGroups, function (err) {
 			$timeout(function () {
 				if (err) {
-					ngToast.warning('Error');
+					ngToast.warning('Error: ' + err);
 				} else {
 					self.shuffle();
 				}
@@ -59,7 +64,7 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	};
 
 	self.addGroup = function () {
-		Event.addGroup(eventId, {name: 'Group ' + (groupIds.length + 1)}, function (err) {
+		Event.addGroup(eventId, {name: 'Group ' + (self.numberOfGroups + 1)}, function (err) {
 			$timeout(function () {
 				if (err) {
 					ngToast.warning('Error');
@@ -71,22 +76,53 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	};
 
 	self.shuffle = function () {
-		var shuffeled = angular.copy(self.event.pilots);
+		var shuffled = angular.copy(pilots);
 
-		var k = 0;
-		angular.forEach(shuffeled, function (val, key) {
-			console.log('pilot', val, key);
-			if (!self.event.groups[groupIds[k]]) {
-				k = 0;
+		//var i, j, temparray, chunk = 10;
+		//for (i = 0, j = array.length; i < j; i += chunk) {
+		//	temparray = array.slice(i, i + chunk);
+		//	// do whatever
+		//}
+
+		angular.forEach(self.groups, function (val, key) {
+			//val.racers = {};
+			Event.deleteAllGroupRacers(eventId, key, function (err) {
+				console.log('deleted racers from group', key);
+				$timeout(function () {
+					if (err) {
+						ngToast.warning(err);
+					}
+				});
+			});
+		});
+
+		var k = 1;
+		angular.forEach(shuffled, function (val, key) {
+			if (!self.groups['Group ' + k]) {
+				k = 1;
 			}
-			if (!self.event.groups[groupIds[k]].racers) {
-				self.event.groups[groupIds[k]].racers = {};
-			}
-			console.log('adding pilot ' + key + ' to group ' + groupIds[k], val);
-			// todo we need to add it to the databse... not just in memory
-			self.event.groups[groupIds[k]].racers[key] = val;
+			console.log('adding pilot ' + key + ' to Group ' + k, val);
+			//self.groups['Group ' + k].racers[key] = val;
+			Event.addGroupRacer(eventId, 'Group ' + k, key, val, function (err) {
+				$timeout(function () {
+					if (err) {
+						ngToast.warning(err);
+					}
+				});
+			});
 			k++;
 		});
+		//angular.forEach(self.groups, function (val, key) {
+		//	Event.deleteGroup(eventId, key, function (err) {
+		//		Event.updateGroup(eventId, key, val, function (err) {
+		//			if (err) {
+		//				$timeout(function () {
+		//					ngToast.warning(err);
+		//				});
+		//			}
+		//		});
+		//	});
+		//});
 	};
 
 	self.startEvent = function () {

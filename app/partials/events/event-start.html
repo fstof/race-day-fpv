@@ -30,7 +30,7 @@
 	</div>
 	<div class="row">
 
-		<div class="col-sm-6 col-md-4" ng-repeat="group in ctrl.event.groups track by $index">
+		<div class="col-sm-6 col-md-4" ng-repeat="group in ctrl.groups track by $index">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					{{group.name}}
@@ -38,7 +38,7 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="racer in group.racers track by $index">
-							{{racer | json}}
+							{{racer.name}}
 						</li>
 					</ul>
 				</div>
