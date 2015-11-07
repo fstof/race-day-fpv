@@ -140,7 +140,6 @@ function TemplateCache($templateCache) {
 		'			<li class="list-group-item"><i class="fa fa-calendar" tooltip="Date"></i>: {{ctrl.event.date | date:\'yyyy-MM-dd hh:mm\'}}</li>' +
 		'			<li class="list-group-item"><i class="fa fa-home" tooltip="Venue"></i>: {{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></li>' +
 		'			<li class="list-group-item"><i class="fa fa-user" tooltip="Organiser"></i>: {{ctrl.event.organiser}}</li>' +
-		'			<li class="list-group-item"><i class="fa fa-sticky-note" tooltip="Notes"></i>: {{ctrl.event.notes}}</li>' +
 		'		</ul>' +
 		'		<span class="" my-item="ctrl.event.organiserId"><a class="btn btn-warning" ng-href="#/events/{{ctrl.event.$id}}/edit"><i class="fa fa-edit"></i></a></span>' +
 		'		<span class="" my-item="ctrl.event.organiserId"><a class="btn btn-danger" ng-click="ctrl.delete()"><i class="fa fa-trash"></i></a></span>' +

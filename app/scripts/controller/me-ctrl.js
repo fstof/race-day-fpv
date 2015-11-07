@@ -100,7 +100,7 @@ function MeCtrl(FPVSession, RDFDateUtil, Pilot, Event, Frequency, ngToast, $loca
 		Pilot.addFrequency(FPVSession.user.$id, freq.key, freq, function (err) {
 			$timeout(function () {
 				if (err) {
-					ngToast.warning('Error')
+					ngToast.warning('Error');
 				} else {
 					ngToast.success('Success');
 				}
@@ -112,7 +112,7 @@ function MeCtrl(FPVSession, RDFDateUtil, Pilot, Event, Frequency, ngToast, $loca
 		Pilot.removeFrequency(FPVSession.user.$id, freq.key, function (err) {
 			$timeout(function () {
 				if (err) {
-					ngToast.warning('Error')
+					ngToast.warning('Error');
 				} else {
 					ngToast.success('Success');
 				}
@@ -130,7 +130,7 @@ function MeCtrl(FPVSession, RDFDateUtil, Pilot, Event, Frequency, ngToast, $loca
 		Pilot.updateFrequency(FPVSession.user.$id, upd.key, upd, function (err) {
 			$timeout(function () {
 				if (err) {
-					ngToast.warning('Error')
+					ngToast.warning('Error');
 				} else {
 					ngToast.success('Success');
 				}

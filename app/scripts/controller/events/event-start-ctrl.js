@@ -28,7 +28,7 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 					pilots[snap.key()] = snap.val();
 					numOfPilots = Object.keys(pilots).length;
 				});
-			})
+			});
 		});
 		$scope.$on('$destroy', function () {
 			ev.off();
