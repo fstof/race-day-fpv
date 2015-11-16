@@ -35,16 +35,22 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 		});
 
 		var grps = Event.getGroups(eventId);
-		grps.on('child_added', function (snap) {
+		//grps.on('child_added', function (snap) {
+		//	var key = snap.key();
+		//	var val = snap.val();
+		//	self.groups[key] = val;
+		//	self.numberOfGroups++;
+		//});
+		//grps.on('child_removed', function (snap) {
+		//	var key = snap.key();
+		//	delete self.groups[key];
+		//	self.numberOfGroups--;
+		//});
+		grps.on('value', function (snap) {
 			var key = snap.key();
 			var val = snap.val();
-			self.groups[key] = val;
-			self.numberOfGroups++;
-		});
-		grps.on('child_removed', function (snap) {
-			var key = snap.key();
-			delete self.groups[key];
-			self.numberOfGroups--;
+			self.groups = val;
+			self.numberOfGroups = Object.keys(self.groups).length;
 		});
 		$scope.$on('$destroy', function () {
 			grps.off();
@@ -52,26 +58,25 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	}
 
 	self.removeGroup = function () {
+		if (self.numberOfGroups == 1) {
+			return;
+		}
 		Event.deleteGroup(eventId, 'Group ' + self.numberOfGroups, function (err) {
-			$timeout(function () {
-				if (err) {
-					ngToast.warning('Error: ' + err);
-				} else {
-					self.shuffle();
-				}
-			});
+			if (err) {
+				ngToast.warning('Error: ' + err);
+			} else {
+				self.shuffle();
+			}
 		});
 	};
 
 	self.addGroup = function () {
 		Event.addGroup(eventId, {name: 'Group ' + (self.numberOfGroups + 1)}, function (err) {
-			$timeout(function () {
-				if (err) {
-					ngToast.warning('Error');
-				} else {
-					self.shuffle();
-				}
-			});
+			if (err) {
+				ngToast.warning('Error');
+			} else {
+				self.shuffle();
+			}
 		});
 	};
 
@@ -88,11 +93,9 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 			//val.racers = {};
 			Event.deleteAllGroupRacers(eventId, key, function (err) {
 				console.log('deleted racers from group', key);
-				$timeout(function () {
-					if (err) {
-						ngToast.warning(err);
-					}
-				});
+				if (err) {
+					ngToast.warning(err);
+				}
 			});
 		});
 
@@ -104,11 +107,9 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 			console.log('adding pilot ' + key + ' to Group ' + k, val);
 			//self.groups['Group ' + k].racers[key] = val;
 			Event.addGroupRacer(eventId, 'Group ' + k, key, val, function (err) {
-				$timeout(function () {
-					if (err) {
-						ngToast.warning(err);
-					}
-				});
+				if (err) {
+					ngToast.warning(err);
+				}
 			});
 			k++;
 		});
@@ -133,6 +134,7 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 			}
 		});
 		console.log('racerCount', racerCount);
+		ngToast.success('yay!!!');
 	};
 
 }
