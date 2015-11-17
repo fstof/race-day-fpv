@@ -81,13 +81,7 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	};
 
 	self.shuffle = function () {
-		var shuffled = angular.copy(pilots);
-
-		//var i, j, temparray, chunk = 10;
-		//for (i = 0, j = array.length; i < j; i += chunk) {
-		//	temparray = array.slice(i, i + chunk);
-		//	// do whatever
-		//}
+		var shuffledKeys = faker.helpers.shuffle(Object.keys(pilots));
 
 		angular.forEach(self.groups, function (val, key) {
 			//val.racers = {};
@@ -100,29 +94,32 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 		});
 
 		var k = 1;
-		angular.forEach(shuffled, function (val, key) {
+		for (var b = 0; b < shuffledKeys.length; b++) {
 			if (!self.groups['Group ' + k]) {
 				k = 1;
 			}
-			console.log('adding pilot ' + key + ' to Group ' + k, val);
+			console.log('adding pilot ' + shuffledKeys[b] + ' to Group ' + k, pilots[shuffledKeys[b]]);
 			//self.groups['Group ' + k].racers[key] = val;
-			Event.addGroupRacer(eventId, 'Group ' + k, key, val, function (err) {
+			Event.addGroupRacer(eventId, 'Group ' + k, shuffledKeys[b], pilots[shuffledKeys[b]], function (err) {
 				if (err) {
 					ngToast.warning(err);
 				}
 			});
 			k++;
-		});
-		//angular.forEach(self.groups, function (val, key) {
-		//	Event.deleteGroup(eventId, key, function (err) {
-		//		Event.updateGroup(eventId, key, val, function (err) {
-		//			if (err) {
-		//				$timeout(function () {
-		//					ngToast.warning(err);
-		//				});
-		//			}
-		//		});
+		}
+
+		//angular.forEach(shuffled, function (val, key) {
+		//	if (!self.groups['Group ' + k]) {
+		//		k = 1;
+		//	}
+		//	console.log('adding pilot ' + key + ' to Group ' + k, val);
+		//	//self.groups['Group ' + k].racers[key] = val;
+		//	Event.addGroupRacer(eventId, 'Group ' + k, key, val, function (err) {
+		//		if (err) {
+		//			ngToast.warning(err);
+		//		}
 		//	});
+		//	k++;
 		//});
 	};
 
