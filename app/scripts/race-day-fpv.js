@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap'])
+angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap', 'btford.markdown'])
 	.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
 			.when('/me/events', {

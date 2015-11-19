@@ -1,10 +1,11 @@
 <div class="jumbotron">
 	<div class="container-fluid">
 		<h3>
-			{{ctrl.event.name}} <small>{{ctrl.event.date | date}}</small>
+			{{ctrl.event.name}}
+			<a my-item="ctrl.event.organiserId" ng-href="#/events/{{ctrl.event.$id}}/edit" class="btn btn-warning"><i class="fa fa-edit"></i></a>
 		</h3>
 
-		<p>{{ctrl.event.date | date: "yyyy-MM-dd hh:mm"}}</p>
+		<p>{{ctrl.event.date | date: "medium"}}</p>
 
 		<p ng-show="ctrl.eventDate > ctrl.today">Check-ins are not yet open.</p>
 
@@ -13,25 +14,27 @@
 		<p>{{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></p>
 
 		<p>
-			<button type="button" class="btn btn-primary" logged-in ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">
+			<button type="button" class="btn btn-success" logged-in ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">
 				<i class="fa fa-check-square" ng-show="ctrl.me != null"> Going</i>
 				<i class="fa fa-square" ng-hide="ctrl.me != null"> Not Going</i>
 			</button>
-
-			<button type="button" class="btn btn-primary" logged-in ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-class="{active: ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn}" ng-click="ctrl.checkInToggle(ctrl.event)">
+		</p>
+		<p>
+			<button type="button" class="btn btn-success" logged-in ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-class="{active: ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn}" ng-click="ctrl.checkInToggle(ctrl.event)">
 				<i class="fa fa-check-square" ng-show="ctrl.me.checkedIn"> Checked In</i>
 				<i class="fa fa-square" ng-hide="ctrl.me.checkedIn"> Not Checked In</i>
 			</button>
-
-			<a my-item="ctrl.event.organiserId" ng-href="#/events/{{ctrl.event.$id}}/edit" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
-
-			<a my-item="ctrl.event.organiserId" ng-href="#/events/{{ctrl.event.$id}}/start" class="btn btn-primary">
-				<i class="fa fa-flag-checkered"></i> Start Event <i class="fa fa-flag-checkered"></i>
+		</p>
+		<p>
+			<a ng-href="#/events/{{ctrl.event.$id}}/start" class="btn btn-primary">
+				<i class="fa fa-flag-checkered"></i> RACE!!! <i class="fa fa-flag-checkered"></i>
 			</a>
 		</p>
-
-		<pre>{{ctrl.event.notes}}</pre>
 	</div>
+</div>
+
+<div class="well">
+	<div btf-markdown="ctrl.event.notes"></div>
 </div>
 
 <div class="container-fluid">

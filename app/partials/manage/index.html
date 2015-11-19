@@ -6,7 +6,13 @@
 
 	<uib-accordion>
 
-		<uib-accordion-group heading="Video Frequencies">
+		<uib-accordion-group heading="Video Frequencies" is-open="true">
+
+			<uib-alert type="danger">
+				<h4>Here be dragons</h4>
+				Please note that if you change these, you affect ALL available frequencies across the site.<br>
+				Be nice. This function will be blocked and made available to "Managers" only. (once I implement)
+			</uib-alert>
 
 			<div ng-include="'partials/manage/frequencies.html'" ></div>
 

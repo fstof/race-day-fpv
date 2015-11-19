@@ -1,17 +1,16 @@
 <div class="jumbotron">
 	<div class="container-fluid">
 		<h3>
-			{{ctrl.event.name}} <small>{{ctrl.event.date | date}}</small>
+			{{ctrl.event.name}}
 		</h3>
 
-		<p>{{ctrl.event.date | date: "yyyy-MM-dd hh:mm"}}</p>
-
+		<p>{{ctrl.event.date | date: "medium"}}</p>
 
 		<div>
 			<label>Number of Groups</label>
-			<button class="btn btn-default" ng-click="ctrl.removeGroup()"><i class="fa fa-minus"></i></button>
+			<button class="btn btn-default" my-item="ctrl.event.organiserId" ng-click="ctrl.removeGroup()"><i class="fa fa-minus"></i></button>
 			<span style="width: 40px">{{ctrl.numberOfGroups}}</span>
-			<button class="btn btn-default" ng-click="ctrl.addGroup()"><i class="fa fa-plus"></i></button>
+			<button class="btn btn-default" my-item="ctrl.event.organiserId" ng-click="ctrl.addGroup()"><i class="fa fa-plus"></i></button>
 		</div>
 		<div>
 			<button type="button" class="btn btn-success"  my-item="ctrl.event.organiserId" ng-click="ctrl.shuffle()">
