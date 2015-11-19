@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventStartCtrl', EventStartCtrl);
 
-function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams, $timeout, $scope) {
+function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToast, $routeParams, $timeout, $scope) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
@@ -11,6 +11,7 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	self.event = {};
 	self.groups = {};
 	var pilots = {};
+	var _raceFrequencies = {};
 
 	self.numberOfGroups = 0;
 	var numOfPilots = 0;
@@ -18,7 +19,6 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 
 	function _init() {
 		var ev = Event.get(eventId);
-
 		ev.on('value', function (snap) {
 			self.event = snap.val();
 			self.event.$id = eventId;
@@ -45,6 +45,16 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 		});
 		$scope.$on('$destroy', function () {
 			grps.off();
+		});
+
+		var freq = Frequency.all();
+		freq.on('value', function (snap) {
+			if (snap.val()) {
+				_raceFrequencies = snap.val();
+			}
+		});
+		$scope.$on('$destroy', function () {
+			freq.off();
 		});
 	}
 
@@ -73,26 +83,29 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 
 	self.shuffle = function () {
 		if (pilots && Object.keys(pilots).length > 0) {
-			var shuffledKeys = faker.helpers.shuffle(Object.keys(pilots));
+			var availableFreqs = {};
 
 			angular.forEach(self.groups, function (val, key) {
-				//val.racers = {};
 				Event.deleteAllGroupRacers(eventId, key, function (err) {
 					console.log('deleted racers from group', key);
+					availableFreqs[key] = angular.copy(_raceFrequencies);
 					if (err) {
 						ngToast.warning(err);
 					}
 				});
 			});
 
+			var shuffledKeys = faker.helpers.shuffle(Object.keys(pilots));
 			var k = 1;
 			for (var b = 0; b < shuffledKeys.length; b++) {
 				if (!self.groups['Group ' + k]) {
 					k = 1;
 				}
-				console.log('adding pilot ' + shuffledKeys[b] + ' to Group ' + k, pilots[shuffledKeys[b]]);
-				//self.groups['Group ' + k].racers[key] = val;
-				Event.addGroupRacer(eventId, 'Group ' + k, shuffledKeys[b], pilots[shuffledKeys[b]], function (err) {
+				var pilot = pilots[shuffledKeys[b]];
+				if (pilot.frequencies != null) {
+					console.log('Group ' + k, availableFreqs['Group ' + k], pilot.frequencies);
+				}
+				Event.addGroupRacer(eventId, 'Group ' + k, shuffledKeys[b], pilot, function (err) {
 					if (err) {
 						ngToast.warning(err);
 					}
@@ -114,4 +127,4 @@ function EventStartCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routePa
 	};
 
 }
-EventStartCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$scope'];
+EventStartCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'Frequency', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$scope'];
