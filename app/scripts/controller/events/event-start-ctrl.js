@@ -3,18 +3,18 @@
 angular.module('race-day-fpv')
 	.controller('EventStartCtrl', EventStartCtrl);
 
-function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToast, $routeParams, $timeout, $scope) {
+function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToast, $routeParams, $timeout, $q, $scope, $firebaseArray, $firebaseObject) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
 
 	self.event = {};
 	self.groups = {};
-	var pilots = {};
+	var _pilots = {};
 	var _raceFrequencies = {};
 
 	self.numberOfGroups = 0;
-	var numOfPilots = 0;
+	var _numOfPilots = 0;
 	_init();
 
 	function _init() {
@@ -26,8 +26,16 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 			angular.forEach(self.event.pilots, function (val, key) {
 				if (val.checkedIn) {
 					Pilot.get(key).once('value', function (snap) {
-						pilots[snap.key()] = snap.val();
-						numOfPilots = Object.keys(pilots).length;
+						var p = snap.val();
+						var v = {
+							key: snap.key(),
+							name: p.name,
+							alias: p.alias,
+							avatar: p.avatar,
+							frequencies: p.frequencies ? p.frequencies : null
+						};
+						_pilots[snap.key()] = v;
+						_numOfPilots = Object.keys(_pilots).length;
 					});
 				}
 			});
@@ -81,39 +89,98 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 		});
 	};
 
+	function _assignFreq(pilot, availableFreqs, group) {
+		if (pilot.frequencies != null) {
+			var freq = _getCommonFreq(pilot.frequencies, availableFreqs[group]);
+			if (freq != null) {
+				delete availableFreqs[group][freq.key];
+				pilot.raceFrequency = freq;
+			}
+		}
+		return pilot;
+	}
+
 	self.shuffle = function () {
-		if (pilots && Object.keys(pilots).length > 0) {
+		if (_pilots && Object.keys(_pilots).length > 0) {
 			var availableFreqs = {};
 
 			angular.forEach(self.groups, function (val, key) {
+				availableFreqs[key] = angular.copy(_raceFrequencies);
 				Event.deleteAllGroupRacers(eventId, key, function (err) {
-					console.log('deleted racers from group', key);
-					availableFreqs[key] = angular.copy(_raceFrequencies);
 					if (err) {
 						ngToast.warning(err);
 					}
 				});
 			});
 
-			var shuffledKeys = faker.helpers.shuffle(Object.keys(pilots));
+			var shuffledKeys = faker.helpers.shuffle(Object.keys(_pilots));
+			var savePromises = [];
+			var saveDefers = [];
 			var k = 1;
 			for (var b = 0; b < shuffledKeys.length; b++) {
+				var defer = $q.defer();
+				saveDefers.push(defer);
+				savePromises.push(defer.promise);
+				var theGroupKey = 'Group ' + k;
 				if (!self.groups['Group ' + k]) {
 					k = 1;
+					theGroupKey = 'Group ' + k
 				}
-				var pilot = pilots[shuffledKeys[b]];
-				if (pilot.frequencies != null) {
-					console.log('Group ' + k, availableFreqs['Group ' + k], pilot.frequencies);
-				}
-				Event.addGroupRacer(eventId, 'Group ' + k, shuffledKeys[b], pilot, function (err) {
-					if (err) {
-						ngToast.warning(err);
-					}
-				});
+				var thePilot = _pilots[shuffledKeys[b]];
+
+				var pilot = _assignFreq(thePilot, availableFreqs, theGroupKey);
+				_persistIt(theGroupKey, shuffledKeys, pilot, saveDefers, b);
 				k++;
 			}
+			$q.all(savePromises)
+				.then(function () {
+					console.log('all resolved');
+					console.log(self.groups);
+				});
+			//var pCopy = angular.copy(_pilots);
+			//var thePilot = _smallestPilot(pCopy);
 		}
 	};
+
+	function _persistIt(theGroupKey, shuffledKeys, pilot, promises, b) {
+		Event.addGroupRacer(eventId, theGroupKey, shuffledKeys[b], pilot, function (err) {
+			if (err) {
+				ngToast.warning(err);
+			}
+			promises[b].resolve();
+		});
+	}
+
+	function _getCommonFreq(obj1, obj2) {
+		var arr1 = Object.keys(obj1);
+		var arr2 = Object.keys(obj2);
+
+		for (var k = 0; k < arr1.length; k++) {
+			for (var l = 0; l < arr2.length; l++) {
+				if (arr1[k] == arr2[l]) {
+					return obj2[arr2[k]];
+				}
+			}
+		}
+		return null;
+	}
+
+	function _smallestPilot(pilots) {
+		var arr = Object.keys(pilots);
+		var smallest = null;
+		var smallestNum = 999;
+
+		for (var k = 0; k < arr.length; k++) {
+			var p = pilots[arr[k]];
+			var numFreq = Object.keys(p.frequencies).length;
+			if (numFreq < smallestNum) {
+				smallestNum = numFreq;
+				smallest = p;
+			}
+		}
+		delete pilots[smallest.key];
+		return smallest;
+	}
 
 	self.startEvent = function () {
 		var racerCount = 0;
@@ -127,4 +194,4 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 	};
 
 }
-EventStartCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'Frequency', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$scope'];
+EventStartCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'Frequency', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$q', '$scope', '$firebaseArray', '$firebaseObject'];

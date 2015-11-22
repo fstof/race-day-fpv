@@ -37,7 +37,8 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="racer in group.racers track by $index">
-							{{racer.name}}
+							<!--{{racer | json}}-->
+							{{racer.alias}} - {{racer.raceFrequency.frequency}}
 						</li>
 					</ul>
 				</div>
