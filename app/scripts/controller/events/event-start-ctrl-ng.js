@@ -19,35 +19,20 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 
 	function _init() {
 		var ev = Event.get(eventId);
-		self.event = $firebaseObject(ev);
-		self.event.$loaded(function () {
-			_numOfPilots = Object.keys(self.event.pilots).length;
-			_pilots = self.event.pilots;
+		ev.on('value', function (snap) {
+			self.event = snap.val();
+			self.event.$id = eventId;
+			self.eventDate = RDFDateUtil.stringValue(new Date(self.event.date));
+			angular.forEach(self.event.pilots, function (val, key) {
+				if (val.checkedIn) {
+					_pilots[key] = val;
+					_numOfPilots = Object.keys(_pilots).length;
+				}
+			});
 		});
-		//ev.on('value', function (snap) {
-		//	self.event = snap.val();
-		//	self.event.$id = eventId;
-		//	self.eventDate = RDFDateUtil.stringValue(new Date(self.event.date));
-		//	angular.forEach(self.event.pilots, function (val, key) {
-		//		if (val.checkedIn) {
-		//			Pilot.get(key).once('value', function (snap) {
-		//				var p = snap.val();
-		//				var v = {
-		//					key: snap.key(),
-		//					name: p.name,
-		//					alias: p.alias,
-		//					avatar: p.avatar,
-		//					frequencies: p.frequencies ? p.frequencies : null
-		//				};
-		//				_pilots[snap.key()] = v;
-		//				_numOfPilots = Object.keys(_pilots).length;
-		//			});
-		//		}
-		//	});
-		//});
-		//$scope.$on('$destroy', function () {
-		//	ev.off();
-		//});
+		$scope.$on('$destroy', function () {
+			ev.off();
+		});
 
 		var grps = Event.getGroups(eventId);
 		self.groups = $firebaseArray(grps);
@@ -56,7 +41,7 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 		});
 
 		var freq = Frequency.all();
-		_raceFrequencies = $firebaseArray(freq);
+		_raceFrequencies = $firebaseObject(freq);
 	}
 
 	self.removeGroup = function () {
@@ -81,100 +66,130 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 			var availableFreqs = {};
 
 			for (var c = 0; c < self.groups.length; c++) {
-				var key = self.groups[c].$id;
-				availableFreqs[key] = angular.copy(_raceFrequencies);
+				var groupKey = self.groups[c].$id;
+				availableFreqs[groupKey] = {};
+				angular.forEach(_raceFrequencies, function (val, key) {
+					availableFreqs[groupKey][key] = angular.copy(val);
+					availableFreqs[groupKey][key].used = false;
+				});
 				self.groups[c].racers = null;
 				self.groups.$save(c);
 			}
 
 			var shuffledKeys = faker.helpers.shuffle(Object.keys(_pilots));
-			var k = 0;
+			var theGroupIndex = 0;
+			var deferrals = [];
+			var promises = [];
 			for (var b = 0; b < shuffledKeys.length; b++) {
-				var theGroupIndex = k;
-				if (!self.groups[k]) {
-					k = 0;
-					theGroupIndex = k
+				deferrals.push($q.defer());
+				promises.push(deferrals[b].promise);
+
+				if (!self.groups[theGroupIndex]) {
+					theGroupIndex = 0;
 				}
 				var thePilot = $firebaseObject(Pilot.get(shuffledKeys[b]));
-				_extracted(thePilot, theGroupIndex, shuffledKeys[b]);
-				k++;
+				_extracted(thePilot, theGroupIndex, shuffledKeys[b], deferrals[b]);
+				theGroupIndex++;
 			}
-			//for (var d = 0; d < self.groups.length; d++) {
-			//	self.groups.$save(d);
-			//}
-			//var pCopy = angular.copy(_pilots);
-			//var thePilot = _smallestPilot(pCopy);
+			$q.all(promises)
+				.then(function () {
+					console.log('all resolved');
+					console.log(self.groups);
+
+					for (var d = 0; d < self.groups.length; d++) {
+						var group = self.groups[d];
+						var smallest = _getSmallestPilot(group.racers);
+						while (smallest != null) {
+							_assignFreq(smallest, availableFreqs[group.$id], group.$id);
+							smallest = _getSmallestPilot(group.racers);
+						}
+						self.groups.$save(d);
+					}
+				});
 		}
 	};
 
-	function _extracted(thePilot, theGroupIndex, rkey) {
+	function _extracted(thePilot, theGroupIndex, rkey, defer) {
 		thePilot.$loaded(function () {
 			if (!self.groups[theGroupIndex].racers) {
 				self.groups[theGroupIndex].racers = {};
 			}
-			var v = {
+			self.groups[theGroupIndex].racers[rkey] = {
 				name: thePilot.name,
 				alias: thePilot.alias,
 				avatar: thePilot.avatar,
 				frequencies: thePilot.frequencies ? thePilot.frequencies : null
 			};
-			self.groups[theGroupIndex].racers[rkey] = v;
-			self.groups.$save(theGroupIndex);
+			defer.resolve();
+			//self.groups.$save(theGroupIndex);
 		});
-	}
-
-	function _getThePilot(key) {
-		retPilot.get(key)
 	}
 
 	function _assignFreq(pilot, availableFreqs, group) {
 		if (pilot.frequencies != null) {
-			var freq = _getCommonFreq(pilot.frequencies, availableFreqs[group]);
+			var freq = _getCommonFreq(pilot.frequencies, availableFreqs);
 			if (freq != null) {
-				delete availableFreqs[group][freq.key];
-				pilot.raceFrequency = freq;
+				if (!freq.used) {
+					//delete availableFreqs[freq.key];
+					freq.used = true;
+					pilot.raceFrequency = freq;
+				} else {
+					freq.frequency += ' - DUPE';
+					pilot.raceFrequency = freq;
+				}
+			} else {
+				pilot.raceFrequency = {frequency: 'ERROR'};
 			}
+		} else {
+			pilot.raceFrequency = {frequency: 'UNKNOWN'};
 		}
 		return pilot;
-	}
-
-	function _persistIt(theGroupKey, shuffledKeys, pilot, promises, b) {
-		Event.addGroupRacer(eventId, theGroupKey, shuffledKeys[b], pilot, function (err) {
-			if (err) {
-				ngToast.warning(err);
-			}
-			promises[b].resolve();
-		});
 	}
 
 	function _getCommonFreq(obj1, obj2) {
 		var arr1 = Object.keys(obj1);
 		var arr2 = Object.keys(obj2);
+		var fallback = null;
 
 		for (var k = 0; k < arr1.length; k++) {
 			for (var l = 0; l < arr2.length; l++) {
+				var freq = obj2[arr2[l]];
 				if (arr1[k] == arr2[l]) {
-					return obj2[arr2[k]];
+					if (!freq.used) {
+						return freq;
+					} else {
+						fallback = freq;
+					}
 				}
 			}
 		}
-		return null;
+		return fallback;
 	}
 
-	function _smallestPilot(pilots) {
-		var arr = Object.keys(pilots);
+	function _getSmallestPilot(pilots) {
 		var smallest = null;
+		var smallestIx = -1;
 		var smallestNum = 999;
 
-		for (var k = 0; k < arr.length; k++) {
-			var p = pilots[arr[k]];
-			var numFreq = Object.keys(p.frequencies).length;
-			if (numFreq < smallestNum) {
-				smallestNum = numFreq;
-				smallest = p;
+		var keys = Object.keys(pilots);
+
+		for (var k = 0; k < keys.length; k++) {
+			var p = pilots[keys[k]];
+			if (p.frequencies) {
+				var numFreq = Object.keys(p.frequencies).length;
+				if (numFreq < smallestNum && !p.raceFrequency) {
+					smallestNum = numFreq;
+					smallest = p;
+					smallestIx = k;
+				}
+			} else {
+				if (!p.raceFrequency) {
+					smallestNum = 0;
+					smallest = p;
+					smallestIx = k;
+				}
 			}
 		}
-		delete pilots[smallest.key];
 		return smallest;
 	}
 

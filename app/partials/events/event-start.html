@@ -1,5 +1,6 @@
 <div class="jumbotron">
 	<div class="container-fluid">
+		<a class="btn btn-default pull-right" ng-href="#/events/{{ctrl.event.$id}}"><i class="fa fa-reply"></i></a>
 		<h3>
 			{{ctrl.event.name}}
 		</h3>
@@ -16,9 +17,9 @@
 			<button type="button" class="btn btn-success"  my-item="ctrl.event.organiserId" ng-click="ctrl.shuffle()">
 				<i class="fa fa-random"></i> Shuffle Racers</i>
 			</button>
-			<button type="button" class="btn btn-success"  my-item="ctrl.event.organiserId" ng-click="ctrl.startEvent()">
-				<i class="fa fa-flag-checkered"></i> Start <i class="fa fa-flag-checkered"></i>
-			</button>
+			<!--<button type="button" class="btn btn-success"  my-item="ctrl.event.organiserId" ng-click="ctrl.startEvent()">-->
+				<!--<i class="fa fa-flag-checkered"></i> Start <i class="fa fa-flag-checkered"></i>-->
+			<!--</button>-->
 		</div>
 	</div>
 </div>
