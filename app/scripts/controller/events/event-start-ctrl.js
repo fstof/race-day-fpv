@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventStartCtrl', EventStartCtrl);
 
-function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToast, $routeParams, $timeout, $q, $scope, $firebaseArray, $firebaseObject) {
+function EventStartCtrl(Pilot, Event, Frequency, RDFDateUtil, ngToast, $routeParams, $q, $scope, $firebaseArray, $firebaseObject) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
@@ -25,18 +25,8 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 			self.eventDate = RDFDateUtil.stringValue(new Date(self.event.date));
 			angular.forEach(self.event.pilots, function (val, key) {
 				if (val.checkedIn) {
-					Pilot.get(key).once('value', function (snap) {
-						var p = snap.val();
-						var v = {
-							key: snap.key(),
-							name: p.name,
-							alias: p.alias,
-							avatar: p.avatar,
-							frequencies: p.frequencies ? p.frequencies : null
-						};
-						_pilots[snap.key()] = v;
-						_numOfPilots = Object.keys(_pilots).length;
-					});
+					_pilots[key] = val;
+					_numOfPilots = Object.keys(_pilots).length;
 				}
 			});
 		});
@@ -45,140 +35,159 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 		});
 
 		var grps = Event.getGroups(eventId);
-		grps.on('value', function (snap) {
-			if (snap.val()) {
-				self.groups = snap.val();
-				self.numberOfGroups = Object.keys(self.groups).length;
-			}
-		});
-		$scope.$on('$destroy', function () {
-			grps.off();
+		self.groups = $firebaseArray(grps);
+		self.groups.$loaded(function () {
+			self.numberOfGroups = self.groups.length;
 		});
 
 		var freq = Frequency.all();
-		freq.on('value', function (snap) {
-			if (snap.val()) {
-				_raceFrequencies = snap.val();
-			}
-		});
-		$scope.$on('$destroy', function () {
-			freq.off();
-		});
+		_raceFrequencies = $firebaseObject(freq);
 	}
 
 	self.removeGroup = function () {
 		if (self.numberOfGroups == 1) {
 			return;
 		}
-		Event.deleteGroup(eventId, 'Group ' + self.numberOfGroups, function (err) {
-			if (err) {
-				ngToast.warning('Error: ' + err);
-			} else {
-				self.shuffle();
-			}
+		self.groups.$remove(self.numberOfGroups - 1).then(function () {
+			self.numberOfGroups--;
+			self.shuffle();
 		});
 	};
 
 	self.addGroup = function () {
-		Event.addGroup(eventId, {name: 'Group ' + (self.numberOfGroups + 1)}, function (err) {
-			if (err) {
-				ngToast.warning('Error');
-			} else {
-				self.shuffle();
-			}
+		self.groups.$add({name: 'Group ' + (self.numberOfGroups + 1)}).then(function () {
+			self.numberOfGroups++;
+			self.shuffle();
 		});
 	};
-
-	function _assignFreq(pilot, availableFreqs, group) {
-		if (pilot.frequencies != null) {
-			var freq = _getCommonFreq(pilot.frequencies, availableFreqs[group]);
-			if (freq != null) {
-				delete availableFreqs[group][freq.key];
-				pilot.raceFrequency = freq;
-			}
-		}
-		return pilot;
-	}
 
 	self.shuffle = function () {
 		if (_pilots && Object.keys(_pilots).length > 0) {
 			var availableFreqs = {};
 
-			angular.forEach(self.groups, function (val, key) {
-				availableFreqs[key] = angular.copy(_raceFrequencies);
-				Event.deleteAllGroupRacers(eventId, key, function (err) {
-					if (err) {
-						ngToast.warning(err);
-					}
+			for (var c = 0; c < self.groups.length; c++) {
+				var groupKey = self.groups[c].$id;
+				availableFreqs[groupKey] = {};
+				angular.forEach(_raceFrequencies, function (val, key) {
+					availableFreqs[groupKey][key] = angular.copy(val);
+					availableFreqs[groupKey][key].used = false;
 				});
-			});
+				self.groups[c].racers = null;
+				self.groups.$save(c);
+			}
 
 			var shuffledKeys = faker.helpers.shuffle(Object.keys(_pilots));
-			var savePromises = [];
-			var saveDefers = [];
-			var k = 1;
+			var theGroupIndex = 0;
+			var deferrals = [];
+			var promises = [];
 			for (var b = 0; b < shuffledKeys.length; b++) {
-				var defer = $q.defer();
-				saveDefers.push(defer);
-				savePromises.push(defer.promise);
-				var theGroupKey = 'Group ' + k;
-				if (!self.groups['Group ' + k]) {
-					k = 1;
-					theGroupKey = 'Group ' + k
-				}
-				var thePilot = _pilots[shuffledKeys[b]];
+				deferrals.push($q.defer());
+				promises.push(deferrals[b].promise);
 
-				var pilot = _assignFreq(thePilot, availableFreqs, theGroupKey);
-				_persistIt(theGroupKey, shuffledKeys, pilot, saveDefers, b);
-				k++;
+				if (!self.groups[theGroupIndex]) {
+					theGroupIndex = 0;
+				}
+				var thePilot = $firebaseObject(Pilot.get(shuffledKeys[b]));
+				_extracted(thePilot, theGroupIndex, shuffledKeys[b], deferrals[b]);
+				theGroupIndex++;
 			}
-			$q.all(savePromises)
+			$q.all(promises)
 				.then(function () {
 					console.log('all resolved');
 					console.log(self.groups);
+
+					for (var d = 0; d < self.groups.length; d++) {
+						var group = self.groups[d];
+						var smallest = _getSmallestPilot(group.racers);
+						while (smallest != null) {
+							_assignFreq(smallest, availableFreqs[group.$id]);
+							smallest = _getSmallestPilot(group.racers);
+						}
+						self.groups.$save(d);
+					}
 				});
-			//var pCopy = angular.copy(_pilots);
-			//var thePilot = _smallestPilot(pCopy);
 		}
 	};
 
-	function _persistIt(theGroupKey, shuffledKeys, pilot, promises, b) {
-		Event.addGroupRacer(eventId, theGroupKey, shuffledKeys[b], pilot, function (err) {
-			if (err) {
-				ngToast.warning(err);
+	function _extracted(thePilot, theGroupIndex, rkey, defer) {
+		thePilot.$loaded(function () {
+			if (!self.groups[theGroupIndex].racers) {
+				self.groups[theGroupIndex].racers = {};
 			}
-			promises[b].resolve();
+			self.groups[theGroupIndex].racers[rkey] = {
+				name: thePilot.name,
+				alias: thePilot.alias,
+				avatar: thePilot.avatar,
+				frequencies: thePilot.frequencies ? thePilot.frequencies : null
+			};
+			defer.resolve();
 		});
+	}
+
+	function _assignFreq(pilot, availableFreqs) {
+		if (pilot.frequencies != null) {
+			var freq = _getCommonFreq(pilot.frequencies, availableFreqs);
+			if (freq != null) {
+				if (!freq.used) {
+					freq.used = true;
+					pilot.raceFrequency = freq;
+				} else {
+					freq.frequency += ' - DUPE';
+					pilot.raceFrequency = freq;
+				}
+			} else {
+				pilot.raceFrequency = {frequency: 'ERROR'};
+			}
+		} else {
+			pilot.raceFrequency = {frequency: 'UNKNOWN'};
+		}
+		return pilot;
 	}
 
 	function _getCommonFreq(obj1, obj2) {
 		var arr1 = Object.keys(obj1);
 		var arr2 = Object.keys(obj2);
+		var fallback = null;
 
 		for (var k = 0; k < arr1.length; k++) {
 			for (var l = 0; l < arr2.length; l++) {
+				var freq = obj2[arr2[l]];
 				if (arr1[k] == arr2[l]) {
-					return obj2[arr2[k]];
+					if (!freq.used) {
+						return freq;
+					} else {
+						fallback = freq;
+					}
 				}
 			}
 		}
-		return null;
+		return fallback;
 	}
 
-	function _smallestPilot(pilots) {
-		var arr = Object.keys(pilots);
+	function _getSmallestPilot(pilots) {
 		var smallest = null;
+		var smallestIx = -1;
 		var smallestNum = 999;
 
-		for (var k = 0; k < arr.length; k++) {
-			var p = pilots[arr[k]];
-			var numFreq = Object.keys(p.frequencies).length;
-			if (numFreq < smallestNum) {
-				smallestNum = numFreq;
-				smallest = p;
+		var keys = Object.keys(pilots);
+
+		for (var k = 0; k < keys.length; k++) {
+			var p = pilots[keys[k]];
+			if (p.frequencies) {
+				var numFreq = Object.keys(p.frequencies).length;
+				if (numFreq < smallestNum && !p.raceFrequency) {
+					smallestNum = numFreq;
+					smallest = p;
+					smallestIx = k;
+				}
+			} else {
+				if (!p.raceFrequency) {
+					smallestNum = 0;
+					smallest = p;
+					smallestIx = k;
+				}
 			}
 		}
-		delete pilots[smallest.key];
 		return smallest;
 	}
 
@@ -194,4 +203,4 @@ function EventStartCtrl(FPVSession, Pilot, Event, Frequency, RDFDateUtil, ngToas
 	};
 
 }
-EventStartCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'Frequency', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$q', '$scope', '$firebaseArray', '$firebaseObject'];
+EventStartCtrl.$inject = ['Pilot', 'Event', 'Frequency', 'RDFDateUtil', 'ngToast', '$routeParams', '$q', '$scope', '$firebaseArray', '$firebaseObject'];

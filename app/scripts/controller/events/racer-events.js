@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('RacerCtrl', MeCtrl);
 
-function MeCtrl(RDFDateUtil, Pilot, Event, ngToast, $timeout, $scope, $routeParams) {
+function MeCtrl(FPVSession, RDFDateUtil, Pilot, Event, ngToast, $timeout, $scope, $routeParams) {
 	var self = this;
 
 	var racerId = $routeParams.racerId;
@@ -53,4 +53,4 @@ function MeCtrl(RDFDateUtil, Pilot, Event, ngToast, $timeout, $scope, $routePara
 	}
 
 }
-MeCtrl.$inject = ['RDFDateUtil', 'Pilot', 'Event', 'ngToast', '$timeout', '$scope', '$routeParams'];
+MeCtrl.$inject = ['FPVSession', 'RDFDateUtil', 'Pilot', 'Event', 'ngToast', '$timeout', '$scope', '$routeParams'];

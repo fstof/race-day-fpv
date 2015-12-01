@@ -88,7 +88,7 @@
 								<li><a ng-href="#/pilots"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
 							</ul>
 						</li>
-						<li logged-in>
+						<li manager>
 							<a ng-href="#/manage" ><i class="fa fa-wrench"></i> Manage</a>
 						</li>
 					</ul>
@@ -122,7 +122,7 @@
 								<li><a ng-href="#/pilots" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
 							</ul>
 						</li>
-						<li logged-in>
+						<li manager>
 							<a ng-href="#/manage" ><i class="fa fa-wrench"></i> Manage</a>
 						</li>
 						<li logged-in="false">
@@ -209,6 +209,7 @@
 <script src="scripts/directive/event-card.js"></script>
 <script src="scripts/directive/logged-in.js"></script>
 <script src="scripts/directive/my-item.js"></script>
+<script src="scripts/directive/manager.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
 <script src="scripts/controller/me-ctrl.js"></script>
 <script src="scripts/controller/events/events-upcoming-ctrl.js"></script>
@@ -216,8 +217,7 @@
 <script src="scripts/controller/events/event-add-ctrl.js"></script>
 <script src="scripts/controller/events/event-edit-ctrl.js"></script>
 <script src="scripts/controller/events/event-ctrl.js"></script>
-<!--<script src="scripts/controller/events/event-start-ctrl.js"></script>-->
-<script src="scripts/controller/events/event-start-ctrl-ng.js"></script>
+<script src="scripts/controller/events/event-start-ctrl.js"></script>
 <script src="scripts/controller/pilots/pilots-ctrl.js"></script>
 <script src="scripts/controller/pilots/pilot-edit-ctrl.js"></script>
 <script src="scripts/controller/manage/manage-ctrl.js"></script>
