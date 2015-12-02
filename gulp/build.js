@@ -56,14 +56,14 @@ gulp.task('html', ['styles', 'scripts'], function () {
 
 
 gulp.task('dev', [], function () {
-	return gulp.src(['app/scripts/race-day-fpv.js'])
+	return gulp.src(['app/scripts/app.js'])
 		.pipe($.replace('https://race-day-fpv.firebaseio.com', 'https://race-day-fpv-dev.firebaseio.com'))
 		.pipe(gulp.dest('app/scripts/'))
 		.pipe($.size());
 });
 
 gulp.task('prod', [], function () {
-	return gulp.src(['app/scripts/race-day-fpv.js'])
+	return gulp.src(['app/scripts/app.js'])
 		.pipe($.replace('https://race-day-fpv-dev.firebaseio.com', 'https://race-day-fpv.firebaseio.com'))
 		.pipe(gulp.dest('app/scripts/'))
 		.pipe($.size());

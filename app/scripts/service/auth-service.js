@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.factory('Auth', Auth);
 
-function Auth(FPVSession, FIREBASE_REF, User, Pilot, ngToast, $firebaseObject, $firebaseAuth, $route, $timeout) {
+function Auth(FPVSession, FIREBASE_REF, User, Pilot, ngToast, $location, $firebaseAuth, $route, $timeout) {
 	var ref = FIREBASE_REF;
 	var _userRef = null;
 	var _pilotRef = null;
@@ -80,21 +80,24 @@ function Auth(FPVSession, FIREBASE_REF, User, Pilot, ngToast, $firebaseObject, $
 					if (snap.val()) {
 						FPVSession.user = snap.val();
 						FPVSession.user.$id = snap.key();
-						$timeout(function () {
-							ngToast.success('User Logged In');
-						});
 						_userRef.off();
-					}
-				});
-				_pilotRef = Pilot.get(authData.uid);
-				_pilotRef.on('value', function (snap) {
-					if (snap.val()) {
-						FPVSession.pilot = snap.val();
-						FPVSession.pilot.$id = snap.key();
-						$timeout(function () {
-							ngToast.success('Pilot Logged In');
+
+						_pilotRef = Pilot.get(authData.uid);
+						_pilotRef.on('value', function (snap) {
+							if (snap.val()) {
+								FPVSession.pilot = snap.val();
+								FPVSession.pilot.$id = snap.key();
+								$timeout(function () {
+									if (!FPVSession.pilot.frequencies) {
+										$location.path('/me/edit');
+										ngToast.warning('Please add your frequencies');
+									} else {
+										ngToast.success('Pilot Logged In');
+									}
+								});
+								_pilotRef.off();
+							}
 						});
-						_pilotRef.off();
 					}
 				});
 			} else {
@@ -138,4 +141,4 @@ function Auth(FPVSession, FIREBASE_REF, User, Pilot, ngToast, $firebaseObject, $
 		});
 	}
 }
-Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'User', 'Pilot', 'ngToast', '$firebaseObject', '$firebaseAuth', '$route', '$timeout'];
+Auth.$inject = ['FPVSession', 'FIREBASE_REF', 'User', 'Pilot', 'ngToast', '$location', '$firebaseAuth', '$route', '$timeout'];

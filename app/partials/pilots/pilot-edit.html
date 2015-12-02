@@ -3,54 +3,32 @@
 </div>
 
 <div class="container-fluid">
-<form>
-	<div class="row">
 
-		<div class="col-sm-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-lg-12">
-							<h4>{{ctrl.pilot.name}} <small>{{ctrl.pilot.alias}}</small></h4>
-						</div>
-					</div>
-				</div>
-				<div class="panel-body">
-					<ul class="list-group">
-						<li class="list-group-item">
-							<span class="form-group">
-								<label>Name</label>
-								<input type="text" class="form-control" placeholder="Name" ng-model="ctrl.pilot.name">
-							</span>
-						</li>
-						<li class="list-group-item">
-							<span class="form-group">
-								<label>Alias</label>
-								<input type="text" class="form-control" placeholder="Alias" ng-model="ctrl.pilot.alias">
-							</span>
-						</li>
-						<li class="list-group-item">
-							<span class="form-group">
-								<label>Avatar</label>
-								<input type="text" class="form-control" placeholder="Avatar" ng-model="ctrl.pilot.avatar">
-							</span>
-						</li>
-						<li class="list-group-item">
-							<span class="form-group">
-								<label>Tagline</label>
-								<input type="text" class="form-control" placeholder="Tagline" ng-model="ctrl.pilot.tagline">
-							</span>
-						</li>
-					</ul>
-					<span class="pull-right">
-						<a class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</a>
-						<a class="btn btn-primary" ng-click="ctrl.save()">Save</a>
-					</span>
-				</div>
-			</div>
-		</div>
+	<uib-alert type="danger" ng-show="ctrl.freqCount == 0">
+		<h4>Frequencies</h4>
+		<p>
+			You are missing frequencies, please add them now
+		</p>
+	</uib-alert>
 
-	</div>
-</form>
+	<uib-accordion>
+
+		<uib-accordion-group is-open="ctrl.status.details.open">
+			<uib-accordion-heading>
+				<i class="fa fa-user"></i> My Details <i class="pull-right fa" ng-class="{'fa-chevron-down': ctrl.status.details.open, 'fa-chevron-right': !ctrl.status.details.open}"></i>
+			</uib-accordion-heading>
+
+			<div ng-include="'partials/pilots/pilot-details.html'"></div>
+		</uib-accordion-group>
+
+		<uib-accordion-group is-open="ctrl.status.frequencies.open">
+			<uib-accordion-heading>
+				<i class="fa fa-wifi" ng-class="{'text-danger': ctrl.freqCount == 0}"></i> My Video Frequencies <i class="pull-right fa" ng-class="{'fa-chevron-down': ctrl.status.frequencies.open, 'fa-chevron-right': !ctrl.status.frequencies.open}"></i>
+			</uib-accordion-heading>
+
+			<div ng-include="'partials/pilots/pilot-frequencies.html'"></div>
+		</uib-accordion-group>
+
+	</uib-accordion>
 
 </div>

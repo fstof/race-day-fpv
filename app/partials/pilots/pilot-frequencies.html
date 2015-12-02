@@ -1,23 +1,17 @@
-<div class="page-header text-center">
-	<h1>
-		Me <small>My Frequencies</small>
-	</h1>
-</div>
-
 <div class="container-fluid">
 
-	<p>
-		<div class="row">
-			<div class="col-md-3">
-				<select class="form-control" ng-model="ctrl.newFreq" ng-options="freq.frequency for freq in ctrl.allFrequencies">
-					<option value="">---Please select---</option> <!-- not selected / blank option -->
-				</select>
-			</div>
-			<div class="col-md-2">
-				<button type="button" class="btn btn-primary" ng-click="ctrl.addFreq(ctrl.newFreq)"><i class="fa fa-plus"></i> Add</button>
-			</div>
+	<div class="row">
+		<div class="col-md-3">
+			<select class="form-control" ng-model="ctrl.newFreq" ng-options="freq.frequency for freq in ctrl.allFrequencies">
+				<option value="">---Please select---</option> <!-- not selected / blank option -->
+			</select>
 		</div>
-	</p>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-primary" ng-click="ctrl.addFreq(ctrl.newFreq)"><i class="fa fa-plus"></i> Add</button>
+		</div>
+	</div>
+
+	<hr>
 
 	<div class="row">
 		<div class="col-md-6" ng-repeat="freq in ctrl.myFrequencies">

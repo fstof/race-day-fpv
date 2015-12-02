@@ -1,16 +1,10 @@
 'use strict';
-var firebase_base = 'https://race-day-fpv-dev.firebaseio.com';
 
-angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast', 'firebase', 'ngRoute', 'ngResource', 'ui.bootstrap', 'btford.markdown'])
+angular.module('race-day-fpv')
 	.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
 			.when('/me/events', {
 				templateUrl: 'partials/my-events.html',
-				controller: 'MeCtrl',
-				controllerAs: 'ctrl'
-			})
-			.when('/me/frequencies', {
-				templateUrl: 'partials/my-frequencies.html',
 				controller: 'MeCtrl',
 				controllerAs: 'ctrl'
 			})
@@ -67,14 +61,4 @@ angular.module('race-day-fpv', ['ngAnimate', 'ngCookies', 'ngSanitize', 'ngToast
 			.otherwise({
 				redirectTo: '/home'
 			});
-	}])
-
-	.config(['ngToastProvider', function (ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'bottom',
-			horizontalPosition: 'left'
-		});
-	}])
-
-	.constant('FIREBASE_REF', new Firebase(firebase_base))
-	.constant('FIREBASE_URL', firebase_base);
+	}]);
