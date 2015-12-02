@@ -55,14 +55,17 @@ gulp.task('html', ['styles', 'scripts'], function () {
 });
 
 
-gulp.task('deploy', [], function () {
-	var jsFilter = $.filter(['**/*.js'], {restore: true});
+gulp.task('dev', [], function () {
+	return gulp.src(['app/scripts/race-day-fpv.js'])
+		.pipe($.replace('https://race-day-fpv.firebaseio.com', 'https://race-day-fpv-dev.firebaseio.com'))
+		.pipe(gulp.dest('app/scripts/'))
+		.pipe($.size());
+});
 
-	return gulp.src(['app/scripts/**/*'])
-		.pipe(jsFilter)
+gulp.task('prod', [], function () {
+	return gulp.src(['app/scripts/race-day-fpv.js'])
 		.pipe($.replace('https://race-day-fpv-dev.firebaseio.com', 'https://race-day-fpv.firebaseio.com'))
-		.pipe(jsFilter.restore)
-		.pipe(gulp.dest('dist'))
+		.pipe(gulp.dest('app/scripts/'))
 		.pipe($.size());
 });
 
@@ -89,4 +92,4 @@ gulp.task('clean', function () {
 	return gulp.src(['.tmp', 'dist'], {read: false}).pipe($.rimraf());
 });
 
-gulp.task('build', ['html', 'images', 'fonts']);
+gulp.task('build', ['prod', 'html', 'images', 'fonts']);

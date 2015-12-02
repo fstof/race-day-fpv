@@ -35,7 +35,7 @@ function browserSyncInit(baseDir, files, browser) {
 
 }
 
-gulp.task('serve', ['watch'], function () {
+gulp.task('serve', ['dev', 'watch'], function () {
 	browserSyncInit([
 		'app',
 		'.tmp'
@@ -46,8 +46,4 @@ gulp.task('serve', ['watch'], function () {
 		'app/partials/**/*.html',
 		'app/images/**/*'
 	]);
-});
-
-gulp.task('serve:dist', ['build'], function () {
-	browserSyncInit('dist');
 });
