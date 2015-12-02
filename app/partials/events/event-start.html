@@ -38,8 +38,14 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="racer in group.racers track by $index">
-							<!--{{racer | json}}-->
-							{{racer.alias}} - {{racer.raceFrequency.frequency}}
+							<span>{{racer.alias}}</span>
+							<span class="pull-right">
+								<i class="fa fa-check text-success" ng-show="!racer.raceFrequency.error" uib-tooltip="Error allocating frequency"></i>
+								<i class="fa fa-exclamation-triangle text-primary" ng-show="racer.raceFrequency.error == 'error'" uib-tooltip="Error allocating frequency"></i>
+								<i class="fa fa-exclamation-triangle text-warning" ng-show="racer.raceFrequency.error == 'unknown'" uib-tooltip="No frequencies for racer"></i>
+								<i class="fa fa-exclamation-triangle text-danger" ng-show="racer.raceFrequency.error == 'duplicate'" uib-tooltip="Duplicate! Check with other racer"></i>
+								{{racer.raceFrequency.frequency}}
+							</span>
 						</li>
 					</ul>
 				</div>

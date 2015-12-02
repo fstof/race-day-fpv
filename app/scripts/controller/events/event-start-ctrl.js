@@ -132,14 +132,15 @@ function EventStartCtrl(Pilot, Event, Frequency, RDFDateUtil, ngToast, $routePar
 					freq.used = true;
 					pilot.raceFrequency = freq;
 				} else {
-					freq.frequency += ' - DUPE';
+					freq.frequency;
+					freq.error = 'duplicate';
 					pilot.raceFrequency = freq;
 				}
 			} else {
-				pilot.raceFrequency = {frequency: 'ERROR'};
+				pilot.raceFrequency = {frequency: '????', error: 'error'};
 			}
 		} else {
-			pilot.raceFrequency = {frequency: 'UNKNOWN'};
+			pilot.raceFrequency = {frequency: '????', error: 'unknown'};
 		}
 		return pilot;
 	}

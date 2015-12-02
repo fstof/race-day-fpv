@@ -54,6 +54,18 @@ gulp.task('html', ['styles', 'scripts'], function () {
 		.pipe($.size());
 });
 
+
+gulp.task('deploy', [], function () {
+	var jsFilter = $.filter(['**/*.js'], {restore: true});
+
+	return gulp.src(['app/scripts/**/*'])
+		.pipe(jsFilter)
+		.pipe($.replace('https://race-day-fpv-dev.firebaseio.com', 'https://race-day-fpv.firebaseio.com'))
+		.pipe(jsFilter.restore)
+		.pipe(gulp.dest('dist'))
+		.pipe($.size());
+});
+
 gulp.task('images', function () {
 	return gulp.src('app/images/**/*')
 		.pipe($.cache($.imagemin({
