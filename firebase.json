@@ -1,5 +1,5 @@
 {
-  "firebase": "race-day-fpv",
+  "firebase": "<FIREBASE_ID>",
   "public": "dist",
   "ignore": [
     "firebase.json",

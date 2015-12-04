@@ -1,5 +1,5 @@
 'use strict';
-var firebase_base = 'https://race-day-fpv-dev.firebaseio.com';
+var firebase_base = 'https://<FIREBASE_ID>.firebaseio.com';
 
 angular.module('race-day-fpv',
 	['ngAnimate',

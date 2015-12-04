@@ -57,14 +57,16 @@ gulp.task('html', ['styles', 'scripts'], function () {
 
 gulp.task('dev', [], function () {
 	return gulp.src(['app/scripts/app.js'])
-		.pipe($.replace('https://race-day-fpv.firebaseio.com', 'https://race-day-fpv-dev.firebaseio.com'))
+		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_DEV_URL))
+		.pipe($.replace(process.env.FIREBASE_PROD_URL, process.env.FIREBASE_DEV_URL))
 		.pipe(gulp.dest('app/scripts/'))
 		.pipe($.size());
 });
 
 gulp.task('prod', [], function () {
 	return gulp.src(['app/scripts/app.js'])
-		.pipe($.replace('https://race-day-fpv-dev.firebaseio.com', 'https://race-day-fpv.firebaseio.com'))
+		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_PROD_URL))
+		.pipe($.replace(process.env.FIREBASE_DEV_URL, process.env.FIREBASE_PROD_URL))
 		.pipe(gulp.dest('app/scripts/'))
 		.pipe($.size());
 });
