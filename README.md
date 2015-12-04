@@ -15,7 +15,7 @@
     "FIREBASE_ID_PROD": "https://YOUR-PROD-ID.firebaseio.com"
 }
 
-```	
+```
 ## Testing
 	When running `gulp serve` the `FIREBASE_ID_DEV` URL will be used
 
