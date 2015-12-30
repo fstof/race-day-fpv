@@ -9,6 +9,7 @@ function RDFDateUtil($filter) {
 		todayDateTime: todayDateTime,
 		startOfDate: startOfDate,
 		stringValue: stringValue,
+		stringTimeValue: stringTimeValue,
 		shuffle: shuffle
 	};
 
@@ -29,8 +30,12 @@ function RDFDateUtil($filter) {
 		return $filter('date')(date, 'yyyy-MM-dd');
 	}
 
+	function stringTimeValue(date) {
+		return $filter('date')(date, 'HH:mm');
+	}
+
 	function shuffle(array) {
-		var currentIndex = array.length, temporaryValue, randomIndex ;
+		var currentIndex = array.length, temporaryValue, randomIndex;
 
 		// While there remain elements to shuffle...
 		while (0 !== currentIndex) {

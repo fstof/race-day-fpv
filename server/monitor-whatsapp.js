@@ -13,18 +13,28 @@ var yowsup = (function () {
 		}());
 	return function (to, message, done) {
 		exec(cmd(to, message), function (err, stdout, stderr) {
+			console.log('err', err);
+			console.log('stderr', stderr);
+			console.log('stdout', stdout);
+
 			if (err) {
-				console.error('err', err);
 				done('error: ' + err);
-			} else if (stderr) {
-				console.log('stderr', stderr);
-				done('error: ' + stderr);
-			} else if (stdout.toUpperCase().indexOf('ERROR') > -1) {
-				console.log('stdout', stdout);
-				done('error: ' + stdout);
-			} else {
-				console.log('success');
-				done();
+				return;
+			}
+			if (stderr) {
+				if (stderr.toUpperCase().indexOf('Message sent'.toUpperCase()) > -1) {
+					done();
+				} else {
+					done('error: ' + stderr);
+				}
+				return;
+			}
+			if (stdout) {
+				if (stdout.toUpperCase().indexOf('Error'.toUpperCase()) > -1) {
+					done('error: ' + stdout);
+				} else {
+					done();
+				}
 			}
 		});
 	};

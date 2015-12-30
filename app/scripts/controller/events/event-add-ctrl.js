@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventAddCtrl', EventAddCtrl);
 
-function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
+function EventAddCtrl(FPVSession, Event, Notification, RDFDateUtil, ngToast, $location, $route) {
 	var self = this;
 	self.heading = 'New Event';
 	self.calanderOpen = false;
@@ -25,6 +25,19 @@ function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 				ngToast.success('Saved');
 				$location.path('/events/' + eventId.key());
 				$route.reload();
+
+				Notification.create({
+					to: '',
+					message:
+					'\ud83c\udfc1 Race Day FPV \ud83c\udfc1\n' +
+					'New event created\n' +
+					'Name: ' + self.event.name + '\n' +
+					'Date: ' + RDFDateUtil.stringValue(self.event.date) + '\n' +
+					'Time: ' + RDFDateUtil.stringTimeValue(self.event.date) + '\n' +
+					'Venue: ' + self.event.venue + '\n' +
+					'Pindrop: ' + self.event.map + '\n\n' +
+					'To join this event register here:\n' + $location.absUrl()
+				});
 			}
 		});
 	};
@@ -34,4 +47,4 @@ function EventAddCtrl(FPVSession, Event, ngToast, $location, $route) {
 		$route.reload();
 	};
 }
-EventAddCtrl.$inject = ['FPVSession', 'Event', 'ngToast', '$location', '$route'];
+EventAddCtrl.$inject = ['FPVSession', 'Event', 'Notification', 'RDFDateUtil', 'ngToast', '$location', '$route'];

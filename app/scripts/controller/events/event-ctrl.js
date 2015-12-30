@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventCtrl', EventCtrl);
 
-function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams, $timeout, $scope) {
+function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, Notification, ngToast, $routeParams, $timeout, $scope, $location) {
 	var self = this;
 
 	var eventId = $routeParams.eventId;
@@ -38,7 +38,9 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams,
 					var ra = Event.getRacer(eventId, event.key);
 					ra.on('value', function (snap) {
 						self.me = snap.val();
-						self.me.$id = snap.key();
+						if (self.me) {
+							self.me.$id = snap.key();
+						}
 					});
 					$scope.$on('$destroy', function () {
 						ra.off();
@@ -83,6 +85,23 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams,
 								ngToast.danger('Error');
 							} else {
 								ngToast.success('See you there');
+
+								var flying = '';
+								for (var k = 0; k < self.racers.length; k++) {
+									flying += self.racers[k].name + '\n'
+								}
+								Notification.create({
+									to: '',
+									message: '\ud83c\udfc1 Race Day FPV \ud83c\udfc1\n' +
+									'Someone joined\n' +
+									'Name: ' + self.event.name + '\n' +
+									'Date: ' + RDFDateUtil.stringValue(self.event.date) + '\n' +
+									'Time: ' + RDFDateUtil.stringTimeValue(self.event.date) + '\n' +
+									'Venue: ' + self.event.venue + '\n' +
+									'Pindrop: ' + self.event.map + '\n\n' +
+									'Flying:\n' + flying + '\n' +
+									'To join this event register here:\n' + $location.absUrl()
+								});
 							}
 						});
 					});
@@ -119,4 +138,4 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, ngToast, $routeParams,
 
 
 }
-EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'RDFDateUtil', 'ngToast', '$routeParams', '$timeout', '$scope'];
+EventCtrl.$inject = ['FPVSession', 'Pilot', 'Event', 'RDFDateUtil', 'Notification', 'ngToast', '$routeParams', '$timeout', '$scope', '$location'];
