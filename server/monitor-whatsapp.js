@@ -48,8 +48,6 @@ var queue = new Queue(queueRef, function (data, progress, resolve, reject) {
 		console.log('got data', data);
 		progress(50);
 
-
-
 		yowsup('<WHATSAPP_GROUP_ID>', data.message, function (err) {
 			if (err) {
 				console.log('rejecting', err);
@@ -63,3 +61,5 @@ var queue = new Queue(queueRef, function (data, progress, resolve, reject) {
 		console.log('catch', err);
 	}
 });
+
+console.log('Motitoring Queue at: ' + queueRef.toString());
