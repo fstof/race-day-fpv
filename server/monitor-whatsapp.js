@@ -41,15 +41,16 @@ var yowsup = (function () {
 }());
 
 
-var queueRef = new Firebase('https://race-day-fpv-dev.firebaseio.com/notifications/whatsapp');
+var queueRef = new Firebase('https://<FIREBASE_ID>.firebaseio.com/notifications/whatsapp');
 var queue = new Queue(queueRef, function (data, progress, resolve, reject) {
 	// Read and process task data
 	try {
 		console.log('got data', data);
-
 		progress(50);
 
-		yowsup(data.to, data.message, function (err) {
+
+
+		yowsup('<WHATSAPP_GROUP_ID>', data.message, function (err) {
 			if (err) {
 				console.log('rejecting', err);
 				reject();
@@ -62,9 +63,3 @@ var queue = new Queue(queueRef, function (data, progress, resolve, reject) {
 		console.log('catch', err);
 	}
 });
-
-//var ref = new Firebase('https://race-day-fpv-dev.firebaseio.com/notifications/whatsapp/tasks');
-//ref.push({
-//	'to': '27825704688',
-//	'message': 'hello firebase'
-//});

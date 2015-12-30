@@ -27,7 +27,6 @@ function EventAddCtrl(FPVSession, Event, Notification, RDFDateUtil, ngToast, $lo
 				$route.reload();
 
 				Notification.create({
-					to: '',
 					message:
 					'\ud83c\udfc1 Race Day FPV \ud83c\udfc1\n' +
 					'New event created\n' +

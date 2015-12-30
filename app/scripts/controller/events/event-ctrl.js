@@ -91,7 +91,6 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, Notification, ngToast,
 									flying += self.racers[k].name + '\n'
 								}
 								Notification.create({
-									to: '',
 									message: '\ud83c\udfc1 Race Day FPV \ud83c\udfc1\n' +
 									'Someone joined\n' +
 									'Name: ' + self.event.name + '\n' +
