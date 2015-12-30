@@ -56,28 +56,46 @@ gulp.task('html', ['styles', 'scripts'], function () {
 
 
 gulp.task('dev', [], function () {
-	return gulp.src(['app/scripts/app.js', 'server/monitor-whatsapp.js'])
+	var appjs = $.filter(['app/scripts/app.js'], {restore: true});
+	var monitorjs = $.filter(['server/monitor-whatsapp.js'], {restore: true});
 
+	return gulp.src(['**/*.js'])
+
+		.pipe(appjs)
 		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_DEV_URL))
 		.pipe($.replace(process.env.FIREBASE_PROD_URL, process.env.FIREBASE_DEV_URL))
+		.pipe(appjs.restore)
 
+		.pipe(monitorjs)
+		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_DEV_URL))
+		.pipe($.replace(process.env.FIREBASE_PROD_URL, process.env.FIREBASE_DEV_URL))
 		.pipe($.replace('<WHATSAPP_GROUP_ID>', process.env.WHATSAPP_GROUP_ID_DEV))
 		.pipe($.replace(process.env.WHATSAPP_GROUP_ID_PROD, process.env.WHATSAPP_GROUP_ID_DEV))
+		.pipe(monitorjs.restore)
 
-		.pipe(gulp.dest('./'))
+		.pipe(gulp.dest('.'))
 		.pipe($.size());
 });
 
 gulp.task('prod', [], function () {
-	return gulp.src(['app/scripts/app.js', 'server/monitor-whatsapp.js'])
+	var appjs = $.filter(['app/scripts/app.js'], {restore: true});
+	var monitorjs = $.filter(['server/monitor-whatsapp.js'], {restore: true});
 
+	return gulp.src(['**/*.js'])
+
+		.pipe(appjs)
 		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_PROD_URL))
 		.pipe($.replace(process.env.FIREBASE_DEV_URL, process.env.FIREBASE_PROD_URL))
+		.pipe(appjs.restore)
 
+		.pipe(monitorjs)
+		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_PROD_URL))
+		.pipe($.replace(process.env.FIREBASE_DEV_URL, process.env.FIREBASE_PROD_URL))
 		.pipe($.replace('<WHATSAPP_GROUP_ID>', process.env.WHATSAPP_GROUP_ID_PROD))
 		.pipe($.replace(process.env.WHATSAPP_GROUP_ID_DEV, process.env.WHATSAPP_GROUP_ID_PROD))
+		.pipe(monitorjs.restore)
 
-		.pipe(gulp.dest('./'))
+		.pipe(gulp.dest('.'))
 		.pipe($.size());
 });
 
