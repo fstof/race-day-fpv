@@ -17,7 +17,7 @@ function eventCard() {
 	};
 }
 
-function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeout, $location) {
+function EventCardCtrl(FPVSession, Event, Pilot, Notification, RDFDateUtil, ngToast, $route, $scope, $timeout, $location) {
 	var self = this;
 	self.uid = FPVSession.user ? FPVSession.user.$id : null;
 	self.eventId = $scope.eventId;
@@ -112,7 +112,7 @@ function EventCardCtrl(FPVSession, Event, Pilot, ngToast, $route, $scope, $timeo
 		});
 	};
 }
-EventCardCtrl.$inject = ['FPVSession', 'Event', 'Pilot', 'ngToast', '$route', '$scope', '$timeout', '$location'];
+EventCardCtrl.$inject = ['FPVSession', 'Event', 'Pilot', 'Notification', 'RDFDateUtil', 'ngToast', '$route', '$scope', '$timeout', '$location'];
 
 function TemplateCache($templateCache) {
 	$templateCache.put('event-card.html',

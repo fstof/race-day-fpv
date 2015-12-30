@@ -85,22 +85,6 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, Notification, ngToast,
 								ngToast.danger('Error');
 							} else {
 								ngToast.success('See you there');
-
-								var flying = '';
-								for (var k = 0; k < self.racers.length; k++) {
-									flying += self.racers[k].name + '\n'
-								}
-								Notification.create({
-									message: '\ud83c\udfc1 Race Day FPV \ud83c\udfc1\n' +
-									'Someone joined\n' +
-									'Name: ' + self.event.name + '\n' +
-									'Date: ' + RDFDateUtil.stringValue(self.event.date) + '\n' +
-									'Time: ' + RDFDateUtil.stringTimeValue(self.event.date) + '\n' +
-									'Venue: ' + self.event.venue + '\n' +
-									'Pindrop: ' + self.event.map + '\n\n' +
-									'Flying:\n' + flying + '\n' +
-									'To join this event register here:\n' + $location.absUrl()
-								});
 							}
 						});
 					});

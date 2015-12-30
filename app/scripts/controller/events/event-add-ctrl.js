@@ -26,17 +26,7 @@ function EventAddCtrl(FPVSession, Event, Notification, RDFDateUtil, ngToast, $lo
 				$location.path('/events/' + eventId.key());
 				$route.reload();
 
-				Notification.create({
-					message:
-					'\ud83c\udfc1 Race Day FPV \ud83c\udfc1\n' +
-					'New event created\n' +
-					'Name: ' + self.event.name + '\n' +
-					'Date: ' + RDFDateUtil.stringValue(self.event.date) + '\n' +
-					'Time: ' + RDFDateUtil.stringTimeValue(self.event.date) + '\n' +
-					'Venue: ' + self.event.venue + '\n' +
-					'Pindrop: ' + self.event.map + '\n\n' +
-					'To join this event register here:\n' + $location.absUrl()
-				});
+				Notification.notifyNewEvent(self.event);
 			}
 		});
 	};

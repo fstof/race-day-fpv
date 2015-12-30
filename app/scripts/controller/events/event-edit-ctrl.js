@@ -3,7 +3,7 @@
 angular.module('race-day-fpv')
 	.controller('EventEditCtrl', EventEditCtrl);
 
-function EventEditCtrl(FPVSession, Event, ngToast, $routeParams, $location, $route, $scope) {
+function EventEditCtrl(FPVSession, Event, Notification, ngToast, $routeParams, $location, $route, $scope) {
 	var self = this;
 	self.heading = 'Edit Event';
 	self.calanderOpen = false;
@@ -37,6 +37,8 @@ function EventEditCtrl(FPVSession, Event, ngToast, $routeParams, $location, $rou
 				ngToast.success('Saved');
 				$location.path('/events/' + eventId);
 				$route.reload();
+
+				Notification.notifyEventUpdate(self.event);
 			}
 		});
 	};
@@ -46,4 +48,4 @@ function EventEditCtrl(FPVSession, Event, ngToast, $routeParams, $location, $rou
 		$route.reload();
 	};
 }
-EventEditCtrl.$inject = ['FPVSession', 'Event', 'ngToast', '$routeParams', '$location', '$route', '$scope'];
+EventEditCtrl.$inject = ['FPVSession', 'Event', 'Notification', 'ngToast', '$routeParams', '$location', '$route', '$scope'];
