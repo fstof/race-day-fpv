@@ -69,8 +69,8 @@ gulp.task('dev', [], function () {
 		.pipe(monitorjs)
 		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_DEV_URL))
 		.pipe($.replace(process.env.FIREBASE_PROD_URL, process.env.FIREBASE_DEV_URL))
-		.pipe($.replace('<WHATSAPP_GROUP_ID>', process.env.WHATSAPP_GROUP_ID_DEV))
-		.pipe($.replace(process.env.WHATSAPP_GROUP_ID_PROD, process.env.WHATSAPP_GROUP_ID_DEV))
+		.pipe($.replace('\'<WHATSAPP_RECIPIENTS>\'', process.env.WHATSAPP_RECIPIENTS_DEV))
+		.pipe($.replace(process.env.WHATSAPP_RECIPIENTS_PROD, process.env.WHATSAPP_RECIPIENTS_DEV))
 		.pipe(monitorjs.restore)
 
 		.pipe(gulp.dest('.'))
@@ -91,8 +91,8 @@ gulp.task('prod', [], function () {
 		.pipe(monitorjs)
 		.pipe($.replace('https://<FIREBASE_ID>.firebaseio.com', process.env.FIREBASE_PROD_URL))
 		.pipe($.replace(process.env.FIREBASE_DEV_URL, process.env.FIREBASE_PROD_URL))
-		.pipe($.replace('<WHATSAPP_GROUP_ID>', process.env.WHATSAPP_GROUP_ID_PROD))
-		.pipe($.replace(process.env.WHATSAPP_GROUP_ID_DEV, process.env.WHATSAPP_GROUP_ID_PROD))
+		.pipe($.replace('\'<WHATSAPP_RECIPIENTS>\'', process.env.WHATSAPP_RECIPIENTS_PROD))
+		.pipe($.replace(process.env.WHATSAPP_RECIPIENTS_DEV, process.env.WHATSAPP_RECIPIENTS_PROD))
 		.pipe(monitorjs.restore)
 
 		.pipe(gulp.dest('.'))

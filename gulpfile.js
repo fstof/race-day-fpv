@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var env = require('gulp-env');
 
 env({
-    file: '.env.json',
+    file: '.env.json'
 });
 
 require('require-dir')('./gulp');
