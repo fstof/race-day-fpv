@@ -2,7 +2,7 @@
   "name": "race-day-fpv",
   "version": "0.0.0",
   "scripts": {
-    "start": "node server/monitor-whatsapp.js"
+    "start": "node server/monitor-notifications.js"
   },
   "dependencies": {
     "async": "^1.5.0",
