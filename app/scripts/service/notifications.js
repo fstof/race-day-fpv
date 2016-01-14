@@ -20,7 +20,10 @@ function Notification(FIREBASE_REF, RDFDateUtil, $location) {
 				'Pindrop: ' + event.map + '\n\n' +
 				'To see more details on this event or to join, register here:\n' + $location.absUrl()
 			};
-			return ref.child('notifications/whatsapp/tasks').push(notice, callback);
+			return ref.child('notifications/whatsapp/tasks').push(notice, function () {
+				notice.channel = '#general';
+				ref.child('notifications/slack/tasks').push(notice, callback);
+			});
 		},
 		notifyEventUpdate: function (event, callback) {
 			//var flying = '';
@@ -38,7 +41,10 @@ function Notification(FIREBASE_REF, RDFDateUtil, $location) {
 				//'Flying:\n' + flying + '\n' +
 				'To see more details on this event or to join, register here:\n' + $location.absUrl()
 			};
-			return ref.child('notifications/whatsapp/tasks').push(notice, callback);
+			return ref.child('notifications/whatsapp/tasks').push(notice, function () {
+				notice.channel = '#general';
+				ref.child('notifications/slack/tasks').push(notice, callback);
+			});
 		}
 	};
 }
