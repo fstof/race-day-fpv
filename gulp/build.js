@@ -57,7 +57,7 @@ gulp.task('html', ['styles', 'scripts'], function () {
 
 gulp.task('dev', [], function () {
 	var appjs = $.filter(['app/scripts/app.js'], {restore: true});
-	var monitorjs = $.filter(['server/monitor-whatsapp.js'], {restore: true});
+	var monitorjs = $.filter(['server/monitor-*.js'], {restore: true});
 
 	return gulp.src(['**/*.js'])
 
