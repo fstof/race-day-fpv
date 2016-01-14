@@ -85,6 +85,8 @@ function EventCtrl(FPVSession, Pilot, Event, RDFDateUtil, Notification, ngToast,
 								ngToast.danger('Error');
 							} else {
 								ngToast.success('See you there');
+
+								Notification.notifyEventJoined(self.event, self.racers, FPVSession.user.name);
 							}
 						});
 					});

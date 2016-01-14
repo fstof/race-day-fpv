@@ -121,12 +121,12 @@ function TemplateCache($templateCache) {
 		'		<div class="row">' +
 		'			<div class="col-lg-12">' +
 		'				<h4 class="pull-left hand" ng-click="ctrl.viewToggle()">{{ctrl.event.name}}<br/><small>{{ctrl.pilotCount}} attending</small></h4>' +
-		'				<div class="pull-right">' +
-		'					<button type="button" class="btn btn-success" logged-in ng-click="ctrl.goingToggle()">' +
-		'						<i class="fa fa-check-square-o" ng-show="ctrl.going"></i>' +
-		'						<i class="fa fa-square-o" ng-hide="ctrl.going"></i>' +
-		'					</button>' +
-		'				</div>' +
+		//'				<div class="pull-right">' +
+		//'					<button type="button" class="btn btn-success" logged-in ng-click="ctrl.goingToggle()">' +
+		//'						<i class="fa fa-check-square-o" ng-show="ctrl.going"></i>' +
+		//'						<i class="fa fa-square-o" ng-hide="ctrl.going"></i>' +
+		//'					</button>' +
+		//'				</div>' +
 		'			</div>' +
 		'		</div>' +
 		'		<div class="row">' +
