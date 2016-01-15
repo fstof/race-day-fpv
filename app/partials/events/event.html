@@ -13,23 +13,27 @@
 
 		<p>{{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></p>
 
-		<p>
-			<button type="button" class="btn btn-success" logged-in ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">
-				<i class="fa fa-check-square" ng-show="ctrl.me != null"> Going</i>
-				<i class="fa fa-square" ng-hide="ctrl.me != null"> Not Going</i>
+		<div logged-in>
+			<label>Will you be going?</label>
+			<div class="btn-group">
+				<label class="btn btn-success" ng-class="{active: ctrl.me == null}" ng-click="ctrl.goingToggle(ctrl.event)">No</label>
+				<label class="btn btn-success" ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">Yes</label>
+			</div>
+		</div>
+		<br>
+		<div logged-in>
+			<label>Check in</label>
+			<button type="button" class="btn btn-success" ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-class="{active: ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn}" ng-click="ctrl.checkInToggle(ctrl.event)">
+				<i class="fa fa-check-square" ng-show="ctrl.me.checkedIn"></i>
+				<i class="fa fa-square" ng-hide="ctrl.me.checkedIn"></i>
 			</button>
-		</p>
-		<p>
-			<button type="button" class="btn btn-success" logged-in ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-class="{active: ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn}" ng-click="ctrl.checkInToggle(ctrl.event)">
-				<i class="fa fa-check-square" ng-show="ctrl.me.checkedIn"> Checked In</i>
-				<i class="fa fa-square" ng-hide="ctrl.me.checkedIn"> Not Checked In</i>
-			</button>
-		</p>
-		<p>
+		</div>
+		<br>
+		<div logged-in>
 			<a ng-href="#/events/{{ctrl.event.$id}}/start" class="btn btn-primary">
 				<i class="fa fa-flag-checkered"></i> RACE!!! <i class="fa fa-flag-checkered"></i>
 			</a>
-		</p>
+		</div>
 	</div>
 </div>
 
