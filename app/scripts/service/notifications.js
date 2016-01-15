@@ -57,7 +57,7 @@ function Notification(FIREBASE_REF, RDFDateUtil, $location) {
 				'To see more details on this event or to join, register here:\n' + $location.absUrl()
 			};
 			return ref.child('notifications/whatsapp/tasks').push(notice, function () {
-				notice.channel = '#general';
+				notice.channel = '#events';
 				ref.child('notifications/slack/tasks').push(notice, callback);
 			});
 		}
