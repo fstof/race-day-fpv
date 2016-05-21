@@ -3,7 +3,10 @@
 ## Web app
 
 ### Requirements
-- Firebase CLI: `npm install firebase-tools`
+- Firebase: `npm install -g firebase-tools`
+- Gulp: `npm install -g gulp`
+- Bower: `npm install -g bower`
+- Install dependencies: `npm install` and `bower install`
 - update `firebase.json` with your production firebase id
 
 ### Environment
