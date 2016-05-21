@@ -1,0 +1,54 @@
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-3">
+			<select class="form-control" ng-model="ctrl.newFreq" ng-options="freq.frequency for freq in ctrl.allFrequencies">
+				<option value="">---Please select---</option> <!-- not selected / blank option -->
+			</select>
+		</div>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-primary" ng-click="ctrl.addFreq(ctrl.newFreq)"><i class="fa fa-plus"></i> Add</button>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row">
+		<div class="col-md-6" ng-repeat="freq in ctrl.myFrequencies">
+			<div class="panel panel-success">
+				<div class="panel-body">
+					<div class="row">
+						<div class="form-group">
+							<label class="col-md-6">Frequency</label>
+							<div class="col-md-6">
+								<div class="input-group">
+									<input type="text" class="form-control" readonly ng-model="freq.frequency">
+									<div class="input-group-addon">MHz</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-md-6">VRx Setting</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" placeholder="eg. UDDU" ng-model="freq.vrx" ng-change="ctrl.updateFreq(freq)" ng-model-options="{debounce: { 'default': 1000, 'blur': 0 }}">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-md-6">VTx Setting</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" placeholder="eg. DUUUD" ng-model="freq.vtx" ng-change="ctrl.updateFreq(freq)" ng-model-options="{debounce: { 'default': 1000, 'blur': 0 }}">
+							</div>
+						</div>
+					</div>
+					<button type="button" class="btn btn-danger" ng-click="ctrl.deleteFreq(freq)">
+						<i class="fa fa-trash"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

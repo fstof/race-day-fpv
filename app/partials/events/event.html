@@ -1,0 +1,65 @@
+<div class="jumbotron">
+	<div class="container-fluid">
+		<h3>
+			{{ctrl.event.name}}
+			<a my-item="ctrl.event.organiserId" ng-href="#/events/{{ctrl.event.$id}}/edit" class="btn btn-warning"><i class="fa fa-edit"></i></a>
+		</h3>
+
+		<p>{{ctrl.event.date | date: "medium"}}</p>
+
+		<p ng-show="ctrl.eventDate > ctrl.today">Check-ins are not yet open.</p>
+
+		<p ng-show="ctrl.eventDate < ctrl.today">This event is closed.</p>
+
+		<p>{{ctrl.event.venue}} <a target="_blank" ng-href="{{ctrl.event.map}}" ng-show="ctrl.event.map"><i class="fa fa-map-marker"></i></a></p>
+
+		<div logged-in>
+			<label>Will you be going?</label>
+			<div class="btn-group">
+				<label class="btn btn-success" ng-class="{active: ctrl.me == null}" ng-click="ctrl.goingToggle(ctrl.event)">No</label>
+				<label class="btn btn-success" ng-class="{active: ctrl.me != null}" ng-click="ctrl.goingToggle(ctrl.event)">Yes</label>
+			</div>
+		</div>
+		<br>
+		<div logged-in>
+			<label>Check in</label>
+			<button type="button" class="btn btn-success" ng-show="ctrl.me != null && ctrl.eventDate == ctrl.today" ng-class="{active: ctrl.me != null && ctrl.eventDate == ctrl.today && ctrl.me.checkedIn}" ng-click="ctrl.checkInToggle(ctrl.event)">
+				<i class="fa fa-check-square" ng-show="ctrl.me.checkedIn"></i>
+				<i class="fa fa-square" ng-hide="ctrl.me.checkedIn"></i>
+			</button>
+		</div>
+		<br>
+		<div logged-in>
+			<a ng-href="#/events/{{ctrl.event.$id}}/start" class="btn btn-primary">
+				<i class="fa fa-flag-checkered"></i> RACE!!! <i class="fa fa-flag-checkered"></i>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="well">
+	<div btf-markdown="ctrl.event.notes"></div>
+</div>
+
+<div class="container-fluid">
+	<div>
+		<h1>Attending Pilots</h1>
+	</div>
+	<div class="row">
+
+		<div class="col-sm-6 col-md-4" ng-repeat="racer in ctrl.evRacers">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-lg-12">
+							<h4 class="pull-left">{{racer.name}} <i ng-show="racer.checkedIn" class="text-success fa fa-check"></i><i ng-hide="racer.checkedIn" class="text-danger fa fa-times"></i></h4>
+							<img class="pull-right" style="width: 50px; height: 50px;" ng-src="{{racer.avatar}}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>

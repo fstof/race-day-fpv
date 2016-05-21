@@ -9,73 +9,147 @@
 
 	<!-- build:css({.tmp,app}) styles/main.css -->
 	<link rel="stylesheet" href="styles/main.css">
+	<link rel="stylesheet" href="../.tmp/styles/main.css">
 	<!-- endbuild -->
 
 	<!-- build:css({.tmp,app}) styles/vendor.css -->
 	<!-- bower:css -->
 	<link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
 	<link rel="stylesheet" href="bower_components/ngToast/dist/ngToast.css" />
+	<link rel="stylesheet" href="bower_components/ngToast/dist/ngToast-animations.css">
 	<!-- endbower -->
 	<!-- endbuild -->
 </head>
 <body ng-controller="IndexCtrl as ctrl">
 <toast></toast>
 
-<div class="container">
+<div style="position: relative; height: 90px" class="hidden-xs"></div>
+<div style="position: relative; height: 65px" class="visible-xs"></div>
 
-	<nav class="navbar navbar-inverse" role="navigation">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" ng-click="ctrl.navCollapsed = !ctrl.navCollapsed">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#/">Race Day FPV</a>
-		</div>
+<div class="navbar-inverse navbar-fixed-top" role="navigation">
 
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" ng-class="!ctrl.navCollapsed && 'in'" ng-click="ctrl.navCollapsed = true">
-
-			<ul class="nav navbar-nav">
-				<li ng-class="{'active':ctrl.active == 'home'}">
-					<a ng-href="#/home" ng-click="ctrl.active = 'home'">Home</a>
+	<div id="topbar" class="hidden-xs">
+		<div class="container">
+			<ul class="pull-right list-inline">
+				<li logged-in="false">
+					<a href ng-click="ctrl.login('google')"><i class="fa fa-google-plus-square"></i> Google Sign-In</a>
 				</li>
-				<li ng-class="{'active':ctrl.active == 'events'}">
-					<a ng-href="#/events" ng-click="ctrl.active = 'events'">Events</a>
+				<li logged-in="false">
+					<a href ng-click="ctrl.login('facebook')"><i class="fa fa-facebook-official"></i> Facebook Sign-In</a>
 				</li>
-				<li ng-class="{'active':ctrl.active == 'racers'}">
-					<a ng-href="#/racers" ng-click="ctrl.active = 'racers'">Racers</a>
-				</li>
-			</ul>
-
-			<ul class="nav navbar-nav navbar-right">
-				<li>
-					<a href="" ng-show="ctrl.FPVSession.user != null">
-						<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.user.profileImageURL}}">
-					</a>
-				</li>
-				<li ng-show="ctrl.FPVSession.user == null">
-					<a href="" ng-click="ctrl.login('google')"><i style="font-size: 1.5em" class="fa fa-google-plus-square"></i> Google Sign-In</a>
-				</li>
-				<li ng-show="ctrl.FPVSession.user == null">
-					<a href="" ng-click="ctrl.login('facebook')"><i style="font-size: 1.5em" class="fa fa-facebook-official"></i> Facebook Sign-In</a>
-				</li>
-				<li ng-show="ctrl.FPVSession.user != null">
-					<a href="" ng-click="ctrl.logout()"><i class="fa fa-sign-out" tooltip="Log Out"></i></a>
+				<li logged-in>
+					<a href ng-click="ctrl.logout()"><i class="fa fa-sign-out"></i> Sign Out</a>
 				</li>
 			</ul>
 		</div>
-		<!-- /.navbar-collapse -->
-	</nav>
-
-	<div ng-view></div>
-
-	<div class="footer">
-		<p class="pull-right">For the racers by the racers</p>
 	</div>
 
+	<div class="navbar" style="margin-bottom: 0">
+		<div class="container">
+
+			<div class="navbar-header text-nowrap">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a ng-href="#/me/events"><img class="logo " width="250px" height="53px" src="images/logo_light.png" alt="Race Day FPV"></a>
+			</div>
+
+			<div class="navbar-collapse collapse">
+
+				<div class="hidden-xs">
+					<ul class="nav navbar-nav pull-right">
+						<li logged-in>
+							<a href class="dropdown-toggle" data-toggle="dropdown" >
+								<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.pilot.avatar}}">
+								<span>Me</span> <b class="fa fa-caret-down"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a ng-href="#/me/events"><span>My Events</span></a></li>
+								<li><a ng-href="#/me/edit"><span>My Profile</span></a></li>
+							</ul>
+						</li>
+						<li><a ng-href="#/" data-target=".navbar-collapse"><span>About</span></a></li>
+						<li class="dropdown">
+							<a href class="dropdown-toggle" data-toggle="dropdown">Events <b class="fa fa-caret-down"></b></a>
+							<ul class="dropdown-menu">
+								<li><a ng-href="#/events/upcoming"><span>Upcoming Events</span></a></li>
+								<li><a ng-href="#/events/past"><span>Past Events</span></a></li>
+								<li logged-in><a ng-href="#/events/add"><i class="fa fa-plus"></i> New Event</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href class="dropdown-toggle" data-toggle="dropdown">Pilots <b class="fa fa-caret-down"></b></a>
+							<ul class="dropdown-menu">
+								<li><a ng-href="#/pilots"><span><i class="fa fa-fw fa-user"></i> Pilots</span></a></li>
+								<li><a ng-href="#/pilots"><span><i class="fa fa-fw fa-users"></i> Teams</span></a></li>
+								<li><a ng-href="#/pilots"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
+							</ul>
+						</li>
+						<li manager>
+							<a ng-href="#/manage" ><i class="fa fa-wrench"></i> Manage</a>
+						</li>
+					</ul>
+				</div><!-- Desktop User Buttons -->
+
+				<div class="visible-xs">
+					<ul class="nav navbar-nav text-center">
+						<li logged-in>
+							<a href class="dropdown-toggle" data-toggle="dropdown" >
+								<img style="width: 20px; height: 20px;" ng-src="{{ctrl.FPVSession.pilot.avatar}}">
+								<span>Me</span> <b class="fa fa-caret-down"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a ng-href="#/me/events"><span>My Events</span></a></li>
+								<li><a ng-href="#/me/edit"><span>My Profile</span></a></li>
+							</ul>
+						</li>
+						<li><a ng-href="#/" data-toggle="collapse" data-target=".navbar-collapse"><span>About</span></a></li>
+						<li class="dropdown"><a href class="dropdown-toggle" data-toggle="dropdown">Events <b class="fa fa-caret-down"></b></a>
+							<ul class="dropdown-menu text-center">
+								<li><a ng-href="#/events/upcoming" data-toggle="collapse" data-target=".navbar-collapse"><span>Upcoming Events</span></a></li>
+								<li><a ng-href="#/events/past" data-toggle="collapse" data-target=".navbar-collapse"><span>Past Events</span></a></li>
+								<li logged-in><a ng-href="#/events/add" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-plus"></i> New Event</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href class="dropdown-toggle" data-toggle="dropdown">Pilots <b class="fa fa-caret-down"></b></a>
+							<ul class="dropdown-menu text-center">
+								<li><a ng-href="#/pilots" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-user"></i> Pilots</span></a></li>
+								<li><a ng-href="#/pilots" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-users"></i> Teams</span></a></li>
+								<li><a ng-href="#/pilots" data-toggle="collapse" data-target=".navbar-collapse"><span><i class="fa fa-fw fa-plane"></i> Aircraft</span></a></li>
+							</ul>
+						</li>
+						<li manager>
+							<a ng-href="#/manage" ><i class="fa fa-wrench"></i> Manage</a>
+						</li>
+						<li logged-in="false">
+							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.login('google')"><i class="fa fa-google-plus-square"></i> Google Sign-In</a>
+						</li>
+						<li logged-in="false">
+							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.login('facebook')"><i class="fa fa-facebook-official"></i> Facebook Sign-In</a>
+						</li>
+						<li logged-in>
+							<a href data-toggle="collapse" data-target=".navbar-collapse" ng-click="ctrl.logout()"><i class="fa fa-sign-out"></i> Sign Out</a>
+						</li>
+					</ul>
+				</div><!-- Mobile User Buttons -->
+
+			</div><!--/.navbar-collapse -->
+		</div>
+
+	</div>
+</div>
+
+<div class="container-fluid" style="position: relative">
+
+	<div class="container" ng-view></div>
+
+</div>
+
+<div class="container-fluid footer" style="position: relative">
+	<p class="pull-right">For the racers by the racers</p>
 </div>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -111,24 +185,44 @@
 <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
 <script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/ngToast/dist/ngToast.js"></script>
+<script src="bower_components/showdown/src/showdown.js"></script>
+<script src="bower_components/angular-markdown-directive/markdown.js"></script>
 <!-- endbower -->
+<script src="scripts/vendor/faker.js"></script>
 <!-- endbuild -->
 
+
 <!-- build:js({app,.tmp}) scripts/main.js -->
-<script src="scripts/race-day-fpv.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/routes.js"></script>
 <script src="scripts/index-ctrl.js"></script>
-<script src="scripts/service/user-service.js"></script>
-<script src="scripts/service/event-service.js"></script>
+<!--<script src="scripts/service/user-service.js"></script>-->
+<!--<script src="scripts/service/event-service.js"></script>-->
 <script src="scripts/service/session-service.js"></script>
 <script src="scripts/service/auth-service.js"></script>
-<!--<script src="scripts/service/event.js"></script>-->
-<!--<script src="scripts/service/user.js"></script>-->
+<script src="scripts/service/event.js"></script>
+<script src="scripts/service/user.js"></script>
+<script src="scripts/service/pilot.js"></script>
+<script src="scripts/service/raceGroup.js"></script>
+<script src="scripts/service/frequency.js"></script>
+<script src="scripts/service/rdf-dateUtil.js"></script>
+<script src="scripts/service/notifications.js"></script>
 <script src="scripts/directive/event-card.js"></script>
+<script src="scripts/directive/logged-in.js"></script>
+<script src="scripts/directive/my-item.js"></script>
+<script src="scripts/directive/manager.js"></script>
 <script src="scripts/controller/home-ctrl.js"></script>
-<script src="scripts/controller/events-ctrl.js"></script>
-<script src="scripts/controller/event-add-ctrl.js"></script>
-<script src="scripts/controller/event-ctrl.js"></script>
-<script src="scripts/controller/racers-ctrl.js"></script>
+<script src="scripts/controller/me-ctrl.js"></script>
+<script src="scripts/controller/events/events-upcoming-ctrl.js"></script>
+<script src="scripts/controller/events/events-past-ctrl.js"></script>
+<script src="scripts/controller/events/event-add-ctrl.js"></script>
+<script src="scripts/controller/events/event-edit-ctrl.js"></script>
+<script src="scripts/controller/events/event-ctrl.js"></script>
+<script src="scripts/controller/events/event-start-ctrl.js"></script>
+<script src="scripts/controller/pilots/pilots-ctrl.js"></script>
+<script src="scripts/controller/pilots/pilot-edit-ctrl.js"></script>
+<script src="scripts/controller/manage/manage-ctrl.js"></script>
+<script src="scripts/controller/manage/frequencies-ctrl.js"></script>
 <!-- endbuild -->
 
 </body>

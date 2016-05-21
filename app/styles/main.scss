@@ -1,3 +1,4 @@
+@import '_variables.scss';
 $icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 @import '../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
@@ -21,4 +22,18 @@ $icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 
 .hand {
   cursor: pointer;
+}
+
+#topbar {
+  height: 23px !important;
+  padding: 0.15em 0em;
+  background: $gray-dark;
+  line-height: 1.5;
+  font-size: 0.85em;
+  display: block;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }

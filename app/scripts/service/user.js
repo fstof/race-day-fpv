@@ -3,30 +3,16 @@
 angular.module('race-day-fpv')
 	.factory('User', User);
 
-function User(FIREBASE_REF, $firebaseObject, $firebaseArray) {
+function User(FIREBASE_REF) {
 	var ref = FIREBASE_REF;
-	var users = $firebaseArray(ref.child('users'));
 
 	return {
-		all: users,
 		get: function (userId) {
-			return $firebaseObject(ref.child('users').child(userId));
+			return ref.child('users').child(userId);
 		},
-		create: function (user) {
-			return users.$add(user);
-		},
-		delete: function (user) {
-			return users.$remove(user);
-		},
-		getEvents: function (userId) {
-			return $firebaseArray(ref.child('users').child(userId).child('events'));
-		},
-		addEvent: function (userId, eventId) {
-			return $firebaseObject(ref.child('users').child(userId).child('events').child(eventId)).$add(true);
-		},
-		removeEvent: function (userId, eventId) {
-			return $firebaseArray(ref.child('users').child(userId).child('events')).$remove(eventId);
+		create: function (userId, user, callback) {
+			return ref.child('users').child(userId).set(user, callback);
 		}
 	};
 }
-User.$inject = ['FIREBASE_REF', '$firebaseObject', '$firebaseArray'];
+User.$inject = ['FIREBASE_REF'];

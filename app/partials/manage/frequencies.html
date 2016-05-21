@@ -1,0 +1,26 @@
+<div ng-controller="FrequenciesCtrl as ctrl">
+	<p>
+		<a class="btn btn-primary" ng-click="ctrl.addFreq()"><i class="fa fa-plus"></i> New Frequency</a>
+	</p>
+
+	<div class="row">
+		<div class="col-md-6" ng-repeat="freq in ctrl.frequencies">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="form-group">
+							<label class="col-md-6">Frequency</label>
+							<div class="col-md-6">
+								<div class="input-group">
+									<input type="number" class="form-control" placeholder="eg. 5685" ng-model="freq.frequency" ng-change="ctrl.updateFreq(freq)" ng-model-options="{debounce: { 'default': 1000, 'blur': 0 }}">
+									<div class="input-group-addon">MHz</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-danger" ng-click="ctrl.deleteFreq(freq)"><i class="fa fa-trash"></i></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

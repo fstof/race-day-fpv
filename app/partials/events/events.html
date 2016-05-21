@@ -1,0 +1,15 @@
+<div class="page-header text-center">
+	<h1>{{ctrl.heading}} <small>{{ctrl.subHeading}}</small></h1>
+</div>
+
+<div class="container-fluid">
+
+	<div class="row">
+
+		<div class="col-sm-6 col-md-4" ng-repeat="event in ctrl.events">
+			<event-card event-id="event.$id" ></event-card>
+		</div>
+
+	</div>
+
+</div>

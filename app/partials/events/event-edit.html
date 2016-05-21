@@ -1,0 +1,70 @@
+<div class="page-header text-center">
+	<h1>{{ctrl.heading}}</h1>
+</div>
+
+<div class="container-fluid">
+<form>
+	<div class="row">
+
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-lg-12">
+							<h4><label>{{ctrl.event.name}}</label>
+							</h4>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item">
+							<span class="input-group">
+								<input type="text" class="form-control" placeholder="Name" ng-model="ctrl.event.name">
+								<span class="input-group-addon"><i class="fa fa-flag-checkered" uib-tooltip="Name"></i></span>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<span class="input-group">
+								<input type="text" class="form-control" placeholder="Date" uib-datepicker-popup ng-click="ctrl.openCalendar()" ng-model="ctrl.event.date" is-open="ctrl.calanderOpen" close-text="Close" />
+								<span class="input-group-addon" ng-click="ctrl.openCalendar()"><i class="fa fa-calendar" uib-tooltip="Date"></i></span>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<span class="input-group">
+								<uib-timepicker ng-model="ctrl.event.date" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
+								<span class="input-group-addon"><i class="fa fa-clock-o" uib-tooltip="time"></i></span>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<span class="input-group">
+								<input type="text" class="form-control" placeholder="Venue" ng-model="ctrl.event.venue">
+								<span class="input-group-addon"><i class="fa fa-map-pin" uib-tooltip="Venue"></i></span>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<span class="input-group">
+								<input type="text" class="form-control" placeholder="Clickable Google Maps URL" ng-model="ctrl.event.map">
+								<span class="input-group-addon"><i class="fa fa-map-marker" uib-tooltip="Venue map pin"></i></span>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown formatting accepted</a>
+							<span class="input-group">
+								<textarea class="form-control" placeholder="Event Details" rows="20" ng-model="ctrl.event.notes"></textarea>
+								<span class="input-group-addon"><i class="fa fa-sticky-note"  uib-tooltip="Event Details"></i></span>
+							</span>
+						</li>
+					</ul>
+					<span class="pull-right">
+						<a class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</a>
+						<a class="btn btn-primary" ng-click="ctrl.save()">Save</a>
+					</span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</form>
+
+</div>

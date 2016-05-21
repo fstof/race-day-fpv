@@ -1,0 +1,16 @@
+<div class="page-header text-center">
+	<h1>
+		Me <small>My Events</small>
+	</h1>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6 col-md-4" ng-repeat="event in ctrl.myEvents">
+			<event-card event-id="event.$id" ></event-card>
+		</div>
+	</div>
+	<div ng-show="ctrl.eventCount == 0">
+		<h3>You have no events... go find some <a ng-href="#/events/upcoming">here</a></h3>
+	</div>
+</div>

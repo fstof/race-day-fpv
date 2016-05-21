@@ -1,0 +1,34 @@
+<div class="page-header text-center">
+	<h1>Edit Your Details</h1>
+</div>
+
+<div class="container-fluid">
+
+	<uib-alert type="danger" ng-show="ctrl.freqCount == 0">
+		<h4>Frequencies</h4>
+		<p>
+			You are missing frequencies, please add them now
+		</p>
+	</uib-alert>
+
+	<uib-accordion>
+
+		<uib-accordion-group is-open="ctrl.status.details.open">
+			<uib-accordion-heading>
+				<i class="fa fa-user"></i> My Details <i class="pull-right fa" ng-class="{'fa-chevron-down': ctrl.status.details.open, 'fa-chevron-right': !ctrl.status.details.open}"></i>
+			</uib-accordion-heading>
+
+			<div ng-include="'partials/pilots/pilot-details.html'"></div>
+		</uib-accordion-group>
+
+		<uib-accordion-group is-open="ctrl.status.frequencies.open">
+			<uib-accordion-heading>
+				<i class="fa fa-wifi" ng-class="{'text-danger': ctrl.freqCount == 0}"></i> My Video Frequencies <i class="pull-right fa" ng-class="{'fa-chevron-down': ctrl.status.frequencies.open, 'fa-chevron-right': !ctrl.status.frequencies.open}"></i>
+			</uib-accordion-heading>
+
+			<div ng-include="'partials/pilots/pilot-frequencies.html'"></div>
+		</uib-accordion-group>
+
+	</uib-accordion>
+
+</div>
